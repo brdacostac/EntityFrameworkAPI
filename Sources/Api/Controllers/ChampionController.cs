@@ -21,9 +21,34 @@ namespace Api.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet(Name = "GetAll")]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAll()
         {
             IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(0, await _dataManager.ChampionsMgr.GetNbItems());
+
+            List<DTOChampion> championListDto = new List<DTOChampion>();
+            foreach (Champion champion in championList)
+            {
+                championListDto.Add(champion.ToDto());
+            }
+            return StatusCode((int)HttpStatusCode.OK, championListDto);
+            //return  Ok( championListDto);
+        }
+
+        [HttpGet( "Get/{page}-{nbItem}")]
+        public async Task<IActionResult> GetPage(int page,int nbItem)
+        {
+
+            if(page < 0 || nbItem < 0 )
+            {
+                return StatusCode((int)HttpStatusCode.RequestedRangeNotSatisfiable, "Numero de page ou nombre d'item est negatif");
+            }
+            int nbItemTotal = await _dataManager.ChampionsMgr.GetNbItems();
+
+            if (page >= nbItemTotal/nbItem)
+            {
+                return StatusCode((int)HttpStatusCode.RequestedRangeNotSatisfiable, "Numero de page est trop grand");
+            }
+            IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(page, nbItem);
 
             List<DTOChampion> championListDto = new List<DTOChampion>();
             foreach (Champion champion in championList)
@@ -43,8 +68,18 @@ namespace Api.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post( string Name,  string Class, string Bio ="", string Icon ="",  string Image="")
         {
+            DTOChampion dTOChampion = new DTOChampion()
+            {
+                Name = Name,
+                Bio = Bio,
+                Class =Class,
+                Icon = Icon,
+                Image =Image
+            };
+            _dataManager.ChampionsMgr.AddItem(dTOChampion.ToChampion());
+
         }
 
         // PUT api/<ValuesController>/5

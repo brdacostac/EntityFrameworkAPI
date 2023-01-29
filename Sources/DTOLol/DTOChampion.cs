@@ -8,6 +8,7 @@ namespace DTOLol
 {
     public class DTOChampion
     {
+
         public String Name
         {
             get; set;
@@ -22,5 +23,16 @@ namespace DTOLol
         {
             get; set;
         }
+
+        public String Icon
+        {
+            get; set;
+        }
+
+        public String Image
+        {
+            get; set;
+        }
+
     }
 }
