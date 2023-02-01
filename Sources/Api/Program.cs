@@ -10,8 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDataManager, StubData>(); //un seul pour tout le monde //il y a des semaphore et de concurrence d acces
-builder.Services.AddScoped<IDataManager, StubData>();//un seul pour le cycle de vie de l'environnement //c est le meuilleur si on sait pas
-builder.Services.AddTransient<IDataManager, StubData>();//un seul pour chque environnment demainder un nouveua instance
+/*builder.Services.AddScoped<IDataManager, StubData>();//un seul pour le cycle de vie de l'environnement //c est le meuilleur si on sait pas
+builder.Services.AddTransient<IDataManager, StubData>();//un seul pour chque environnment demainder un nouveua instance*/
 
 var app = builder.Build();
 

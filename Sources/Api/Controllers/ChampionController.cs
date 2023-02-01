@@ -23,14 +23,8 @@ namespace Api.Controllers
         [HttpGet(Name = "GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(0, await _dataManager.ChampionsMgr.GetNbItems());
-
-            List<DTOChampion> championListDto = new List<DTOChampion>();
-            foreach (Champion champion in championList)
-            {
-                championListDto.Add(champion.ToDto());
-            }
-            return StatusCode((int)HttpStatusCode.OK, championListDto);
+           
+            return StatusCode((int)HttpStatusCode.OK, (await _dataManager.ChampionsMgr.GetItems(0, await _dataManager.ChampionsMgr.GetNbItems())).Select(e => e.ToDto()));
             //return  Ok( championListDto);
         }
 
@@ -51,10 +45,12 @@ namespace Api.Controllers
             IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(page, nbItem);
 
             List<DTOChampion> championListDto = new List<DTOChampion>();
-            foreach (Champion champion in championList)
+
+            championList.ToList().ForEach(champion => championListDto.Add(champion.ToDto()));
+/*            foreach (Champion champion in championList)
             {
                 championListDto.Add(champion.ToDto());
-            }
+            }*/
             return StatusCode((int)HttpStatusCode.OK, championListDto);
             //return  Ok( championListDto);
         }
@@ -68,17 +64,10 @@ namespace Api.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post( string Name,  string Class, string Bio ="", string Icon ="",  string Image="")
+        public void Post( DTOChampion champion)
         {
-            DTOChampion dTOChampion = new DTOChampion()
-            {
-                Name = Name,
-                Bio = Bio,
-                Class =Class,
-                Icon = Icon,
-                Image =Image
-            };
-            _dataManager.ChampionsMgr.AddItem(dTOChampion.ToChampion());
+            
+            _dataManager.ChampionsMgr.AddItem(champion.ToChampion());
 
         }
 
