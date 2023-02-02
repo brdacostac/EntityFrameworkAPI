@@ -64,23 +64,45 @@ namespace Api.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post( DTOChampion champion)
+        public async Task<IActionResult> Post( DTOChampion champion)
         {
-            
+            if (string.IsNullOrWhiteSpace(champion.Name) || string.IsNullOrWhiteSpace(champion.Image) || string.IsNullOrWhiteSpace(champion.Bio) || string.IsNullOrWhiteSpace(champion.Class) || string.IsNullOrWhiteSpace(champion.Icon))
+                return StatusCode((int)HttpStatusCode.Forbidden, "Les données du champion sont incomplètes");
+
+            int nbItemTotal = await _dataManager.ChampionsMgr.GetNbItems();
+            IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(0, nbItemTotal);
+
+            if (championList.Any(championExist => championExist.Name == champion.Name  || championExist.Bio == champion.Bio))
+                return StatusCode((int)HttpStatusCode.Forbidden, "Le champion existe déjà");
+
             _dataManager.ChampionsMgr.AddItem(champion.ToChampion());
 
+            return StatusCode((int)HttpStatusCode.Created, "Le champion a été créé");
         }
 
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put([FromBody] DTOChampion champion)
         {
+            int nbItemByName = await _dataManager.ChampionsMgr.GetNbItemsByName(champion.Name);
+            if (nbItemByName == 0)
+                return StatusCode((int)HttpStatusCode.NotFound, "Le champion n'existe pas.");
+
+            //Champion championDelete = await _dataManager.ChampionsMgr.GetItemsByName(champion.Name);
+            //await _dataManager.ChampionsMgr.UpdateItem(championDelete, champion.ToChampion());
+            return StatusCode((int)HttpStatusCode.OK, "Le champion a été modifié.");
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(string name)
         {
+            //Champion championDelete = await _dataManager.ChampionsMgr.GetItemsByName(name);
+            //if(championDelete == null)
+            //    return StatusCode((int)HttpStatusCode.Forbidden, "Le champion n'est pas existant");
+
+            return StatusCode((int)HttpStatusCode.OK, "Le champion a été créé");
         }
+
     }
 }
