@@ -1,7 +1,9 @@
 ﻿namespace Shared;
 public interface IGenericDataManager<T>
 {
-    Task<int> GetNbItems();
+
+	Task<T> GetItemByName(string name, string? orderingPropertyName, bool descending = false);
+	Task<int> GetNbItems();
 	Task<IEnumerable<T>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false);
 	Task<int> GetNbItemsByName(string substring);
 	Task<IEnumerable<T>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false);

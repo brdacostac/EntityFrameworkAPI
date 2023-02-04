@@ -37,6 +37,8 @@ namespace StubLib
             return Task.FromResult<T?>(item);
         }
 
+       
+
         internal static Task<bool> DeleteItem<T>(this IList<T> collection, T? item)
         {
             if(item == null)

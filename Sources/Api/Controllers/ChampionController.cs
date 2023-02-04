@@ -33,6 +33,7 @@ namespace Api.Controllers
         {
 
             if(page < 0 || nbItem < 0 )
+                //badRequest?
             {
                 return StatusCode((int)HttpStatusCode.RequestedRangeNotSatisfiable, "Numero de page ou nombre d'item est negatif");
             }
@@ -47,33 +48,32 @@ namespace Api.Controllers
             List<DTOChampion> championListDto = new List<DTOChampion>();
 
             championList.ToList().ForEach(champion => championListDto.Add(champion.ToDto()));
-/*            foreach (Champion champion in championList)
-            {
-                championListDto.Add(champion.ToDto());
-            }*/
             return StatusCode((int)HttpStatusCode.OK, championListDto);
             //return  Ok( championListDto);
         }
 
         // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{name}")]
+        public async Task<IActionResult> Get(string name)
         {
-            return "value";
+            Champion champion = await _dataManager.ChampionsMgr.GetItemByName(name, null);
+            if (champion == null)
+                return StatusCode((int)HttpStatusCode.NotFound, "Le champion n'est pas existant");
+            return StatusCode((int)HttpStatusCode.OK, champion);
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> Post( DTOChampion champion)
+        public async Task<IActionResult> Post([FromBody] DTOChampion champion)
         {
             if (string.IsNullOrWhiteSpace(champion.Name) || string.IsNullOrWhiteSpace(champion.Image) || string.IsNullOrWhiteSpace(champion.Bio) || string.IsNullOrWhiteSpace(champion.Class) || string.IsNullOrWhiteSpace(champion.Icon))
-                return StatusCode((int)HttpStatusCode.Forbidden, "Les données du champion sont incomplètes");
+                return StatusCode((int)HttpStatusCode.BadRequest, "Les données du champion sont incomplètes");
 
             int nbItemTotal = await _dataManager.ChampionsMgr.GetNbItems();
             IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(0, nbItemTotal);
 
             if (championList.Any(championExist => championExist.Name == champion.Name  || championExist.Bio == champion.Bio))
-                return StatusCode((int)HttpStatusCode.Forbidden, "Le champion existe déjà");
+                return StatusCode((int)HttpStatusCode.BadRequest, "Le champion existe déjà");
 
             _dataManager.ChampionsMgr.AddItem(champion.ToChampion());
 
@@ -81,27 +81,28 @@ namespace Api.Controllers
         }
 
         // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> Put([FromBody] DTOChampion champion)
         {
             int nbItemByName = await _dataManager.ChampionsMgr.GetNbItemsByName(champion.Name);
             if (nbItemByName == 0)
                 return StatusCode((int)HttpStatusCode.NotFound, "Le champion n'existe pas.");
 
-            //Champion championDelete = await _dataManager.ChampionsMgr.GetItemsByName(champion.Name);
-            //await _dataManager.ChampionsMgr.UpdateItem(championDelete, champion.ToChampion());
+            Champion championDelete = await _dataManager.ChampionsMgr.GetItemByName(champion.Name,null);
+            await _dataManager.ChampionsMgr.UpdateItem(championDelete, champion.ToChampion());
             return StatusCode((int)HttpStatusCode.OK, "Le champion a été modifié.");
+            //no content
         }
 
         // DELETE api/<ValuesController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{name}")]
         public async Task<IActionResult> Delete(string name)
         {
-            //Champion championDelete = await _dataManager.ChampionsMgr.GetItemsByName(name);
-            //if(championDelete == null)
-            //    return StatusCode((int)HttpStatusCode.Forbidden, "Le champion n'est pas existant");
+            Champion championDelete = await _dataManager.ChampionsMgr.GetItemByName(name,null);
+            if(championDelete == null)
+                return StatusCode((int)HttpStatusCode.NotFound, "Le champion n'est pas existant");
 
-            return StatusCode((int)HttpStatusCode.OK, "Le champion a été créé");
+            return StatusCode((int)HttpStatusCode.OK, "Le champion a été supprimé.");
         }
 
     }

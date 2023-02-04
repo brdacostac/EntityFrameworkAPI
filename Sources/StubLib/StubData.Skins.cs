@@ -74,6 +74,11 @@ namespace StubLib
 
             public Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
                 => parent.skins.UpdateItem(oldItem, newItem);
+
+            public Task<Skin?> GetItemByName(string name, string? orderingPropertyName, bool descending = false)
+            {
+                throw new NotImplementedException();
+            }
         }
 	}
 }
