@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClientApi\ClientApi.csproj" />
     <ProjectReference Include="..\DTOLol\DTOLol.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
     <ProjectReference Include="..\StubLib\StubLib.csproj" />
