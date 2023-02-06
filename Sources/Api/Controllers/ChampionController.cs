@@ -56,10 +56,10 @@ namespace Api.Controllers
         [HttpGet("{name}")]
         public async Task<IActionResult> Get(string name)
         {
-            Champion champion = await _dataManager.ChampionsMgr.GetItemByName(name, null);
+            Champion champion = await _dataManager.ChampionsMgr.GetItemByName(name);
             if (champion == null)
                 return StatusCode((int)HttpStatusCode.NotFound, "Le champion n'est pas existant");
-            return StatusCode((int)HttpStatusCode.OK, champion);
+            return StatusCode((int)HttpStatusCode.OK, champion.ToDto());
         }
 
         // POST api/<ValuesController>
@@ -75,7 +75,9 @@ namespace Api.Controllers
             if (championList.Any(championExist => championExist.Name == champion.Name  || championExist.Bio == champion.Bio))
                 return StatusCode((int)HttpStatusCode.BadRequest, "Le champion existe déjà");
 
-            _dataManager.ChampionsMgr.AddItem(champion.ToChampion());
+
+            /*championResult=_dataManager.ChampionsMgr.AddItem(champion.ToChampion());
+            return CreatedAtAction((GetByName),new {id = 1 },championResult) */
 
             return StatusCode((int)HttpStatusCode.Created, "Le champion a été créé");
         }
@@ -88,7 +90,7 @@ namespace Api.Controllers
             if (nbItemByName == 0)
                 return StatusCode((int)HttpStatusCode.NotFound, "Le champion n'existe pas.");
 
-            Champion championDelete = await _dataManager.ChampionsMgr.GetItemByName(champion.Name,null);
+            Champion championDelete = await _dataManager.ChampionsMgr.GetItemByName(champion.Name);
             await _dataManager.ChampionsMgr.UpdateItem(championDelete, champion.ToChampion());
             return StatusCode((int)HttpStatusCode.OK, "Le champion a été modifié.");
             //no content
@@ -98,10 +100,10 @@ namespace Api.Controllers
         [HttpDelete("{name}")]
         public async Task<IActionResult> Delete(string name)
         {
-            Champion championDelete = await _dataManager.ChampionsMgr.GetItemByName(name,null);
+            Champion championDelete = await _dataManager.ChampionsMgr.GetItemByName(name);
             if(championDelete == null)
                 return StatusCode((int)HttpStatusCode.NotFound, "Le champion n'est pas existant");
-
+            _dataManager.ChampionsMgr.DeleteItem(championDelete);
             return StatusCode((int)HttpStatusCode.OK, "Le champion a été supprimé.");
         }
 

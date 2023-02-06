@@ -30,7 +30,11 @@ namespace ClientApi
             throw new NotImplementedException();
         }
 
-      
+        public Task<DTOChampion> GetItemByName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<DTOChampion>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
             var champions = await _client.GetFromJsonAsync<IEnumerable<DTOChampion>>(UrlApiChampions);
