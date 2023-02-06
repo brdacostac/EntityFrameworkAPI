@@ -32,10 +32,10 @@ namespace Api.Controllers
         public async Task<IActionResult> GetPage(int page,int nbItem)
         {
 
-            if(page < 0 || nbItem < 0 )
-                //badRequest?
+            //badRequest?
+            if (page < 0 || nbItem < 0 )
             {
-                return StatusCode((int)HttpStatusCode.RequestedRangeNotSatisfiable, "Numero de page ou nombre d'item est negatif");
+                return StatusCode((int)HttpStatusCode.BadRequest, "Numero de page ou nombre d'item est negatif");
             }
             int nbItemTotal = await _dataManager.ChampionsMgr.GetNbItems();
 
