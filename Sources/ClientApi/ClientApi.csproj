@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DTOLol\DTOLol.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>
