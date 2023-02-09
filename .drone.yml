@@ -72,6 +72,7 @@ steps:
     when:
       branch:
         - master
+    depends_on: [ tests ]
 
 volumes:
 - name: docs
