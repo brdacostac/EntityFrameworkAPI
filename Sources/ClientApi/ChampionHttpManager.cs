@@ -12,7 +12,7 @@ namespace ClientApi
 {
     public class ChampionHttpManager: IGenericDataManager<DTOChampion>
     {
-        private const string UrlApiChampions = "/api/Champion";
+        private const string UrlApiChampions = "/api/Champions";
         private readonly HttpClient _client;
 
         public ChampionHttpManager(HttpClient client) {
@@ -25,14 +25,16 @@ namespace ClientApi
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteItem(DTOChampion item)
+        public async Task<bool> DeleteItem(DTOChampion item)
         {
-            throw new NotImplementedException();
+            var champions = await _client.GetFromJsonAsync<DTOChampion>($"{UrlApiChampions}/"); //a finire
+            return champions;
         }
 
-        public Task<DTOChampion> GetItemByName(string name)
+        public async Task<DTOChampion> GetItemByName(string name)
         {
-            throw new NotImplementedException();
+            var champions = await _client.GetFromJsonAsync<DTOChampion>($"{UrlApiChampions}/{name}");
+            return champions;
         }
 
         public async Task<IEnumerable<DTOChampion>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
