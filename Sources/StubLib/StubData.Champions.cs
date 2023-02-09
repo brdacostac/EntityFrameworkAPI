@@ -92,14 +92,7 @@ namespace StubLib
 
             public async Task<Champion?> GetItemByName(string name)
             {
-                foreach(var champion in parent.champions)
-                {
-                    if(champion.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return champion;
-                    }
-                }
-                return null;
+                return parent.champions.FirstOrDefault(champ => champ.Name==name);
             }
 
             public Task<IEnumerable<Champion?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName, bool descending = false)

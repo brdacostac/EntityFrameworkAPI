@@ -14,7 +14,7 @@ namespace TestChampion
         public async Task TestGetChampion()
         {
             IDataManager stubData = new StubData();
-            ChampionController controller = new ChampionController(stubData);
+            ChampionsController controller = new ChampionsController(stubData);
             var championResult = await controller.GetAll();
 
             var objectValue =  championResult as ObjectResult;
