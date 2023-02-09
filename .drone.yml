@@ -61,7 +61,7 @@ steps:
   - name: docker-build
     image: plugins/docker
     settings:
-        dockerfile: Sources/Api/Dockerfile
+        dockerfile: Sources/Dockerfile
         context: .
         registry: hub.codefirst.iut.uca.fr
         repo: hub.codefirst.iut.uca.fr/rami.khedair/entityframework_api_lol
