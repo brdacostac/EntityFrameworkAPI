@@ -13,6 +13,7 @@ steps:
       - cd Sources/
       - dotnet restore LeagueOfLegends.sln
       - dotnet build LeagueOfLegends.sln -c Release --no-restore
+      - dotnet publish LeagueOfLegends.sln -c Release --no-restore -o CI_PROJECT_DIR/build/release
 
   - name: tests
     image: mcr.microsoft.com/dotnet/sdk:6.0
@@ -60,8 +61,8 @@ steps:
   - name: docker-build
     image: plugins/docker
     settings:
-        dockerfile: Sources/API/Dockerfile
-        context: .
+        dockerfile: Sources/Dockerfile
+        context: Sources/
         registry: hub.codefirst.iut.uca.fr
         repo: hub.codefirst.iut.uca.fr/rami.khedair/entityframework_api_lol
         username:
@@ -71,6 +72,7 @@ steps:
     when:
       branch:
         - master
+    depends_on: [ tests ]
 
 volumes:
 - name: docs
