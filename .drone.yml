@@ -62,7 +62,7 @@ steps:
     image: plugins/docker
     settings:
         dockerfile: Sources/Dockerfile
-        context: .
+        context: Sources/
         registry: hub.codefirst.iut.uca.fr
         repo: hub.codefirst.iut.uca.fr/rami.khedair/entityframework_api_lol
         username:
