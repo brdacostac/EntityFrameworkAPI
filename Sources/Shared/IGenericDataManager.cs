@@ -2,7 +2,7 @@
 public interface IGenericDataManager<T>
 {
 
-	Task<T> GetItemByName(string name, string? orderingPropertyName, bool descending = false);
+	Task<T> GetItemByName(string name);
 	Task<int> GetNbItems();
 	Task<IEnumerable<T>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false);
 	Task<int> GetNbItemsByName(string substring);

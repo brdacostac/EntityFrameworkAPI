@@ -5,7 +5,7 @@ using DTOLol;
 
 Console.WriteLine("Hello, World!");
 ChampionHttpManager championHttpManager = new ChampionHttpManager(new HttpClient());
-foreach(DTOChampion champ in await championHttpManager.GetChampions())
+foreach(DTOChampion champ in await championHttpManager.GetItems(1,0))
 {
-    Console.WriteLine(champ.Name);
+    Console.Out.WriteLine(champ.Name);
 }

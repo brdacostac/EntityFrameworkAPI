@@ -34,5 +34,7 @@ namespace DTOLol
             get; set;
         }
 
+        public IEnumerable<DTOSkin> skins { get; set; }
+
     }
 }

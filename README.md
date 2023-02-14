@@ -1,4 +1,4 @@
-# prepaLoL
+# PrepaLoL
 
 ## Diagramme de classes du modèle
 ```mermaid

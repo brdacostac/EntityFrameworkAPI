@@ -78,7 +78,7 @@ namespace StubLib
             public Task<RunePage?> UpdateItem(RunePage? oldItem, RunePage? newItem)
                 => parent.runePages.UpdateItem(oldItem, newItem);
 
-            public Task<RunePage?> GetItemByName(string name,string? orderingPropertyName, bool descending = false)
+            public Task<RunePage?> GetItemByName(string name)
             {
                 throw new NotImplementedException();
             }

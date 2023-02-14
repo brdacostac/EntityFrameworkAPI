@@ -89,9 +89,11 @@ namespace StubLib
             public Task<int> GetNbItemsByName(string substring)
                 => parent.champions.GetNbItemsWithFilter(champ => filterByName(champ, substring));
 
-            public  async Task<Champion?> GetItemByName(string name, string? orderingPropertyName, bool descending = false)
-               =>  parent.champions.GetItemsWithFilterAndOrdering(champ => filterByName(champ, name), 0, 1, orderingPropertyName, descending).Result.ElementAt(0);
 
+            public async Task<Champion?> GetItemByName(string name)
+            {
+                return parent.champions.FirstOrDefault(champ => champ.Name==name);
+            }
 
             public Task<IEnumerable<Champion?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName, bool descending = false)
                 => parent.champions.GetItemsWithFilterAndOrdering(champ => filterByName(champ, substring), index, count, orderingPropertyName, descending);
