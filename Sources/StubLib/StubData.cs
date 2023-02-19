@@ -14,7 +14,7 @@ public partial class StubData : IDataManager
         InitRunePages();
     }
 
-    public IChampionsManager ChampionsMgr { get; }
+    public IChampionsManager ChampionsMgr { get; set; }
 
     public ISkinsManager SkinsMgr { get; }
 

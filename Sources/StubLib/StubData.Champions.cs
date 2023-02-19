@@ -22,6 +22,11 @@ namespace StubLib
             public ChampionsManager(StubData parent)
                 => this.parent = parent;
 
+            public ChampionsManager(List<Champion> champions)
+            {
+                this.parent.champions = champions;
+            }
+
             public Task<Champion?> AddItem(Champion? item)
                 => parent.champions.AddItem(item);
 
@@ -85,6 +90,7 @@ namespace StubLib
                                     .Skip(index*count).Take(count));
 
             private Func<Champion, string, bool> filterByName = (champ, substring) => champ.Name.Contains(substring, StringComparison.InvariantCultureIgnoreCase);
+            private List<Champion> champions;
 
             public Task<int> GetNbItemsByName(string substring)
                 => parent.champions.GetNbItemsWithFilter(champ => filterByName(champ, substring));

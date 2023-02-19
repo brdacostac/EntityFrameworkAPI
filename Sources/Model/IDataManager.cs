@@ -5,7 +5,7 @@ namespace Model
 {
 	public interface IDataManager
 	{
-		IChampionsManager ChampionsMgr { get; }
+		IChampionsManager ChampionsMgr { get; set; }
 		ISkinsManager SkinsMgr { get; }
 		IRunesManager RunesMgr { get; }
 		IRunePagesManager RunePagesMgr { get; }

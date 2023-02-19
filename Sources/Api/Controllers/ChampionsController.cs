@@ -21,43 +21,80 @@ namespace Api.Controllers
         }
 
         // GET: api/<ValuesController>
-        [HttpGet(Name = "GetAll")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(0, await _dataManager.ChampionsMgr.GetNbItems());
-            if(championList.Count() == 0) return StatusCode((int)HttpStatusCode.NoContent, championList.Select(e => e.ToDto()));
-            return StatusCode((int)HttpStatusCode.OK, championList.Select(e => e.ToDto()));
-            //regarder quand le contenu est vide, le base ne repond pas
+            try
+            {
+                IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(0, await _dataManager.ChampionsMgr.GetNbItems());
+                if (championList.Count() == 0) return StatusCode((int)HttpStatusCode.NoContent);
+                return StatusCode((int)HttpStatusCode.OK, championList.Select(e => e.ToDto()));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur est survenue lors de la récupération des champions"));
+            }
         }
 
-        [HttpGet( "{page}/{nbItem}")]//?nbpage=
-        public async Task<IActionResult> GetPage(int page,int nbItem)
-        {
+        //[HttpGet( "{page}/{nbItem}")]//?nbpage=
+        //public async Task<IActionResult> GetPage(int page,int nbItem)
+        //{
 
-            //badRequest?
-            if (page < 0 || nbItem < 0 )
+        //    //badRequest?
+        //    if (page < 0 || nbItem < 0 )
+        //    {
+        //        return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Numero de page ou nombre d'item est negatif"));//changer le 416
+        //    }
+        //    int nbItemTotal = await _dataManager.ChampionsMgr.GetNbItems();
+
+        //    if (page >= nbItemTotal/nbItem)
+        //    {
+        //        return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Numero de page est trop grand")); // mettre le message d'error en json
+        //    }
+        //    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(page, nbItem);
+
+        //    List<DTOChampion> championListDto = new List<DTOChampion>();
+
+        //    championList.ToList().ForEach(champion => championListDto.Add(champion.ToDto()));
+        //    return StatusCode((int)HttpStatusCode.OK, championListDto);
+        //    //return  Ok( championListDto);
+        //}
+        [HttpGet("page/{page}/items/{nbItem}")]
+        public async Task<IActionResult> GetPage(int page, int nbItem)
+        {
+            if (page < 0 || nbItem < 0)
             {
                 return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Numero de page ou nombre d'item est negatif"));//changer le 416
             }
+
             int nbItemTotal = await _dataManager.ChampionsMgr.GetNbItems();
 
-            if (page >= nbItemTotal/nbItem)
+            if (page >= nbItemTotal / nbItem)
             {
                 return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Numero de page est trop grand")); // mettre le message d'error en json
             }
-            IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(page, nbItem);
 
-            List<DTOChampion> championListDto = new List<DTOChampion>();
-
-            championList.ToList().ForEach(champion => championListDto.Add(champion.ToDto()));
-            return StatusCode((int)HttpStatusCode.OK, championListDto);
-            //return  Ok( championListDto);
+            try
+            {
+                IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(page, nbItem);
+                List<DTOChampion> championListDto = (List<DTOChampion>)championList.Select(champion => champion.ToDto());
+                return Ok(championListDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { message = "Une erreur s'est produite lors de la récupération des données." });
+            }
         }
+
 
         // GET api/<ValuesController>/5
         [HttpGet("{name}")]
         public async Task<IActionResult> Get(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Le nom du champion ne peut pas être vide."));
+            }
             Champion champion = await _dataManager.ChampionsMgr.GetItemByName(name);
             if (champion == null)
                 return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate("Le champion n'est pas existant"));
@@ -68,8 +105,13 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] DTOChampion champion)
         {
+            //vérifier que le model soit valide
+            if (!ModelState.IsValid)
+                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du champion ne sont pas correctes"));
+
             if (string.IsNullOrWhiteSpace(champion.Name) || string.IsNullOrWhiteSpace(champion.Image) || string.IsNullOrWhiteSpace(champion.Bio) || string.IsNullOrWhiteSpace(champion.Class) || string.IsNullOrWhiteSpace(champion.Icon))
                 return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du champion sont incomplètes"));
+
 
             int nbItemTotal = await _dataManager.ChampionsMgr.GetNbItems();
             IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(0, nbItemTotal);
@@ -78,8 +120,8 @@ namespace Api.Controllers
                 return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Le champion existe déjà"));
 
 
-            /*championResult=_dataManager.ChampionsMgr.AddItem(champion.ToChampion());
-            return CreatedAtAction((GetByName),new {id = 1 },championResult) */
+            var championResult=_dataManager.ChampionsMgr.AddItem(champion.ToChampion());
+            /*return CreatedAtAction((GetByName),new {id = 1 },championResult) */
 
             return StatusCode((int)HttpStatusCode.Created, FactoryMessage.MessageCreate("Le champion a été créé"));
         }
@@ -88,6 +130,12 @@ namespace Api.Controllers
         [HttpPut("{name}")]
         public async Task<IActionResult> Put(string name,[FromBody] DTOChampion champion)
         {
+            if (!ModelState.IsValid)
+                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du champion sont incomplètes"));
+
+            if (string.IsNullOrWhiteSpace(champion.Name) || string.IsNullOrWhiteSpace(champion.Image) || string.IsNullOrWhiteSpace(champion.Bio) || string.IsNullOrWhiteSpace(champion.Class) || string.IsNullOrWhiteSpace(champion.Icon))
+                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du champion sont incomplètes"));
+
             int nbItemByName = await _dataManager.ChampionsMgr.GetNbItemsByName(champion.Name);
             if (nbItemByName == 0)
                 return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate("Le champion n'existe pas."));
