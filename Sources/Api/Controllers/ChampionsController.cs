@@ -15,9 +15,11 @@ namespace Api.Controllers
     public class ChampionsController : ControllerBase
     {
         private readonly IDataManager _dataManager;
-        public ChampionsController(IDataManager dataManger)
+        private readonly ILogger<ChampionsController> _logger;
+        public ChampionsController(IDataManager dataManger, ILogger<ChampionsController> logger)
         {
             _dataManager = dataManger;
+            _logger = logger;
         }
 
         // GET: api/<ValuesController>

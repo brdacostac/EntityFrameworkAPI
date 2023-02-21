@@ -57,7 +57,7 @@ namespace Api.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] DTOSkin skin)
+        public async Task<IActionResult> Post([FromBody] DTOSkinPost skin)
         {
             //vérifier que le model soit valide
             if (!ModelState.IsValid)
@@ -66,15 +66,18 @@ namespace Api.Controllers
             if (string.IsNullOrWhiteSpace(skin.Name) || string.IsNullOrWhiteSpace(skin.Image) || string.IsNullOrWhiteSpace(skin.Description) || float.IsNegative(skin.Price) || string.IsNullOrWhiteSpace(skin.Icon))
                 return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
 
-
             int nbItemTotal = await _dataManager.SkinsMgr.GetNbItems();
             IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItems(0, nbItemTotal);
 
             if (skinList.Any(skinExist => skinExist.Name == skin.Name))
                 return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Le skin existe déjà"));
 
+            Champion champion = await _dataManager.ChampionsMgr.GetItemByName(skin.NameChampion);
+            if (champion == null)
+                return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate("Le champion n'est pas existant"));
 
-            var skinResult = _dataManager.SkinsMgr.AddItem(skin.ToSkin());
+
+            var skinResult = _dataManager.SkinsMgr.AddItem(skin.ToSkin(champion));
             /*return CreatedAtAction((GetByName),new {id = 1 },championResult) */
 
             return StatusCode((int)HttpStatusCode.Created, FactoryMessage.MessageCreate("Le champion a été créé"));

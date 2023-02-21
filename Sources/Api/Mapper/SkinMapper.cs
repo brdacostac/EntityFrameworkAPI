@@ -23,5 +23,10 @@ namespace Api.Mapper
         {
             return new Skin(dTOSkin.Name, dTOSkin.Champion.ToChampion(), dTOSkin.Price, dTOSkin.Icon, dTOSkin.Image, dTOSkin.Description);
         }
+
+        public static Skin ToSkin(this DTOSkinPost dTOSkin, Champion champion)
+        {
+            return new Skin(dTOSkin.Name, champion, dTOSkin.Price, dTOSkin.Icon, dTOSkin.Image, dTOSkin.Description);
+        }
     }
 }
