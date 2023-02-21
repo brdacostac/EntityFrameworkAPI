@@ -16,7 +16,9 @@ namespace DTOLol
         {
             get; set;
         }
-        //public IEnumerable<DTORuneFamily> Family { get; set; }
+        public String Family {
+            get; set; 
+        }
         public String Icon
         {
             get; set;

@@ -10,6 +10,7 @@ namespace Api.Mapper
             DTORune dTORune = new DTORune()
             {
                 Name = rune.Name,
+                Family = rune.Family.ToString(),
                 Description = rune.Description,
                 Icon = rune.Icon,
                 Image = rune.Image.Base64,
@@ -17,12 +18,13 @@ namespace Api.Mapper
             return dTORune;
         }
         
-        /*
+        
         public static Rune ToRune(this DTORune dTORune)
         {
-            return new Rune(dTORune.Name, dTORune.Description, dTORune.Icon, dTORune.Image);
+            RuneFamily runeFamily = Enum.TryParse<RuneFamily>(dTORune.Family, true, out runeFamily) ? runeFamily : RuneFamily.Unknown;
+            return new Rune(dTORune.Name, runeFamily, dTORune.Icon, dTORune.Image, dTORune.Description);
         }
-        */
+        
 
     }
 }

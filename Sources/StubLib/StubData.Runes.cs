@@ -66,7 +66,7 @@ namespace StubLib
 
             public Task<Rune?> GetItemByName(string name)
             {
-                throw new NotImplementedException();
+                return parent.runes.FirstOrDefault(rune => rune.Name == name);
             }
         }
 	}
