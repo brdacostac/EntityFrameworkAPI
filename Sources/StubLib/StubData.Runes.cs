@@ -64,9 +64,9 @@ namespace StubLib
             public Task<Rune?> UpdateItem(Rune? oldItem, Rune? newItem)
                 => parent.runes.UpdateItem(oldItem, newItem);
 
-            public Task<Rune?> GetItemByName(string name)
+            public async Task<Rune?> GetItemByName(string name)
             {
-                throw new NotImplementedException();
+                return parent.runes.FirstOrDefault(rune => rune.Name == name);
             }
         }
 	}
