@@ -84,6 +84,7 @@ steps:
         CONTAINERNAME: entityframework_api_lol
         COMMAND: create
         OVERWRITE: true
+    depends_on: [ docker-build ]
 
 volumes:
 - name: docs
