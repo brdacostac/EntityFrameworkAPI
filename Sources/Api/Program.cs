@@ -16,11 +16,11 @@ builder.Services.AddTransient<IDataManager, StubData>();//un seul pour chque env
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+/*if (app.Environment.IsDevelopment())*/
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+/*}
 else
 {
     app.UseSwagger(c =>
@@ -34,7 +34,7 @@ else
         c.SwaggerEndpoint("/ramikhedair-entityframework_api_lol/swagger", "API V1");
         c.RoutePrefix = "/ramikhedair-entityframework_api_lol/swagger";
     });
-}
+}*/
 
 //app.UseHttpsRedirection();
 
