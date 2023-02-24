@@ -59,10 +59,6 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] DTOSkinPost skin)
         {
-            //vérifier que le model soit valide
-            if (!ModelState.IsValid)
-                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin ne sont pas correctes"));
-
             if (string.IsNullOrWhiteSpace(skin.Name) || string.IsNullOrWhiteSpace(skin.Image) || string.IsNullOrWhiteSpace(skin.Description) || float.IsNegative(skin.Price) || string.IsNullOrWhiteSpace(skin.Icon))
                 return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
 
@@ -83,25 +79,26 @@ namespace Api.Controllers
             return StatusCode((int)HttpStatusCode.Created, FactoryMessage.MessageCreate("Le champion a été créé"));
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{name}")]
-        public async Task<IActionResult> Put(string name, [FromBody] DTOSkin skin)
-        {
-            if (!ModelState.IsValid)
-                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
+        //// PUT api/<ValuesController>/5
+        //[HttpPut("{name}")]
+        //public async Task<IActionResult> Put(string name, [FromBody] DTOSkin skin)
+        //{
+        //    //fait automatiquement pour les champs required ...
+        //    //if (!ModelState.IsValid)
+        //    //    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
 
-            if (string.IsNullOrWhiteSpace(skin.Name) || string.IsNullOrWhiteSpace(skin.Image) || string.IsNullOrWhiteSpace(skin.Description) || float.IsNegative(skin.Price) || string.IsNullOrWhiteSpace(skin.Icon))
-                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
+        //    if (string.IsNullOrWhiteSpace(skin.Name) || string.IsNullOrWhiteSpace(skin.Image) || string.IsNullOrWhiteSpace(skin.Description) || float.IsNegative(skin.Price) || string.IsNullOrWhiteSpace(skin.Icon))
+        //        return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
 
-            int nbItemByName = await _dataManager.SkinsMgr.GetNbItemsByName(skin.Name);
-            if (nbItemByName == 0)
-                return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate("Le skin n'existe pas."));
+        //    int nbItemByName = await _dataManager.SkinsMgr.GetNbItemsByName(skin.Name);
+        //    if (nbItemByName == 0)
+        //        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate("Le skin n'existe pas."));
 
-            Skin skinUpdate = await _dataManager.SkinsMgr.GetItemByName(name);
-            await _dataManager.SkinsMgr.UpdateItem(skinUpdate, skin.ToSkin());
-            return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate("Le skin a été modifié."));
-            //no content
-        }
+        //    Skin skinUpdate = await _dataManager.SkinsMgr.GetItemByName(name);
+        //    await _dataManager.SkinsMgr.UpdateItem(skinUpdate, skin.ToSkin());
+        //    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate("Le skin a été modifié."));
+        //    //no content
+        //}
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{name}")]
