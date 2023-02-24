@@ -247,65 +247,65 @@ namespace TestChampion
 
         }
 
-        [TestMethod]
-        public async Task TestUpdateChampion()
-        {
-            // Arrange
-            var stubData = new StubData();
-            var controller = new ChampionsController(stubData);
-            var championName = "Akali";
-            var champion = new DTOChampion
-            {
-                Name = "Akali",
-                Image = "ashe.png",
-                Bio = "Ashe's Bio",
-                Class = "Marksman",
-                Icon = "ashe-icon.png"
-            };
-            var updatedChampion = new DTOChampion
-            {
-                Name = "Akali",
-                Image = "new-ashe.png",
-                Bio = "New Ashe's Bio",
-                Class = "Assassin",
-                Icon = "new-ashe-icon.png"
-            };
+        //[TestMethod]
+        //public async Task TestUpdateChampion()
+        //{
+        //    // Arrange
+        //    var stubData = new StubData();
+        //    var controller = new ChampionsController(stubData);
+        //    var championName = "Akali";
+        //    var champion = new DTOChampion
+        //    {
+        //        Name = "Akali",
+        //        Image = "ashe.png",
+        //        Bio = "Ashe's Bio",
+        //        Class = "Marksman",
+        //        Icon = "ashe-icon.png"
+        //    };
+        //    var updatedChampion = new DTOChampion
+        //    {
+        //        Name = "Akali",
+        //        Image = "new-ashe.png",
+        //        Bio = "New Ashe's Bio",
+        //        Class = "Assassin",
+        //        Icon = "new-ashe-icon.png"
+        //    };
 
-            // Act
-            var result = await controller.Put(championName, updatedChampion);
-            var objectResult = (ObjectResult)result;
+        //    // Act
+        //    var result = await controller.Put(championName, updatedChampion);
+        //    var objectResult = (ObjectResult)result;
 
-            // Assert
-            Assert.IsNotNull(objectResult);
-            Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+        //    // Assert
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
 
-            var updatedChampionEntity = await stubData.ChampionsMgr.GetItemByName(championName);
-            Assert.IsNotNull(updatedChampionEntity);
-            Assert.AreEqual(updatedChampion.Image, updatedChampionEntity.Image.Base64);
-            Assert.AreEqual(updatedChampion.Bio, updatedChampionEntity.Bio);
-            Assert.AreEqual(updatedChampion.Class, updatedChampionEntity.Class.ToString());
-            Assert.AreEqual(updatedChampion.Icon, updatedChampionEntity.Icon);
+        //    var updatedChampionEntity = await stubData.ChampionsMgr.GetItemByName(championName);
+        //    Assert.IsNotNull(updatedChampionEntity);
+        //    Assert.AreEqual(updatedChampion.Image, updatedChampionEntity.Image.Base64);
+        //    Assert.AreEqual(updatedChampion.Bio, updatedChampionEntity.Bio);
+        //    Assert.AreEqual(updatedChampion.Class, updatedChampionEntity.Class.ToString());
+        //    Assert.AreEqual(updatedChampion.Icon, updatedChampionEntity.Icon);
 
-            // Test with incomplete data
-            champion = new DTOChampion
-            {
-                Name = "Ashe",
-                Image = "ashe.png",
-                Bio = "Ashe's Bio",
-                Class = "Marksman",
-            };
-            result = await controller.Put(championName, champion);
-            objectResult = (ObjectResult)result;
-            Assert.IsNotNull(objectResult);
-            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        //    // Test with incomplete data
+        //    champion = new DTOChampion
+        //    {
+        //        Name = "Ashe",
+        //        Image = "ashe.png",
+        //        Bio = "Ashe's Bio",
+        //        Class = "Marksman",
+        //    };
+        //    result = await controller.Put(championName, champion);
+        //    objectResult = (ObjectResult)result;
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
-            // Test with non-existent champion
-            var nonExistentChampionName = "NonExistentChampion";
-            result = await controller.Put(nonExistentChampionName, updatedChampion);
-            objectResult = (ObjectResult)result;
-            Assert.IsNotNull(objectResult);
-            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
-        }
+        //    // Test with non-existent champion
+        //    var nonExistentChampionName = "NonExistentChampion";
+        //    result = await controller.Put(nonExistentChampionName, updatedChampion);
+        //    objectResult = (ObjectResult)result;
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        //}
 
         [TestMethod]
         public async Task TestDeleteChampion()

@@ -16,10 +16,15 @@ namespace Api.Controllers
     {
         private readonly IDataManager _dataManager;
         private readonly ILogger<ChampionsController> _logger;
-        public ChampionsController(IDataManager dataManger, ILogger<ChampionsController> logger)
+        //public ChampionsController(IDataManager dataManger, ILogger<ChampionsController> logger)
+        //{
+        //    _dataManager = dataManger;
+        //    _logger = logger;
+        //}
+
+        public ChampionsController(IDataManager dataManger)
         {
             _dataManager = dataManger;
-            _logger = logger;
         }
 
         // GET: api/<ValuesController>
