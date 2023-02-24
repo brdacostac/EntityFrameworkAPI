@@ -16,9 +16,9 @@ builder.Services.AddTransient<IDataManager, StubData>();//un seul pour chque env
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-/*if (app.Environment.IsDevelopment())*/
-{
-    app.UseSwagger();
+/*if (app.Environment.IsDevelopment())
+{*/
+app.UseSwagger();
     app.UseSwaggerUI();
 /*}
 else
