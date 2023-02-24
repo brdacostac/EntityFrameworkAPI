@@ -34,7 +34,7 @@ namespace Api.Controllers
             }
         }
 
-        [HttpGet("page/{page}/items/{nbItem}")]
+       /* [HttpGet("page/{page}/items/{nbItem}")]
         public async Task<IActionResult> GetPage(int page, int nbItem)
         {
             if (page < 0 || nbItem < 0)
@@ -59,7 +59,7 @@ namespace Api.Controllers
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, new { message = "Une erreur s'est produite lors de la récupération des données." });
             }
-        }
+        }*/
 
         // GET api/<ValuesController>/5
         [HttpGet("{name}")]
@@ -90,7 +90,7 @@ namespace Api.Controllers
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données de la rune ne sont pas correctes"));
 
                 if (string.IsNullOrWhiteSpace(rune.Name) || string.IsNullOrWhiteSpace(rune.Image) || string.IsNullOrWhiteSpace(rune.Description) || string.IsNullOrWhiteSpace(rune.Family) || string.IsNullOrWhiteSpace(rune.Icon))
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du champion sont incomplètes"));
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données de la rune sont incomplètes"));
 
 
                 int nbItemTotal = await _dataManager.RunesMgr.GetNbItems();
