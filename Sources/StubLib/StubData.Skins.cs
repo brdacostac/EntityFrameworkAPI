@@ -75,9 +75,9 @@ namespace StubLib
             public Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
                 => parent.skins.UpdateItem(oldItem, newItem);
 
-            public Task<Skin?> GetItemByName(string name)
+            public async Task<Skin?> GetItemByName(string name)
             {
-                throw new NotImplementedException();
+                return parent.skins.FirstOrDefault(skin => skin.Name == name);
             }
         }
 	}

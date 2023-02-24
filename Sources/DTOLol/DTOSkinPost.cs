@@ -1,8 +1,13 @@
 ﻿using Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DTOLol
 {
-    public class DTOSkin
+    public class DTOSkinPost
     {
         public String Name
         {
@@ -19,7 +24,7 @@ namespace DTOLol
             get; set;
         }
 
-        public DTOChampion Champion
+        public String NameChampion
         {
             get; set;
         }
@@ -33,5 +38,6 @@ namespace DTOLol
         {
             get; set;
         }
+
     }
 }
