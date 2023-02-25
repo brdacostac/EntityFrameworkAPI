@@ -28,8 +28,9 @@ else
 
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/ramikhedair-entityframework_api_lol/swagger", "Api V1");
-        c.RoutePrefix = "/ramikhedair-entityframework_api_lol/swagger";
+        c.SwaggerEndpoint("/containers/ramikhedair-entityframework_api_lol/swagger/index.html", "Api V1");
+        c.RoutePrefix = "/containers/ramikhedair-entityframework_api_lol/swagger/index.html";
+        c.ConfigObject.AdditionalItems.Add("url", "/containers/ramikhedair-entityframework_api_lol/swagger/index.html");
     });
 }
 
