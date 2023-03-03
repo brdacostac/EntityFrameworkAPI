@@ -38,8 +38,8 @@ namespace ClientApi
 
         public async Task<IEnumerable<Champion>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
-            var dtoChampions = await _client.GetFromJsonAsync<IEnumerable<DTOChampion>>(UrlApiChampions);
-            List<Champion> champions = (List<Champion>)dtoChampions.Select(champion => champion.ToChampion());
+            var dtoChampions = await _client.GetFromJsonAsync<List<DTOChampion>>(UrlApiChampions);
+            List<Champion> champions = dtoChampions.Select(champion => champion.ToChampion()).ToList();
             return champions;
         }
 

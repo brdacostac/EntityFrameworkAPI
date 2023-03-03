@@ -1,5 +1,4 @@
 using Api.Controllers;
-using ClientApi;
 using DTOLol;
 using Microsoft.AspNetCore.Mvc;
 using Model;
