@@ -21,7 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
+/*else
 {
     app.UseSwagger();
 
@@ -31,7 +31,7 @@ else
         c.SwaggerEndpoint("/ramikhedair-entityframework_api_lol/swagger", "Api V1");
         c.RoutePrefix = "/ramikhedair-entityframework_api_lol/swagger";
     });
-}
+}*/
 
 //app.UseHttpsRedirection();
 
