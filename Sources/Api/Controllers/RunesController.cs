@@ -25,6 +25,10 @@ namespace Api.Controllers
         {
             try
             {
+
+                if (count > 25) return StatusCode((int)HttpStatusCode.BadRequest);
+                if (count <= 0) return StatusCode((int)HttpStatusCode.BadRequest);
+
                 int totalItemCount = await _dataManager.RunesMgr.GetNbItems();
                 int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
                 int actualCount = count.HasValue ? count.Value : totalItemCount;
