@@ -13,6 +13,9 @@ builder.Services.AddSingleton<IDataManager, StubData>(); //un seul pour tout le 
 /*builder.Services.AddScoped<IDataManager, StubData>();//un seul pour le cycle de vie de l'environnement //c est le meuilleur si on sait pas
 builder.Services.AddTransient<IDataManager, StubData>();//un seul pour chque environnment demainder un nouveua instance*/
 
+builder.Logging.AddConsole();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
