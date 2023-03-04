@@ -1,18 +1,14 @@
 ﻿using DTOLol;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
 using Shared;
-
-using System.Threading.Tasks;
+using Model;
+using Api.Mapper;
 
 namespace ClientApi
 {
-    public class ChampionHttpManager: IGenericDataManager<DTOChampion>
+    public class ChampionHttpManager: IChampionsManager
     {
-        private const string UrlApiChampions = "/api/Champion";
+        private const string UrlApiChampions = "/api/Champions";
         private readonly HttpClient _client;
 
         public ChampionHttpManager(HttpClient client) {
@@ -20,28 +16,59 @@ namespace ClientApi
             client.BaseAddress = new Uri("https://localhost:7091");
         }
 
-        public Task<DTOChampion> AddItem(DTOChampion item)
+        public async Task<Champion> AddItem(Champion item)
         {
-            throw new NotImplementedException();
+            var resp=await _client.PostAsJsonAsync($"{UrlApiChampions}", item.ToDto());
+
+            return item;
         }
 
-        public Task<bool> DeleteItem(DTOChampion item)
+        public async Task<bool> DeleteItem(Champion item)
         {
-            throw new NotImplementedException();
+
+            var champions = await _client.DeleteAsync($"{UrlApiChampions}/{item.Name}"); //a finire
+            return true;
         }
 
-        public Task<DTOChampion> GetItemByName(string name)
+        public async Task<Champion> GetItemByName(string name)
         {
-            throw new NotImplementedException();
+            var champions = await _client.GetFromJsonAsync<DTOChampion>($"{UrlApiChampions}/{name}");
+            return champions.ToChampion();
         }
 
-        public async Task<IEnumerable<DTOChampion>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
+        public async Task<IEnumerable<Champion>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
-            var champions = await _client.GetFromJsonAsync<IEnumerable<DTOChampion>>(UrlApiChampions);
+            var dtoChampions = await _client.GetFromJsonAsync<List<DTOChampion>>(UrlApiChampions);
+            List<Champion> champions = dtoChampions.Select(champion => champion.ToChampion()).ToList();
             return champions;
         }
 
-        public Task<IEnumerable<DTOChampion>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
+        public Task<IEnumerable<Champion?>> GetItemsByCharacteristic(string charName, int index, int count, string? orderingPropertyName = null, bool descending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Champion?>> GetItemsByClass(ChampionClass championClass, int index, int count, string? orderingPropertyName = null, bool descending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Champion>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Champion?>> GetItemsByRunePage(RunePage? runePage, int index, int count, string? orderingPropertyName = null, bool descending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Champion?>> GetItemsBySkill(string skill, int index, int count, string? orderingPropertyName = null, bool descending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Champion?>> GetItemsBySkill(Skill? skill, int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
             throw new NotImplementedException();
         }
@@ -51,12 +78,42 @@ namespace ClientApi
             throw new NotImplementedException();
         }
 
+        public Task<int> GetNbItemsByCharacteristic(string charName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetNbItemsByClass(ChampionClass championClass)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<int> GetNbItemsByName(string substring)
         {
             throw new NotImplementedException();
         }
 
-        public Task<DTOChampion> UpdateItem(DTOChampion oldItem, DTOChampion newItem)
+        public Task<int> GetNbItemsByRunePage(RunePage? runePage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetNbItemsBySkill(Skill? skill)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetNbItemsBySkill(string skill)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Champion> UpdateItem(Champion oldItem, Champion newItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Champion?>> IGenericDataManager<Champion?>.GetItems(int index, int count, string? orderingPropertyName, bool descending)
         {
             throw new NotImplementedException();
         }

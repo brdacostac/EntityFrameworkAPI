@@ -24,7 +24,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
+/*else
 {
     app.UseSwagger();
 
@@ -35,7 +35,7 @@ else
         c.RoutePrefix = "/containers/ramikhedair-entityframework_api_lol/swagger";
         c.ConfigObject.AdditionalItems.Add("url", "/containers/ramikhedair-entityframework_api_lol/swagger");
     });
-}
+}*/
 
 //app.UseHttpsRedirection();
 
