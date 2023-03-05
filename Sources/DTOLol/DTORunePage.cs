@@ -10,7 +10,7 @@ namespace DTOLol
     {
         public string Name { get; set; }
 
-        Dictionary<string,DTORune> DTORune { get; set; }
+        public Dictionary<string,DTORune> DTORuneDic { get; set; }
 
 
     }
