@@ -21,7 +21,7 @@ namespace Api.Controllers
         // GET: api/<ValuesController>
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(int? startIndex = null, int? count = 4, string? name = null)
+        public async Task<IActionResult> GetAll(int? startIndex = null, int? count = 50, string? name = null)
         {
             try
             {

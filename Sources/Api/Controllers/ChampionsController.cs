@@ -24,13 +24,40 @@ namespace Api.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int? startIndex = null, int? count = 50, string? name = null)
         {
             try
             {
-                IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(0, await _dataManager.ChampionsMgr.GetNbItems());
+
+                if (count > 25) return StatusCode((int)HttpStatusCode.BadRequest);
+                if (count <= 0) return StatusCode((int)HttpStatusCode.BadRequest);
+
+                int totalItemCount = await _dataManager.ChampionsMgr.GetNbItems();
+                int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
+                int actualCount = count.HasValue ? count.Value : totalItemCount;
+                IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(actualStartIndex, actualCount);
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    championList = championList.Where(r => r.Name.Contains(name));
+                }
+
                 if (championList.Count() == 0) return StatusCode((int)HttpStatusCode.NoContent);
-                return StatusCode((int)HttpStatusCode.OK, championList.Select(e => e.ToDto()));
+
+                int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
+                int currentPage = actualStartIndex / actualCount + 1;
+                int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
+
+                var result = new
+                {
+                    currentPage = currentPage,
+                    nextPage = nextPage,
+                    totalPages = totalPages,
+                    totalCount = totalItemCount,
+                    items = championList.Select(e => e.ToDto())
+                };
+
+                return StatusCode((int)HttpStatusCode.OK, result);
             }
             catch (Exception ex)
             {

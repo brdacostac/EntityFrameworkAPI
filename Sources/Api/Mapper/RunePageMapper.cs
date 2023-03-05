@@ -23,7 +23,9 @@ namespace Api.Mapper
         {
             Category tmp;
            Dictionary<Category,Rune > runDico = dTORune.DTORuneDic.ToDictionary(
-               r =>, r => r.Value.ToRune());
+               r => (RunePage.Category)Enum.Parse(typeof(RunePage.Category), r.Key),
+               r => r.Value.ToRune()
+           );
 
             RunePage runePage = new RunePage(dTORune.Name);
             foreach (var rune in dTORune.DTORuneDic)
