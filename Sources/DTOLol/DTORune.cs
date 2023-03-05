@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOLol
 {
-    public class DTORune
+    public class DTORunePage
     {
         public String Name
         {
