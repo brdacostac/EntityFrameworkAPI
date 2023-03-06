@@ -20,13 +20,40 @@ namespace Api.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int? startIndex = null, int? count = 20, string? name = null)
         {
             try
             {
-                IEnumerable<Skin> skinsList = await _dataManager.SkinsMgr.GetItems(0, await _dataManager.SkinsMgr.GetNbItems());
+
+                if (count > 25) return StatusCode((int)HttpStatusCode.BadRequest);
+                if (count <= 0) return StatusCode((int)HttpStatusCode.BadRequest);
+
+                int totalItemCount = await _dataManager.SkinsMgr.GetNbItems();
+                int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
+                int actualCount = count.HasValue ? count.Value : totalItemCount;
+                IEnumerable<Skin> skinsList = await _dataManager.SkinsMgr.GetItems(actualStartIndex, actualCount);
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    skinsList = skinsList.Where(r => r.Name.Contains(name));
+                }
+
                 if (skinsList.Count() == 0) return StatusCode((int)HttpStatusCode.NoContent);
-                return StatusCode((int)HttpStatusCode.OK, skinsList.Select(e => e.ToDto()));
+
+                int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
+                int currentPage = actualStartIndex / actualCount + 1;
+                int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
+
+                var result = new
+                {
+                    currentPage = currentPage,
+                    nextPage = nextPage,
+                    totalPages = totalPages,
+                    totalCount = totalItemCount,
+                    items = skinsList.Select(e => e.ToDto())
+                };
+
+                return StatusCode((int)HttpStatusCode.OK, result);
             }
             catch (Exception ex)
             {

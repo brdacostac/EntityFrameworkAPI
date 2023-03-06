@@ -6,15 +6,11 @@ using Api.Mapper;
 
 namespace ClientApi
 {
-    public class ChampionHttpManager: IChampionsManager
+    public class ChampionHttpManager: HttpManager, IChampionsManager 
     {
         private const string UrlApiChampions = "/api/Champions";
-        private readonly HttpClient _client;
 
-        public ChampionHttpManager(HttpClient client) {
-            _client = client;
-            client.BaseAddress = new Uri("https://localhost:7091");
-        }
+        public ChampionHttpManager(HttpClient client) : base(client){ }
 
 
         //Complet
