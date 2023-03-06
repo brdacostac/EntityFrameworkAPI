@@ -101,7 +101,7 @@ namespace Api.Controllers
 
                 var successMessage = $"Le champion {name} a été modifié ajouté avec succès.";
                 _logger.LogInformation(successMessage);
-                return StatusCode((int)HttpStatusCode.OK, champion.ToDto());
+                return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<DTOChampion>(successMessage, champion.ToDto()));
             }
             catch (Exception ex)
             {
@@ -153,7 +153,7 @@ namespace Api.Controllers
             {
                 var errorMessage = $"Erreur de base de donnée lors de l'ajout du champion {champion.Name}";
                 _logger.LogError(errorMessage, ex);
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { message = errorMessage });
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
             }
 
         }
@@ -194,7 +194,7 @@ namespace Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Erreur de base de donnée lors de la modification du champion {name}", ex);
-                return StatusCode((int)HttpStatusCode.InternalServerError, new { message = "Une erreur s'est produite en base de données." });
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur s'est produite en base de données."));
             }
         }
 
@@ -218,7 +218,7 @@ namespace Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"Erreur de base de donnée lors de la suppression du champion {name}",ex);
-                return StatusCode((int) HttpStatusCode.InternalServerError, new { message = "Une erreur s'est produite lors de la récupération des données." });
+                return StatusCode((int) HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur s'est produite lors de la récupération des données."));
             }
         }
 

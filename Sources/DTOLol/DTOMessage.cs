@@ -18,5 +18,21 @@ namespace DTOLol
             Data = data;
         }
 
+
+
+    }
+
+
+
+    public class DTOMessage
+    {
+        public string Message { get; set; }
+
+
+        public DTOMessage(string message)
+        {
+            Message = message;
+        }
+
     }
 }
