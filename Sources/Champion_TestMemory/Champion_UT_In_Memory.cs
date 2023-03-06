@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Champion_TestMemory
 {
-    public class Champion_UT
+    public class Champion_UT_In_Memory
     {
         [Fact]
         public void Add_Test()
@@ -34,7 +34,6 @@ namespace Champion_TestMemory
             //prepares the database with one instance of the context
             using (var context = new ChampionsDbContexte(options))
             {
-                context.Database.EnsureCreated();
                 Assert.Equal(3, context.ChampionsSet.Count());
                 Assert.Equal("Gnar", context.ChampionsSet.First().Name);
             }
@@ -64,8 +63,6 @@ namespace Champion_TestMemory
             //uses another instance of the context to do the tests
             using (var context = new ChampionsDbContexte(options))
             {
-                context.Database.EnsureCreated();
-
                 string nameToFind = "nar";
                 Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
                 nameToFind = "vlad";
@@ -78,8 +75,6 @@ namespace Champion_TestMemory
             //uses another instance of the context to do the tests
             using (var context = new ChampionsDbContexte(options))
             {
-                context.Database.EnsureCreated();
-
                 string nameToFind = "nar";
                 Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
                 nameToFind = "annie";
