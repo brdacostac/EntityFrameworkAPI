@@ -362,5 +362,5 @@ namespace TestChampion
     //        Assert.IsNotNull(objectResult);
     //        Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
     //    }
-    //}
+    }
 }

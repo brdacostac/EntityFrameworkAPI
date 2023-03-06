@@ -1,0 +1,90 @@
+using Entity_framework;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Xunit;
+
+namespace Champion_TestMemory
+{
+    public class Champion_UT
+    {
+        [Fact]
+        public void Add_Test()
+        {
+            //connection must be opened to use In-memory database
+            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+                .UseInMemoryDatabase(databaseName: "Add_Test_Database")
+                .Options;
+
+
+            //prepares the database with one instance of the context
+            using (var context = new ChampionsDbContexte(options))
+            {
+
+                ChampionDB Gnar = new ChampionDB { Name = "Gnar", Bio = "Teste gnar", Icon = "dzadaz" };
+                ChampionDB Vladimir = new ChampionDB { Name = "Vladimir", Bio = "Teste Vlad", Icon = "dzadaz" };
+                ChampionDB Corki = new ChampionDB { Name = "Corki", Bio = "Teste Corki", Icon = "dzadaz" };
+
+                context.ChampionsSet.Add(Gnar);
+                context.ChampionsSet.Add(Vladimir);
+                context.ChampionsSet.Add(Corki);
+                context.SaveChanges();
+            }
+
+            //prepares the database with one instance of the context
+            using (var context = new ChampionsDbContexte(options))
+            {
+                context.Database.EnsureCreated();
+                Assert.Equal(3, context.ChampionsSet.Count());
+                Assert.Equal("Gnar", context.ChampionsSet.First().Name);
+            }
+        }
+
+        [Fact]
+        public void Modify_Test()
+        {
+            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+                .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
+                .Options;
+
+            //prepares the database with one instance of the context
+            using (var context = new ChampionsDbContexte(options))
+            {
+
+                ChampionDB gnar = new ChampionDB { Name = "Gnar", Bio = "Teste gnar", Icon = "dzadaz" };
+                ChampionDB vladimir = new ChampionDB { Name = "Vladimir", Bio = "Teste Vlad", Icon = "dzadaz" };
+                ChampionDB corki = new ChampionDB { Name = "Corki", Bio = "Teste Corki", Icon = "dzadaz" };
+
+                context.ChampionsSet.Add(gnar);
+                context.ChampionsSet.Add(vladimir);
+                context.ChampionsSet.Add(corki);
+                context.SaveChanges();
+            }
+
+            //uses another instance of the context to do the tests
+            using (var context = new ChampionsDbContexte(options))
+            {
+                context.Database.EnsureCreated();
+
+                string nameToFind = "nar";
+                Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
+                nameToFind = "vlad";
+                Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
+                var corki = context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).First();
+                corki.Name = "Annie";
+                context.SaveChanges();
+            }
+
+            //uses another instance of the context to do the tests
+            using (var context = new ChampionsDbContexte(options))
+            {
+                context.Database.EnsureCreated();
+
+                string nameToFind = "nar";
+                Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
+                nameToFind = "annie";
+                Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
+            }
+        }
+    }
+}
