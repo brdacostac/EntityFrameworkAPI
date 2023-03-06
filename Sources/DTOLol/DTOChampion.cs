@@ -34,7 +34,10 @@ namespace DTOLol
             get; set;
         }
 
-        public IEnumerable<DTOSkin> skins { get; set; }
+        public IEnumerable<DTOSkin>? Skins { get; set; }
+        public IEnumerable<DTOSkill>? Skills { get; set; }
+        public Dictionary<string, int>? Characteristics { get; set; }
+
 
     }
 }

@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace DTOLol
 {
-    public class DTOMessage
+    public class DTOMessage<T>
     {
         public string Message { get; set; }
 
-        public DTOMessage(string message)
+        public T Data { get; set; }
+
+        public DTOMessage(string message, T data = default)
         {
             Message = message;
+            Data = data;
         }
 
     }
