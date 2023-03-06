@@ -11,13 +11,11 @@ namespace Champion_TestMemory
         [Fact]
         public void Add_Test()
         {
-            //connection must be opened to use In-memory database
             var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Add_Test_Database")
                 .Options;
 
 
-            //prepares the database with one instance of the context
             using (var context = new ChampionsDbContexte(options))
             {
 
@@ -31,7 +29,6 @@ namespace Champion_TestMemory
                 context.SaveChanges();
             }
 
-            //prepares the database with one instance of the context
             using (var context = new ChampionsDbContexte(options))
             {
                 Assert.Equal(3, context.ChampionsSet.Count());
@@ -46,7 +43,6 @@ namespace Champion_TestMemory
                 .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
                 .Options;
 
-            //prepares the database with one instance of the context
             using (var context = new ChampionsDbContexte(options))
             {
 
@@ -60,19 +56,18 @@ namespace Champion_TestMemory
                 context.SaveChanges();
             }
 
-            //uses another instance of the context to do the tests
             using (var context = new ChampionsDbContexte(options))
             {
                 string nameToFind = "nar";
                 Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
                 nameToFind = "vlad";
                 Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
-                var corki = context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).First();
-                corki.Name = "Annie";
+
+                var vladimir = context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).First();
+                vladimir.Name = "Annie";
                 context.SaveChanges();
             }
 
-            //uses another instance of the context to do the tests
             using (var context = new ChampionsDbContexte(options))
             {
                 string nameToFind = "nar";
