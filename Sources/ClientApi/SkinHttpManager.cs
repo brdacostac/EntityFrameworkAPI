@@ -45,6 +45,10 @@ namespace ClientApi
             throw new NotImplementedException();
         }
 
+        public Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
+        {
+            throw new NotImplementedException();
+        }
         public Task<int> GetNbItems()
         {
             throw new NotImplementedException();
@@ -56,11 +60,6 @@ namespace ClientApi
         }
 
         public Task<int> GetNbItemsByName(string substring)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
         {
             throw new NotImplementedException();
         }
