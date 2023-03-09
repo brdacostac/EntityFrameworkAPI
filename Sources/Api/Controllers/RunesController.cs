@@ -13,8 +13,8 @@ namespace Api.Controllers
     public class RunesController : ControllerBase
     {
         private readonly IDataManager _dataManager;
-        private readonly ILogger<ChampionsController> _logger;
-        public RunesController(IDataManager dataManger, ILogger<ChampionsController> logger)
+        private readonly ILogger<RunesController> _logger;
+        public RunesController(IDataManager dataManger, ILogger<RunesController> logger)
         {
             _dataManager = dataManger;
             _logger = logger;
@@ -119,53 +119,9 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                var errorMessage = $"Une erreur est survenue lors de la récupération des champions : {ex.Message}";
+                var errorMessage = $"Une erreur est survenue lors de la récupération des runes : {ex.Message}";
                 _logger.LogError(errorMessage);
                 return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
-            }
-        }
-
-        // GET: api/<ValuesController>
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll(int? startIndex = null, int? count = 20, string? name = null)
-        {
-            try
-            {
-
-                if (count > 25) return StatusCode((int)HttpStatusCode.BadRequest);
-                if (count <= 0) return StatusCode((int)HttpStatusCode.BadRequest);
-
-                int totalItemCount = await _dataManager.RunesMgr.GetNbItems();
-                int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                int actualCount = count.HasValue ? count.Value : totalItemCount;
-                IEnumerable<Rune> runeList = await _dataManager.RunesMgr.GetItems(actualStartIndex, actualCount);
-
-                if (!string.IsNullOrEmpty(name))
-                {
-                    runeList = runeList.Where(r => r.Name.Contains(name));
-                }
-
-                if (runeList.Count() == 0) return StatusCode((int)HttpStatusCode.NoContent);
-
-                int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                int currentPage = actualStartIndex / actualCount + 1;
-                int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
-
-                var result = new
-                {
-                    currentPage = currentPage,
-                    nextPage = nextPage,
-                    totalPages = totalPages,
-                    totalCount = totalItemCount,
-                    items = runeList.Select(e => e.ToDto())
-                };
-
-                return StatusCode((int)HttpStatusCode.OK, result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur est survenue lors de la récupération des runes"));
             }
         }
 
@@ -176,25 +132,25 @@ namespace Api.Controllers
             try { 
                 if (string.IsNullOrEmpty(name))
                 {
-                    var message = $"Le nom de la rune ne peut pas être vide.";
+                    var message = $"Le nom de la page de rune ne peut pas être vide.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
-                Rune rune = await _dataManager.RunesMgr.GetItemByName(name);
+                RunePage rune = await _dataManager.RunePagesMgr.GetItemByName(name);
                 if (rune == null)
                 {
-                    var message = $"La rune {name} n'est pas existante.";
+                    var message = $"La page de rune {name} n'est pas existante.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                 }
 
-                var successMessage = $"La rune {name} a été modifié ajouté avec succès.";
+                var successMessage = $"La page de rune {name} a été récupé avec succès.";
                 _logger.LogInformation(successMessage);
                 return StatusCode((int)HttpStatusCode.OK, rune.ToDto());
             }
             catch (Exception ex)
             {
-                var errorMessage = $"Erreur de base de donnée lors de la récupération de la rune {name}";
+                var errorMessage = $"Erreur de base de donnée lors de la récupération de la page de rune {name}";
                 _logger.LogError(errorMessage, ex);
                 return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
             }
@@ -202,42 +158,42 @@ namespace Api.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] DTORune rune)
+        public async Task<IActionResult> Post([FromBody] DTORunePage runepage)
         {
             try {
                 if (!ModelState.IsValid)
                 {
-                    var message = $"Les données de la rune ne sont pas correctes";
+                    var message = $"Les données de la page de rune ne sont pas correctes";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
-                if (string.IsNullOrWhiteSpace(rune.Name) || string.IsNullOrWhiteSpace(rune.Image) || string.IsNullOrWhiteSpace(rune.Description) || string.IsNullOrWhiteSpace(rune.Family) || string.IsNullOrWhiteSpace(rune.Icon))
+                if (string.IsNullOrWhiteSpace(runepage.Name))
                 {
-                    var message = $"La rune {rune.Name} a des données incomplétés.";
+                    var message = $"La page de rune {runepage.Name} a des données incomplétés.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
-                int nbItemTotal = await _dataManager.RunesMgr.GetNbItems();
-                IEnumerable<Rune> runeList = await _dataManager.RunesMgr.GetItems(0, nbItemTotal);
+                int nbItemTotal = await _dataManager.RunePagesMgr.GetNbItems();
+                IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItems(0, nbItemTotal);
 
-                if (runeList.Any(runeExist => runeExist.Name == rune.Name))
+                if (runePageList.Any(runeExist => runeExist.Name == runepage.Name))
                 {
-                    var message = $"La rune {rune.Name} existe déjà.";
+                    var message = $"La page de rune {runepage.Name} existe déjà.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
-                var runeResult = _dataManager.RunesMgr.AddItem(rune.ToRune());
+                var runeResult = _dataManager.RunePagesMgr.AddItem(runepage.ToRunePage());
 
-                var successMessage = $"La rune {rune.Name} a été modifié ajouté avec succès.";
+                var successMessage = $"La page de rune {runepage.Name} a été modifié ajouté avec succès.";
                 _logger.LogInformation(successMessage);
                 return StatusCode((int)HttpStatusCode.Created, FactoryMessage.MessageCreate(successMessage));
             }
             catch (Exception ex)
             {
-                var errorMessage = $"Erreur de base de donnée lors de l'ajout de la rune {rune.Name}";
+                var errorMessage = $"Erreur de base de donnée lors de l'ajout de la page de rune {runepage.Name}";
                 _logger.LogError(errorMessage, ex);
                 return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
             }
@@ -245,41 +201,41 @@ namespace Api.Controllers
 
         // PUT api/<ValuesController>/5
         [HttpPut("{name}")]
-        public async Task<IActionResult> Put(string name, [FromBody] DTORune rune)
+        public async Task<IActionResult> Put(string name, [FromBody] DTORunePage runepage)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    var message = $"Le rune passé en paramètre n'est pas correct";
+                    var message = $"Le page de rune passé en paramètre n'est pas correct";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
-                if (string.IsNullOrWhiteSpace(rune.Name) || string.IsNullOrWhiteSpace(rune.Image) || string.IsNullOrWhiteSpace(rune.Description) || string.IsNullOrWhiteSpace(rune.Family) || string.IsNullOrWhiteSpace(rune.Icon))
+                if (string.IsNullOrWhiteSpace(runepage.Name))
                 { 
-                    var message = $"Les paramètres de la rune ne sont pas correct";
+                    var message = $"Le nom de la page de rune n'est pas correct";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
-                int nbItemByName = await _dataManager.RunesMgr.GetNbItemsByName(rune.Name);
+                int nbItemByName = await _dataManager.RunePagesMgr.GetNbItemsByName(runepage.Name);
                 if (nbItemByName == 0)
                 {
-                    var message = $"La rune {name} n'existe pas.";
+                    var message = $"La page de rune {name} n'existe pas.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                 }
 
-                Rune runeUpdate = await _dataManager.RunesMgr.GetItemByName(name);
-                await _dataManager.RunesMgr.UpdateItem(runeUpdate, rune.ToRune());
-                var successMessage = $"La rune {name} a été modifié avec succès.";
+                RunePage runeUpdate = await _dataManager.RunePagesMgr.GetItemByName(name);
+                await _dataManager.RunePagesMgr.UpdateItem(runeUpdate, runepage.ToRunePage());
+                var successMessage = $"La page de rune {name} a été modifié avec succès.";
                 _logger.LogInformation(successMessage);
                 return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate(successMessage));
             }
             catch (Exception ex)
             {
-                var message = $"Erreur de base de donnée lors de la modification de la rune {name}";
+                var message = $"Erreur de base de donnée lors de la modification de la page de rune {name}";
                 _logger.LogError(message, ex);
                 return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(message));
             }
@@ -290,20 +246,20 @@ namespace Api.Controllers
         public async Task<IActionResult> Delete(string name)
         {
             try { 
-                Rune runeDelete = await _dataManager.RunesMgr.GetItemByName(name);
+                RunePage runeDelete = await _dataManager.RunePagesMgr.GetItemByName(name);
                 if (runeDelete == null)
                 {
-                    var message = $"La rune {name} n'est pas existante.";
+                    var message = $"La page de rune {name} n'est pas existante.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
-                var successMessage = $"La rune {name} a été supprimée avec succès.";
+                var successMessage = $"La page de rune {name} a été supprimée avec succès.";
                 _logger.LogInformation(successMessage);
                 return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate(successMessage));
             }
             catch (Exception ex)
             {
-                var error_message = $"Erreur de base de donnée lors de la suppression de la rune {name}";
+                var error_message = $"Erreur de base de donnée lors de la suppression de la page de rune {name}";
                 _logger.LogError(error_message, ex);
                 return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(error_message));
             }
