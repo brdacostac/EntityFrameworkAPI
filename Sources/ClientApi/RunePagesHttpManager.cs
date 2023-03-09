@@ -52,6 +52,7 @@ namespace ClientApi
             throw new NotImplementedException();
         }
 
+        //Nb
         public Task<int> GetNbItems()
         {
             throw new NotImplementedException();

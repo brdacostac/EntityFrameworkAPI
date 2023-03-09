@@ -12,6 +12,5 @@ namespace DTOLol
 
         public Dictionary<string,DTORune> DTORuneDic { get; set; }
 
-
     }
 }
