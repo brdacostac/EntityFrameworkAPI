@@ -115,5 +115,32 @@ namespace Champion_TestMemory
             }
 
         }
+
+        /*
+        [Fact]
+        public void GetChampion_Test()
+        {
+            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+                .UseInMemoryDatabase(databaseName: "GetChampion_Test_Database")
+                .Options;
+
+            using (var context = new ChampionsDbContexte(options))
+            {
+                ChampionController championService = new ChampionController(context);
+
+                var gnar = championService.GetChampion("Gnar");
+                var vladimir = championService.GetChampion("Vladimir");
+                var corki = championService.GetChampion("Corki");
+
+                Assert.NotNull(gnar);
+                Assert.NotNull(vladimir);
+                Assert.NotNull(corki);
+
+                Assert.Equal("Gnar", gnar.Name);
+                Assert.Equal("Vladimir", vladimir.Name);
+                Assert.Equal("Corki", corki.Name);
+            }
+        }
+        */
     }
 }
