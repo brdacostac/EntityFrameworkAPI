@@ -13,9 +13,11 @@ namespace Api.Controllers
     public class SkinsController : ControllerBase
     {
         private readonly IDataManager _dataManager;
-        public SkinsController(IDataManager dataManger)
+        private readonly ILogger<SkinsController> _logger;
+        public SkinsController(IDataManager dataManger, ILogger<SkinsController> logger)
         {
             _dataManager = dataManger;
+            _logger = logger;
         }
 
         // GET: api/<ValuesController>
@@ -69,63 +71,114 @@ namespace Api.Controllers
             {
                 if (string.IsNullOrEmpty(name))
                 {
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Le nom du skin ne peut pas être vide."));
+                    var message = $"Le nom du skin ne peut pas être vide.";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
                 Skin skin = await _dataManager.SkinsMgr.GetItemByName(name);
                 if (skin == null)
-                    return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate("Le skin n'est pas existant"));
+                {
+                    var message = $"Le skin {name} n'est pas existant.";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
+                }
+                var successMessage = $"Le skin {name} a été récupé avec succès.";
+                _logger.LogInformation(successMessage);
                 return StatusCode((int)HttpStatusCode.OK, skin.ToDto());
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur est survenue lors de la récupération des skins"));
+                var errorMessage = $"Erreur de base de donnée lors de la récupération du skin {name}";
+                _logger.LogError(errorMessage, ex);
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
             }
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] DTOSkinPost skin)
+        public async Task<IActionResult> Post([FromBody] DTOSkin skin)
         {
-            if (string.IsNullOrWhiteSpace(skin.Name) || string.IsNullOrWhiteSpace(skin.Image) || string.IsNullOrWhiteSpace(skin.Description) || float.IsNegative(skin.Price) || string.IsNullOrWhiteSpace(skin.Icon))
-                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
+            try { 
+                if (!ModelState.IsValid)
+                {
+                    var message = $"Les données du skin ne sont pas correctes";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
 
-            int nbItemTotal = await _dataManager.SkinsMgr.GetNbItems();
-            IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItems(0, nbItemTotal);
+                if (string.IsNullOrWhiteSpace(skin.Name) || string.IsNullOrWhiteSpace(skin.Image) || string.IsNullOrWhiteSpace(skin.Description) || float.IsNegative(skin.Price) || string.IsNullOrWhiteSpace(skin.Icon))
+                {
+                    var message = $"Le skin {skin.Name} a des données incomplétés.";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
 
-            if (skinList.Any(skinExist => skinExist.Name == skin.Name))
-                return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Le skin existe déjà"));
+                int nbItemTotal = await _dataManager.SkinsMgr.GetNbItems();
+                IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItems(0, nbItemTotal);
 
-            Champion champion = await _dataManager.ChampionsMgr.GetItemByName(skin.NameChampion);
-            if (champion == null)
-                return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate("Le champion n'est pas existant"));
+                if (skinList.Any(skinExist => skinExist.Name == skin.Name))
+                {
+                    var message = $"Le skin {skin.Name} a été existe déjà.";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
 
+                var skinResult = _dataManager.SkinsMgr.AddItem(skin.ToSkin());
+                /*return CreatedAtAction((GetByName),new {id = 1 },championResult) */
 
-            var skinResult = _dataManager.SkinsMgr.AddItem(skin.ToSkin(champion));
-            /*return CreatedAtAction((GetByName),new {id = 1 },championResult) */
-
-            return StatusCode((int)HttpStatusCode.Created, FactoryMessage.MessageCreate("Le champion a été créé"));
+                var successMessage = $"Le skin {skin.Name} a été ajouté avec succès.";
+                _logger.LogInformation(successMessage);
+                return StatusCode((int)HttpStatusCode.Created, FactoryMessage.MessageCreate(successMessage));
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Erreur de base de donnée lors de l'ajout du skin {skin.Name}";
+                _logger.LogError(errorMessage, ex);
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
+            }
         }
 
-        //// PUT api/<ValuesController>/5
-        //[HttpPut("{name}")]
-        //public async Task<IActionResult> Put(string name, [FromBody] DTOSkin skin)
-        //{
-        //    //fait automatiquement pour les champs required ...
-        //    //if (!ModelState.IsValid)
-        //    //    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
+        // PUT api/<ValuesController>/5
+        [HttpPut("{name}")]
+        public async Task<IActionResult> Put(string name, [FromBody] DTOSkin skin)
+        {
+            try {
+                //fait automatiquement pour les champs required ...
+                if (!ModelState.IsValid)
+                {
+                    var message = $"Le skin passé en paramètre n'est pas correct";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
 
-        //    if (string.IsNullOrWhiteSpace(skin.Name) || string.IsNullOrWhiteSpace(skin.Image) || string.IsNullOrWhiteSpace(skin.Description) || float.IsNegative(skin.Price) || string.IsNullOrWhiteSpace(skin.Icon))
-        //        return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Les données du skin sont incomplètes"));
+                if (string.IsNullOrWhiteSpace(skin.Name) || string.IsNullOrWhiteSpace(skin.Image) || string.IsNullOrWhiteSpace(skin.Description) || float.IsNegative(skin.Price) || string.IsNullOrWhiteSpace(skin.Icon))
+                {
+                    var message = $"Les paramètres du skin ne sont pas correct";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
 
-        //    int nbItemByName = await _dataManager.SkinsMgr.GetNbItemsByName(skin.Name);
-        //    if (nbItemByName == 0)
-        //        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate("Le skin n'existe pas."));
+                int nbItemByName = await _dataManager.SkinsMgr.GetNbItemsByName(skin.Name);
+                if (nbItemByName == 0)
+                {
+                    var message = $"Le skin {name} n'existe pas.";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
+                }
 
-        //    Skin skinUpdate = await _dataManager.SkinsMgr.GetItemByName(name);
-        //    await _dataManager.SkinsMgr.UpdateItem(skinUpdate, skin.ToSkin());
-        //    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate("Le skin a été modifié."));
-        //    //no content
-        //}
+                Skin skinUpdate = await _dataManager.SkinsMgr.GetItemByName(name);
+                await _dataManager.SkinsMgr.UpdateItem(skinUpdate, skin.ToSkin());
+                var successMessage = $"Le skin {name} a été modifié avec succès.";
+                _logger.LogInformation(successMessage);
+                return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate(successMessage));
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Erreur de base de donnée lors de modification du skin {skin.Name}";
+                _logger.LogError(errorMessage, ex);
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
+            }
+        }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{name}")]
@@ -135,13 +188,21 @@ namespace Api.Controllers
             {
                 Skin skinDelete = await _dataManager.SkinsMgr.GetItemByName(name);
                 if (skinDelete == null)
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate("Le skin n'est pas existant"));
+                {
+                    var message = $"Le skin {name} n'est pas existant";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
                 _dataManager.SkinsMgr.DeleteItem(skinDelete);
-                return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate("Le skin a été supprimé"));
+                var successMessage = $"Le skin {name} a été supprimé avec succès.";
+                _logger.LogInformation(successMessage);
+                return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate(successMessage));
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur est survenue lors de la récupération des skins"));
+                var error_message = $"Erreur de base de donnée lors de la suppression du skin {name}";
+                _logger.LogError(error_message, ex);
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(error_message));
             }
         }
     }
