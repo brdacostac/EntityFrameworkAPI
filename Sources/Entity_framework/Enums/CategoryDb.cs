@@ -1,7 +1,7 @@
 ﻿namespace Entity_framework.Enums
 {
     [Flags]
-	public enum Category : int
+	public enum CategoryDb : int
 	{
 		Major = 0,
 		Minor1 = 1,

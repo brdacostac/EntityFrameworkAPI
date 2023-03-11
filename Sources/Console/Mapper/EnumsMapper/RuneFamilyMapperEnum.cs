@@ -29,10 +29,5 @@ namespace BiblioMilieu.Mapper.EnumsMapper
                     return RuneFamily.Unknown;
             }
         }
-
-
-
-
-
     }
 }

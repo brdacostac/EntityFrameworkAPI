@@ -40,8 +40,8 @@ namespace Entity_framework
             modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithOne(skin => skin.Champion).HasForeignKey(skin => skin.ChampionForeignKey);
             modelBuilder.Entity<ChampionDB>().HasIndex(champ => champ.Name).IsUnique();
             //modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithMany(skin => skin.Champion);
-            modelBuilder.Entity<RunePagesDb>().HasMany(runePage => runePage.CategoryRunePages).WithOne(categoryRunePage => categoryRunePage.runesPage).HasForeignKey(categoryRunePage => categoryRunePage.runesPagesForeignKey);
-            modelBuilder.Entity<CategoryDicDB>().HasMany(categoryRunePage => categoryRunePage.runes).WithMany(rune => rune.runesPages);
+            modelBuilder.Entity<RunePagesDb>().HasMany(runePage => runePage.CategoryRunePages).WithOne(categoryRunePage => categoryRunePage.runePage).HasForeignKey(categoryRunePage => categoryRunePage.runesPagesForeignKey);
+            modelBuilder.Entity<CategoryDicDB>().HasOne(CategoryRunePageSet => CategoryRunePageSet.rune).WithMany(rune => rune.runesPages);
 
 
 
