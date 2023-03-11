@@ -21,17 +21,10 @@ namespace Entity_framework.DataBase
             get; set;
         }
 
-     /*   public DictionnaireCategorieRune DictionnaireCategorieRune 
-        { 
-            get; set; 
-        }*/
 
-
+        public ICollection<ChampionDB> champions { get; set; } = new List<ChampionDB>();
 
         public ICollection<CategoryDicDB> CategoryRunePages { get; set; } = new List<CategoryDicDB>();
-        
-
-
 
     }
 }

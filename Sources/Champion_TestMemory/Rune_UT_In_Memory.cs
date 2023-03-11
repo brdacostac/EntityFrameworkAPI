@@ -13,12 +13,12 @@ namespace TestEntityUT
         [Fact]
         public void Add_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Add_Test_Database")
                 .Options;
 
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family=(new RuneFamilyDb()), Icon = "dzadaz" };
@@ -31,7 +31,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 Assert.Equal(3, context.RunesSet.Count());
                 Assert.Equal("Glacial Augment", context.RunesSet.First().Name);
@@ -41,11 +41,11 @@ namespace TestEntityUT
         [Fact]
         public void Modify_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = (new RuneFamilyDb()), Icon = "dzadaz" };
@@ -58,7 +58,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "lacial";
                 Assert.Equal(1, context.RunesSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -70,7 +70,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "lacial";
                 Assert.Equal(1, context.RunesSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -82,11 +82,11 @@ namespace TestEntityUT
         [Fact]
         public void Delete_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Delete_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = (new RuneFamilyDb()), Icon = "dzadaz" };
@@ -99,7 +99,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "lacial";
                 Assert.Equal(1, context.RunesSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -110,7 +110,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "guaridan";
                 Assert.NotEqual(1, context.RunesSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());

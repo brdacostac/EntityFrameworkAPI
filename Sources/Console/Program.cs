@@ -24,7 +24,7 @@ var runesListModel = await stub.RunesMgr.GetItems(0, nbRunes);
 var runesList = runesListModel.ToList().Select(e => e.ToDb());
 var runesPagesList = runesListModel.ToList().Select(e => e.ToDb());
 
-using (var context = new ChampionsDbContexte())
+using (var context = new EntityDbContexte())
 {
     context.Database.EnsureCreated();
     // Crée des champions et les insère dans la base
@@ -80,7 +80,7 @@ using (var context = new ChampionsDbContexte())
    
 }
 
-using (var context = new ChampionsDbContexte())
+using (var context = new EntityDbContexte())
 {
     foreach (var n in context.ChampionsSet)
     {

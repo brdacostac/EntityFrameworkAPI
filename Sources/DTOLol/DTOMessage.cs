@@ -11,10 +11,10 @@ namespace DTOLol
         public string Message { get; set; }
 
         public T Data { get; set; }
-        public int? CurrentPage { get; set; }
-        public int? NextPage { get; set; }
-        public int? TotalPages { get; set; }
-        public int? TotalCount { get; set; }
+        public int CurrentPage { get; set; }
+        public int NextPage { get; set; }
+        public int TotalPages { get; set; }
+        public int TotalCount { get; set; }
 
         public DTOMessage(string message, T data = default)
         {

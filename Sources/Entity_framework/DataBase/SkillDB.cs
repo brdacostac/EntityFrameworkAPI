@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,16 @@ namespace Entity_framework
         }
         [StringLength(1000, ErrorMessage = "le description skill ne doit pas depasser 1000 caractere")]
         public string Description
+        {
+            get; set;
+        }
+        public int ChampionForeignKey
+        {
+            get; set;
+        }
+        [Required]
+        [ForeignKey("ChampionForeignKey")]
+        public ChampionDB Champion
         {
             get; set;
         }
