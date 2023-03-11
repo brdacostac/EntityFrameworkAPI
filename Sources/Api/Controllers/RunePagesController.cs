@@ -20,21 +20,6 @@ namespace Api.Controllers
             _logger = logger;
         }
 
-        public Task<IEnumerable<RunePage?>> GetItemsByChampion(Champion? champion, int index, int count, string? orderingPropertyName = null, bool descending = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<RunePage?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<RunePage?>> GetItemsByRune(Model.Rune? rune, int index, int count, string? orderingPropertyName = null, bool descending = false)
-        {
-            throw new NotImplementedException();
-        }
-
 
         [HttpGet]
         public async Task<IActionResult> GetRunePages([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] Champion? champion = null, [FromQuery(Name = "Runne")] Rune? rune = null)
@@ -79,7 +64,7 @@ namespace Api.Controllers
 
                     var successMessage = $"Les pages de runes avec le nom {nameSubstring} ont été récupéré avec succès.";
                     _logger.LogInformation(successMessage);
-                    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTORune>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, runePageList.Select(e => e.ToDto())));
+                    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTORunePage>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, runePageList.Select(e => e.ToDto())));
                 }
                 //&& runeFamily.IsValid()
                 else if (champion != null)
@@ -168,49 +153,6 @@ namespace Api.Controllers
             }
         }
 
-        // GET: api/<ValuesController>
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll(int? startIndex = null, int? count = 20, string? name = null)
-        {
-            try
-            {
-
-                if (count > 25) return StatusCode((int)HttpStatusCode.BadRequest);
-                if (count <= 0) return StatusCode((int)HttpStatusCode.BadRequest);
-
-                int totalItemCount = await _dataManager.RunesMgr.GetNbItems();
-                int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                int actualCount = count.HasValue ? count.Value : totalItemCount;
-                IEnumerable<Rune> runeList = await _dataManager.RunesMgr.GetItems(actualStartIndex, actualCount);
-
-                if (!string.IsNullOrEmpty(name))
-                {
-                    runeList = runeList.Where(r => r.Name.Contains(name));
-                }
-
-                if (runeList.Count() == 0) return StatusCode((int)HttpStatusCode.NoContent);
-
-                int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                int currentPage = actualStartIndex / actualCount + 1;
-                int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
-
-                var result = new
-                {
-                    currentPage = currentPage,
-                    nextPage = nextPage,
-                    totalPages = totalPages,
-                    totalCount = totalItemCount,
-                    items = runeList.Select(e => e.ToDto())
-                };
-
-                return StatusCode((int)HttpStatusCode.OK, result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur est survenue lors de la récupération des runes"));
-            }
-        }
 
         // GET api/<ValuesController>/5
         [HttpGet("{name}")]
@@ -358,4 +300,4 @@ namespace Api.Controllers
     }
 
 }
-}
+

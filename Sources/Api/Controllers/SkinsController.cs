@@ -22,44 +22,109 @@ namespace Api.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public async Task<IActionResult> GetAll(int? startIndex = null, int? count = 20, string? name = null)
+
+        [HttpGet]
+        public async Task<IActionResult> GetRunes([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] Champion champion = null)
         {
             try
             {
-
-                if (count > 25) return StatusCode((int)HttpStatusCode.BadRequest);
-                if (count <= 0) return StatusCode((int)HttpStatusCode.BadRequest);
-
-                int totalItemCount = await _dataManager.SkinsMgr.GetNbItems();
-                int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                int actualCount = count.HasValue ? count.Value : totalItemCount;
-                IEnumerable<Skin> skinsList = await _dataManager.SkinsMgr.GetItems(actualStartIndex, actualCount);
-
-                if (!string.IsNullOrEmpty(name))
+                if (Request.Query.Count > 3)
                 {
-                    skinsList = skinsList.Where(r => r.Name.Contains(name));
+                    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
+                    _logger.LogWarning(errorMessage);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
                 }
 
-                if (skinsList.Count() == 0) return StatusCode((int)HttpStatusCode.NoContent);
-
-                int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                int currentPage = actualStartIndex / actualCount + 1;
-                int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
-
-                var result = new
+                if (count <= 0 || count > 25)
                 {
-                    currentPage = currentPage,
-                    nextPage = nextPage,
-                    totalPages = totalPages,
-                    totalCount = totalItemCount,
-                    items = skinsList.Select(e => e.ToDto())
-                };
+                    var message = "startIndex doit être compris entre 1 et 25.";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
+                if (!string.IsNullOrEmpty(nameSubstring))
+                {
+                    var totalItemCount = await _dataManager.SkinsMgr.GetNbItemsByName(nameSubstring);
+                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
+                    int actualCount = count.HasValue ? count.Value : totalItemCount;
 
-                return StatusCode((int)HttpStatusCode.OK, result);
+                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByName(nameSubstring, actualStartIndex, actualCount, null, descending);
+                    if (!string.IsNullOrEmpty(nameSubstring))
+                    {
+                        skinList = skinList.Where(r => r.Name.Contains(nameSubstring));
+                    }
+
+                    if (!skinList.Any())
+                    {
+                        var message = $"Aucun skin nommé {nameSubstring} n'a été trouvé.";
+                        _logger.LogInformation(message);
+                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                    }
+
+                    int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
+                    int currentPage = actualStartIndex / actualCount + 1;
+                    int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
+
+                    var successMessage = $"Les skins avec le nom {nameSubstring} ont été récupéré avec succès.";
+                    _logger.LogInformation(successMessage);
+                    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOSkin>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, skinList.Select(e => e.ToDto())));
+                }
+                //&& runeFamily.IsValid()
+                else if (champion != null)
+                {
+                    var totalItemCount = await _dataManager.SkinsMgr.GetNbItemsByChampion(champion);
+                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
+                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+
+                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByChampion(champion, actualStartIndex, actualCount, null, descending);
+                    //if (!string.IsNullOrEmpty(skillName))
+                    //{
+                    //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
+                    //}
+
+                    if (!skinList.Any())
+                    {
+                        var message = $"Aucune champion {champion.Name} n'a été trouvé.";
+                        _logger.LogInformation(message);
+                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                    }
+
+                    int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
+                    int currentPage = actualStartIndex / actualCount + 1;
+                    int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
+
+                    var successMessage = $"Les skins {champion.Name} ont été récupéré avec succès.";
+                    _logger.LogInformation(successMessage);
+                    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOSkin>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, skinList.Select(e => e.ToDto())));
+                }
+                else
+                {
+                    int totalItemCount = await _dataManager.SkinsMgr.GetNbItems();
+                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
+                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+
+                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItems(actualStartIndex, actualCount, null, descending);
+
+                    if (!skinList.Any())
+                    {
+                        var message = $"Aucun skins en base de données.";
+                        _logger.LogInformation(message);
+                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                    }
+
+                    int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
+                    int currentPage = actualStartIndex / actualCount + 1;
+                    int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
+
+                    var successMessage = $"La récupération des données a été réalisé avec succès.";
+                    _logger.LogInformation(successMessage);
+                    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOSkin>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, skinList.Select(e => e.ToDto())));
+                }
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur est survenue lors de la récupération des skins"));
+                var errorMessage = $"Une erreur est survenue lors de la récupération des champions : {ex.Message}";
+                _logger.LogError(errorMessage);
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
             }
         }
 

@@ -136,7 +136,7 @@ namespace Api.Controllers
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
-                RunePage rune = await _dataManager.RunePagesMgr.GetItemByName(name);
+                Rune rune = await _dataManager.RunesMgr.GetItemByName(name);
                 if (rune == null)
                 {
                     var message = $"La page de rune {name} n'est pas existante.";
