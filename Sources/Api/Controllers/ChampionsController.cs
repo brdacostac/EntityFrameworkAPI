@@ -101,7 +101,8 @@ namespace Api.Controllers
 
                 var successMessage = $"Le champion {name} a été modifié ajouté avec succès.";
                 _logger.LogInformation(successMessage);
-                return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<DTOChampion>(successMessage, champion.ToDto()));
+                //return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<DTOChampion>(successMessage, champion.ToDto()));
+                return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate(successMessage));
             }
             catch (Exception ex)
             {
