@@ -48,5 +48,6 @@ namespace Entity_framework
             get; set;
         }
         public ICollection<SkinDB> Skins { get; set; } = new List<SkinDB>();
+        public ICollection<SkillDB> Skills { get; set; } = new List<SkillDB>();
     }
 }

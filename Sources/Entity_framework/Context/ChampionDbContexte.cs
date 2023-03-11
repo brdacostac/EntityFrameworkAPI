@@ -36,15 +36,13 @@ namespace Entity_framework
             modelBuilder.Entity<CategoryDicDB>().ToTable("CategoryDicSet");
 
             //Contrainte
-            //modelBuilder.Entity<SkinDB>().HasKey(e => e.Id);
+            
             modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithOne(skin => skin.Champion).HasForeignKey(skin => skin.ChampionForeignKey);
+            modelBuilder.Entity<SkillDB>().HasOne(skill => skill.Champion).WithMany(champ => champ.Skills);
             modelBuilder.Entity<ChampionDB>().HasIndex(champ => champ.Name).IsUnique();
             //modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithMany(skin => skin.Champion);
             modelBuilder.Entity<RunePagesDb>().HasMany(runePage => runePage.CategoryRunePages).WithOne(categoryRunePage => categoryRunePage.runesPage).HasForeignKey(categoryRunePage => categoryRunePage.runesPagesForeignKey);
             modelBuilder.Entity<CategoryDicDB>().HasMany(categoryRunePage => categoryRunePage.runes).WithMany(rune => rune.runesPages);
-
-
-
         }
     }
 }
