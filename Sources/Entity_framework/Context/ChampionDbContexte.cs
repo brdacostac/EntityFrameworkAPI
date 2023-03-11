@@ -11,6 +11,7 @@ namespace Entity_framework
         public DbSet<SkillDB> SkillSet { get; set; }
         public DbSet<SkinDB> SkinsSet { get; set; }
         public DbSet<CategoryDicDB> CategoryRunePageSet { get; set; }
+        public DbSet<ChampionRunePageDb> ChampionRunePageSet { get; set; }
 
         public ChampionsDbContexte()
         { }
@@ -40,6 +41,12 @@ namespace Entity_framework
             modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithOne(skin => skin.Champion).HasForeignKey(skin => skin.ChampionForeignKey);
             modelBuilder.Entity<SkillDB>().HasOne(skill => skill.Champion).WithMany(champ => champ.Skills);
             modelBuilder.Entity<ChampionDB>().HasIndex(champ => champ.Name).IsUnique();
+
+            modelBuilder.Entity<ChampionRunePageDb>().HasKey(champRune => champRune.Id);
+
+            modelBuilder.Entity<ChampionRunePageDb>().HasOne(cr => cr.Champion).WithMany().HasForeignKey(cr => cr.ChampionId);
+
+            modelBuilder.Entity<ChampionRunePageDb>().HasOne(cr => cr.RunePage).WithMany().HasForeignKey(cr => cr.RunePageId);
             //modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithMany(skin => skin.Champion);
             modelBuilder.Entity<RunePagesDb>().HasMany(runePage => runePage.CategoryRunePages).WithOne(categoryRunePage => categoryRunePage.runesPage).HasForeignKey(categoryRunePage => categoryRunePage.runesPagesForeignKey);
             modelBuilder.Entity<CategoryDicDB>().HasMany(categoryRunePage => categoryRunePage.runes).WithMany(rune => rune.runesPages);

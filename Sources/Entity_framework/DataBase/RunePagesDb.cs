@@ -21,17 +21,8 @@ namespace Entity_framework.DataBase
             get; set;
         }
 
-     /*   public DictionnaireCategorieRune DictionnaireCategorieRune 
-        { 
-            get; set; 
-        }*/
-
 
 
         public ICollection<CategoryDicDB> CategoryRunePages { get; set; } = new List<CategoryDicDB>();
-        
-
-
-
     }
 }
