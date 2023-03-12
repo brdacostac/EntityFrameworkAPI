@@ -26,7 +26,7 @@ namespace Api.Controllers
         {
             try
             {
-                if (Request.Query.Count > 3)
+                if (Request.Query.Count > 4)
                 {
                     var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
                     _logger.LogWarning(errorMessage);
@@ -55,7 +55,7 @@ namespace Api.Controllers
                     {
                         var message = $"Aucune rune nommé {nameSubstring} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
@@ -83,7 +83,7 @@ namespace Api.Controllers
                     {
                         var message = $"Aucune rune correspond à la famille {runeFamily.Value} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);

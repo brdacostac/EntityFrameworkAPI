@@ -10,7 +10,7 @@ namespace Model
 			get => name;
 			private init
 			{
-				if(string.IsNullOrWhiteSpace(value))
+				if (string.IsNullOrWhiteSpace(value))
 				{
 					throw new ArgumentException("a Rune Page must have a name");
 				}
@@ -32,7 +32,7 @@ namespace Model
 		{
 			get
 			{
-				if(runes.TryGetValue(category, out Rune? rune))
+				if (runes.TryGetValue(category, out Rune? rune))
 				{
 					return rune;
 				}
@@ -40,9 +40,10 @@ namespace Model
 			}
 			set
 			{
-				if(value == null)
+				if (value == null)
 				{
 					runes.Remove(category);
+					return;
 				}
 				runes[category] = value!;
 				CheckRunes(category);
@@ -51,7 +52,7 @@ namespace Model
 
 		private void CheckRunes(Category newRuneCategory)
 		{
-			switch(newRuneCategory)
+			switch (newRuneCategory)
 			{
 				case Category.Major:
 					UpdateMajorFamily(Category.Minor1, true);
@@ -76,18 +77,18 @@ namespace Model
 		{
 			runes.TryGetValue(cat1, out Rune? rune1);
 			runes.TryGetValue(cat2, out Rune? rune2);
-			if(rune1 == null || rune2 == null)
+			if (rune1 == null || rune2 == null)
 			{
 				return null;
 			}
 			return rune1.Family == rune2.Family;
 		}
 
-		private void UpdateMajorFamily(Category minor, bool expectedValue)
+		private void UpdateMajorFamily(Category cat, bool expectedValue)
 		{
-			if(CheckFamilies(Category.Major, minor).GetValueOrDefault(expectedValue) == expectedValue)
+			if (CheckFamilies(Category.Major, cat).GetValueOrDefault(expectedValue) != expectedValue)
 			{
-				runes.Remove(minor);
+				runes.Remove(cat);
 			}
 		}
 	}

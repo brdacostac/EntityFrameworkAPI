@@ -19,7 +19,7 @@ namespace DTOLol
             get; set;
         }
 
-        public DTOChampion Champion
+        public String ChampionName
         {
             get; set;
         }

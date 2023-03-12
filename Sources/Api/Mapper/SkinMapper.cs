@@ -10,7 +10,7 @@ namespace Api.Mapper
             DTOSkin dTOSkin = new DTOSkin()
             {
                 Name = skin.Name,
-                Champion = skin.Champion.ToDto(),
+                ChampionName = skin.Champion.Name,
                 Description = skin.Description,
                 Price = skin.Price, 
                 Icon = skin.Icon,
@@ -21,7 +21,8 @@ namespace Api.Mapper
 
         public static Skin ToSkin(this DTOSkin dTOSkin)
         {
-            return new Skin(dTOSkin.Name, dTOSkin.Champion.ToChampion(), dTOSkin.Price, dTOSkin.Icon, dTOSkin.Image, dTOSkin.Description);
+            return null;
+            //return new Skin(dTOSkin.Name, dTOSkin.ChampionName.ToDto(), dTOSkin.Price, dTOSkin.Icon, dTOSkin.Image, dTOSkin.Description);
         }
 
         public static Skin ToSkin(this DTOSkinPost dTOSkin, Champion champion)

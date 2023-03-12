@@ -3,18 +3,15 @@ using StubLib;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDataManager, StubData>(); //un seul pour tout le monde //il y a des semaphore et de concurrence d acces
-/*builder.Services.AddScoped<IDataManager, StubData>();//un seul pour le cycle de vie de l'environnement //c est le meuilleur si on sait pas
-builder.Services.AddTransient<IDataManager, StubData>();//un seul pour chque environnment demainder un nouveua instance*/
+
+builder.Services.AddControllers().AddControllersAsServices(); // Add controllers as services
 
 builder.Logging.AddConsole();
-
 
 var app = builder.Build();
 
