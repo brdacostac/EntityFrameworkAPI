@@ -21,7 +21,7 @@ namespace TestEntityUT
             using (var context = new EntityDbContexte(options))
             {
 
-                SkillDB Passive = new SkillDB { Name = "Frost Shot", Type= SkillTypeSkillDb.Passive, Description = "Teste Passive"};
+                SkillDB Passive = new SkillDB { Name = "Frost Shot", Type = SkillTypeSkillDb.Passive, Description = "Teste Passive" };
                 SkillDB FirstSkill = new SkillDB { Name = "Rangers Focus", Type = SkillTypeSkillDb.Basic, Description = "Teste First Skill" };
                 SkillDB SecondSkill = new SkillDB { Name = "Volley", Type = SkillTypeSkillDb.Basic, Description = "Teste Second Skill " };
                 SkillDB ThirdSkill = new SkillDB { Name = "HawkShot", Type = SkillTypeSkillDb.Basic, Description = "Teste Third Skill" };
@@ -166,7 +166,7 @@ namespace TestEntityUT
                 Assert.NotNull(passive);
                 Assert.Equal("Teste Passive", passive.Description);
 
-                var firstSkill  = skills.FirstOrDefault(c => c.Name == "Rangers Focus");
+                var firstSkill = skills.FirstOrDefault(c => c.Name == "Rangers Focus");
                 Assert.NotNull(firstSkill);
                 Assert.Equal("Teste First Skill", firstSkill.Description);
 

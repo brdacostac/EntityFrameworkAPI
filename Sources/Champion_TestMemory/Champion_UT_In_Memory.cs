@@ -116,31 +116,65 @@ namespace Champion_TestMemory
 
         }
 
-        /*
+
         [Fact]
-        public void GetChampion_Test()
+        public void GetAllChampion_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
-                .UseInMemoryDatabase(databaseName: "GetChampion_Test_Database")
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
+                .UseInMemoryDatabase(databaseName: "GetAllChampion_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
-                ChampionController championService = new ChampionController(context);
 
-                var gnar = championService.GetChampion("Gnar");
-                var vladimir = championService.GetChampion("Vladimir");
-                var corki = championService.GetChampion("Corki");
+                ChampionDB gnar = new ChampionDB { Name = "Gnar", Bio = "Teste gnar", Icon = "dzadaz" };
+                ChampionDB vladimir = new ChampionDB { Name = "Vladimir", Bio = "Teste Vlad", Icon = "dzadaz" };
+                ChampionDB corki = new ChampionDB { Name = "Corki", Bio = "Teste Corki", Icon = "dzadaz" };
 
+                context.ChampionsSet.Add(gnar);
+                context.ChampionsSet.Add(vladimir);
+                context.ChampionsSet.Add(corki);
+                context.SaveChanges();
+            }
+
+            using (var context = new EntityDbContexte(options))
+            {
+
+                var champions = context.ChampionsSet.ToList();
+
+                Assert.Equal(3, champions.Count);
+
+                var gnar = champions.FirstOrDefault(c => c.Name == "Gnar");
                 Assert.NotNull(gnar);
-                Assert.NotNull(vladimir);
-                Assert.NotNull(corki);
+                Assert.Equal("Teste gnar", gnar.Bio);
 
-                Assert.Equal("Gnar", gnar.Name);
-                Assert.Equal("Vladimir", vladimir.Name);
-                Assert.Equal("Corki", corki.Name);
+                var vladimir = champions.FirstOrDefault(c => c.Name == "Vladimir");
+                Assert.NotNull(vladimir);
+                Assert.Equal("Teste Vlad", vladimir.Bio);
+
+                var corki = champions.FirstOrDefault(c => c.Name == "Corki");
+                Assert.NotNull(corki);
+                Assert.Equal("Teste Corki", corki.Bio);
             }
         }
-        */
+
+        [Fact]
+        public void ErrorChampion_Test()
+        {
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
+                .UseInMemoryDatabase(databaseName: "ErrorChampion_Test_Database")
+                .Options;
+
+            using (var context = new EntityDbContexte(options))
+            {
+
+                context.ChampionsSet.Add(new ChampionDB { Name = null, Bio = "Test", Icon = "Test" });
+
+                Assert.Throws<DbUpdateException>(() => context.SaveChanges());
+            }
+
+
+        }
+
     }
 }
