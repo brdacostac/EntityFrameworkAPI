@@ -1,4 +1,5 @@
 ﻿using Entity_framework;
+using Entity_framework.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Model;
 
@@ -49,5 +50,8 @@ namespace Entity_framework
         }
         public ICollection<SkinDB> Skins { get; set; } = new List<SkinDB>();
         public ICollection<SkillDB> Skills { get; set; } = new List<SkillDB>();
+
+        public ICollection<RunePagesDb> RunePages { get; set; } = new List<RunePagesDb>();
+
     }
 }

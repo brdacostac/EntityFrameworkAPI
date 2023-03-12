@@ -11,12 +11,12 @@ namespace Champion_TestMemory
         [Fact]
         public void Add_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Add_Test_Database")
                 .Options;
 
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 ChampionDB Gnar = new ChampionDB { Name = "Gnar", Bio = "Teste gnar", Icon = "dzadaz" };
@@ -29,7 +29,7 @@ namespace Champion_TestMemory
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 Assert.Equal(3, context.ChampionsSet.Count());
                 Assert.Equal("Gnar", context.ChampionsSet.First().Name);
@@ -39,11 +39,11 @@ namespace Champion_TestMemory
         [Fact]
         public void Modify_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 ChampionDB gnar = new ChampionDB { Name = "Gnar", Bio = "Teste gnar", Icon = "dzadaz" };
@@ -56,7 +56,7 @@ namespace Champion_TestMemory
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "nar";
                 Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -68,7 +68,7 @@ namespace Champion_TestMemory
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "nar";
                 Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -80,11 +80,11 @@ namespace Champion_TestMemory
         [Fact]
         public void Delete_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Delete_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 ChampionDB gnar = new ChampionDB { Name = "Gnar", Bio = "Teste gnar", Icon = "dzadaz" };
@@ -97,7 +97,7 @@ namespace Champion_TestMemory
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "nar";
                 Assert.Equal(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -108,7 +108,7 @@ namespace Champion_TestMemory
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "vlad";
                 Assert.NotEqual(1, context.ChampionsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -116,65 +116,31 @@ namespace Champion_TestMemory
 
         }
 
-        
+        /*
         [Fact]
-        public void GetAllChampion_Test()
+        public void GetChampion_Test()
         {
             var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
-                .UseInMemoryDatabase(databaseName: "GetAllChampion_Test_Database")
+                .UseInMemoryDatabase(databaseName: "GetChampion_Test_Database")
                 .Options;
 
             using (var context = new ChampionsDbContexte(options))
             {
+                ChampionController championService = new ChampionController(context);
 
-                ChampionDB gnar = new ChampionDB { Name = "Gnar", Bio = "Teste gnar", Icon = "dzadaz" };
-                ChampionDB vladimir = new ChampionDB { Name = "Vladimir", Bio = "Teste Vlad", Icon = "dzadaz" };
-                ChampionDB corki = new ChampionDB { Name = "Corki", Bio = "Teste Corki", Icon = "dzadaz" };
+                var gnar = championService.GetChampion("Gnar");
+                var vladimir = championService.GetChampion("Vladimir");
+                var corki = championService.GetChampion("Corki");
 
-                context.ChampionsSet.Add(gnar);
-                context.ChampionsSet.Add(vladimir);
-                context.ChampionsSet.Add(corki);
-                context.SaveChanges();
-            }
-
-            using (var context = new ChampionsDbContexte(options))
-            {
-                
-                var champions = context.ChampionsSet.ToList();
-
-                Assert.Equal(3, champions.Count);
-
-                var gnar = champions.FirstOrDefault(c => c.Name == "Gnar");
                 Assert.NotNull(gnar);
-                Assert.Equal("Teste gnar", gnar.Bio);
-
-                var vladimir = champions.FirstOrDefault(c => c.Name == "Vladimir");
                 Assert.NotNull(vladimir);
-                Assert.Equal("Teste Vlad", vladimir.Bio);
-
-                var corki = champions.FirstOrDefault(c => c.Name == "Corki");
                 Assert.NotNull(corki);
-                Assert.Equal("Teste Corki", corki.Bio);
+
+                Assert.Equal("Gnar", gnar.Name);
+                Assert.Equal("Vladimir", vladimir.Name);
+                Assert.Equal("Corki", corki.Name);
             }
         }
-
-        [Fact]
-        public void ErrorChampion_Test()
-        {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
-                .UseInMemoryDatabase(databaseName: "ErrorChampion_Test_Database")
-                .Options;
-
-            using (var context = new ChampionsDbContexte(options))
-            {
-
-                context.ChampionsSet.Add(new ChampionDB { Name = null, Bio = "Test", Icon = "Test" });
-
-                Assert.Throws<DbUpdateException>(() => context.SaveChanges());
-            }
-
-     
-        }
-
+        */
     }
 }

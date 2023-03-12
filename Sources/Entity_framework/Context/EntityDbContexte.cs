@@ -4,19 +4,18 @@ using Model;
 
 namespace Entity_framework
 {
-    public class ChampionsDbContexte : DbContext
+    public class EntityDbContexte : DbContext
     {
         public DbSet<ChampionDB> ChampionsSet { get; set; }
         public DbSet<RuneDB> RunesSet { get; set; }
         public DbSet<SkillDB> SkillSet { get; set; }
         public DbSet<SkinDB> SkinsSet { get; set; }
         public DbSet<CategoryDicDB> CategoryRunePageSet { get; set; }
-        public DbSet<ChampionRunePageDB> ChampionRunePageSet { get; set; }
-
-        public ChampionsDbContexte()
+        public DbSet<RunePagesDb> RunePagesSet { get; set; }
+        public EntityDbContexte()
         { }
 
-        public ChampionsDbContexte(DbContextOptions<ChampionsDbContexte> options)
+        public EntityDbContexte(DbContextOptions<EntityDbContexte> options)
             : base(options)
         { }
 
@@ -42,12 +41,14 @@ namespace Entity_framework
             modelBuilder.Entity<SkillDB>().HasOne(skill => skill.Champion).WithMany(champ => champ.Skills);
             modelBuilder.Entity<ChampionDB>().HasIndex(champ => champ.Name).IsUnique();
 
-            modelBuilder.Entity<ChampionRunePageDB>().HasKey(champRune => champRune.Id);
-            modelBuilder.Entity<ChampionRunePageDB>().HasMany(cr => cr.Champion).WithMany().HasForeignKey(cr => cr.ChampionId);
-            modelBuilder.Entity<ChampionRunePageDB>().HasOne(cr => cr.RunePage).WithMany().HasForeignKey(cr => cr.RunePageId);
+            modelBuilder.Entity<RunePagesDb>().HasMany(runePage => runePage.champions).WithMany(champ => champ.RunePages);
             //modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithMany(skin => skin.Champion);
-            modelBuilder.Entity<RunePagesDb>().HasMany(runePage => runePage.CategoryRunePages).WithOne(categoryRunePage => categoryRunePage.runesPage).HasForeignKey(categoryRunePage => categoryRunePage.runesPagesForeignKey);
-            modelBuilder.Entity<CategoryDicDB>().HasMany(categoryRunePage => categoryRunePage.runes).WithMany(rune => rune.runesPages);
+            modelBuilder.Entity<RunePagesDb>().HasMany(runePage => runePage.CategoryRunePages).WithOne(categoryRunePage => categoryRunePage.runePage).HasForeignKey(categoryRunePage => categoryRunePage.runesPagesForeignKey);
+            modelBuilder.Entity<CategoryDicDB>().HasOne(categoryRunePage => categoryRunePage.rune).WithMany(rune => rune.runesPages);
+
+
+           
+
         }
     }
 }

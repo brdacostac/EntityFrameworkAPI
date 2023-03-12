@@ -13,11 +13,11 @@ namespace TestEntityUT
         [Fact]
         public void Add_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
             .UseInMemoryDatabase(databaseName: "Add_Test_Database")
             .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 ChampionDB champion = new ChampionDB { Name = "Lux", Bio = "The Lady of Luminosity" };
                 context.ChampionsSet.Add(champion);
@@ -32,7 +32,7 @@ namespace TestEntityUT
 
                 context.SaveChanges();
             }
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 Assert.Equal(3, context.SkinsSet.Count());
                 Assert.Equal("Classic", context.SkinsSet.First().Name);
@@ -42,11 +42,11 @@ namespace TestEntityUT
         [Fact]
         public void Modify_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 ChampionDB champion = new ChampionDB { Name = "Lux", Bio = "The Lady of Luminosity" };
                 context.ChampionsSet.Add(champion);
@@ -62,7 +62,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "elementalist";
                 Assert.Equal(1, context.SkinsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -72,7 +72,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "elementalist";
                 Assert.Equal(1, context.SkinsSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());

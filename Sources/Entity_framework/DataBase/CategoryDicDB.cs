@@ -13,14 +13,14 @@ namespace Entity_framework.DataBase
         {
             get; set;
         }
-        public Category category { get; set; }
+        public CategoryDb category { get; set; }
 
         public int runesPagesForeignKey
         {
             get; set;
         }
-        public RunePagesDb runesPage { get; set; }
-        public ICollection<RuneDB> runes { get; set; }
+        public RunePagesDb runePage { get; set; }
+        public RuneDB rune { get; set; }
 
     }
 }

@@ -13,12 +13,12 @@ namespace TestEntityUT
         [Fact]
         public void Add_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Add_Test_Database")
                 .Options;
 
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 SkillDB Passive = new SkillDB { Name = "Frost Shot", Type= SkillTypeSkillDb.Passive, Description = "Teste Passive"};
@@ -35,7 +35,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 Assert.Equal(5, context.SkillSet.Count());
                 Assert.Equal("Frost Shot", context.SkillSet.First().Name);
@@ -45,11 +45,11 @@ namespace TestEntityUT
         [Fact]
         public void Modify_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 SkillDB Passive = new SkillDB { Name = "Frost Shot", Type = SkillTypeSkillDb.Passive, Description = "Teste Passive" };
@@ -66,7 +66,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "rost";
                 Assert.Equal(1, context.SkillSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -78,7 +78,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "shot";
                 Assert.Equal(1, context.SkillSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -90,11 +90,11 @@ namespace TestEntityUT
         [Fact]
         public void Delete_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "Delete_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 SkillDB Passive = new SkillDB { Name = "Frost Shot", Type = SkillTypeSkillDb.Passive, Description = "Teste Passive" };
@@ -111,7 +111,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "rost";
                 Assert.Equal(1, context.SkillSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -123,7 +123,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
                 string nameToFind = "volley";
                 Assert.NotEqual(1, context.SkillSet.Where(n => n.Name.ToLower().Contains(nameToFind)).Count());
@@ -134,11 +134,11 @@ namespace TestEntityUT
         [Fact]
         public void GetAllSkill_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "GetAllSkill_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 SkillDB Passive = new SkillDB { Name = "Frost Shot", Type = SkillTypeSkillDb.Passive, Description = "Teste Passive" };
@@ -155,7 +155,7 @@ namespace TestEntityUT
                 context.SaveChanges();
             }
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 var skills = context.SkillSet.ToList();
@@ -189,11 +189,11 @@ namespace TestEntityUT
         [Fact]
         public void ErrorSkill_Test()
         {
-            var options = new DbContextOptionsBuilder<ChampionsDbContexte>()
+            var options = new DbContextOptionsBuilder<EntityDbContexte>()
                 .UseInMemoryDatabase(databaseName: "ErrorSkill_Test_Database")
                 .Options;
 
-            using (var context = new ChampionsDbContexte(options))
+            using (var context = new EntityDbContexte(options))
             {
 
                 context.SkillSet.Add(new SkillDB { Name = null, Description = "Test", Type = SkillTypeSkillDb.Unknown });

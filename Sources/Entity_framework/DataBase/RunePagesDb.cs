@@ -22,7 +22,9 @@ namespace Entity_framework.DataBase
         }
 
 
+        public ICollection<ChampionDB> champions { get; set; } = new List<ChampionDB>();
 
         public ICollection<CategoryDicDB> CategoryRunePages { get; set; } = new List<CategoryDicDB>();
+
     }
 }
