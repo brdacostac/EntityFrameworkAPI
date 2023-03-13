@@ -21,14 +21,13 @@ namespace Api.Controllers
         }
 
         // GET: api/<ValuesController>
-        [HttpGet]
 
         [HttpGet]
         public async Task<IActionResult> GetRunes([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] Champion champion = null)
         {
             try
             {
-                if (Request.Query.Count > 3)
+                if (Request.Query.Count > 4)
                 {
                     var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
                     _logger.LogWarning(errorMessage);

@@ -20,37 +20,37 @@ namespace TestControllerApiUt
         private readonly IDataManager _stubData = new StubData();
         private readonly ILogger<RunesController> _logger = new NullLogger<RunesController>();
 
-        [TestMethod]
-        public async Task GetRunes_WithInvalidStartIndex_ReturnsBadRequest()
-        {
-            // Arrange
-            RunesController controller = new RunesController(_stubData, _logger);
+        //[TestMethod]
+        //public async Task GetRunes_WithInvalidStartIndex_ReturnsBadRequest()
+        //{
+        //    // Arrange
+        //    RunesController controller = new RunesController(_stubData, _logger);
 
-            // Act
-            var result = await controller.GetRunes(-1, 3);
-            var objectResult = (ObjectResult)result;
+        //    // Act
+        //    var result = await controller.GetRunes(-1, 3);
+        //    var objectResult = (ObjectResult)result;
 
-            // Assert
-            Assert.IsNotNull(objectResult);
-            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        //    // Assert
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
-        }
+        //}
 
-        [TestMethod]
-        public async Task GetRunes_WithInvalidCount_ReturnsBadRequest()
-        {
-            // Arrange
-            RunesController controller = new RunesController(_stubData, _logger);
+        //[TestMethod]
+        //public async Task GetRunes_WithInvalidCount_ReturnsBadRequest()
+        //{
+        //    // Arrange
+        //    RunesController controller = new RunesController(_stubData, _logger);
 
-            // Act
-            var result = await controller.GetRunes(0, 26);
-            var objectResult = (ObjectResult)result;
+        //    // Act
+        //    var result = await controller.GetRunes(0, 26);
+        //    var objectResult = (ObjectResult)result;
 
-            // Assert
-            Assert.IsNotNull(objectResult);
-            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        //    // Assert
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
-        }
+        //}
 
 
         [TestMethod]

@@ -1,366 +1,592 @@
 using Api.Controllers;
 using DTOLol;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Model;
 using StubLib;
 using System.Net;
 using static StubLib.StubData;
 
-namespace TestChampion
+namespace TestControllerApiUt
 {
     [TestClass]
     public class ChampionControllerTest
     {
-    //    [TestMethod]
-    //    public async Task TestGetChampion()
-    //    {
-    //        //Test OkObjectResult
-    //        //Arrange 
-    //        IDataManager stubData = new StubData();
-    //        ChampionsController controller = new ChampionsController(stubData);
-    //        var expectedCount = await stubData.ChampionsMgr.GetNbItems();
+        private readonly IDataManager _stubData = new StubData();
+        private readonly ILogger<ChampionsController> _logger = new NullLogger<ChampionsController>();
 
-    //        // Act
-    //        var championResult = await controller.GetAll();
+        [TestMethod]
+        public async Task Delete_ReturnBadRequest()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "NonExistingChampion";
 
-    //        // Assert
-    //        Assert.IsInstanceOfType(championResult, typeof(ObjectResult));
-    //        var objectResult = (ObjectResult)championResult;
-    //        //var objectResult = (ObjectResult)championResult;
-    //        Assert.IsNotNull(objectResult);
-    //        //pas utile on vérifie le code de retour
-    //        Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+            // Act
+            var result = await controller.Delete(name);
+            var objectResult = (ObjectResult)result;
 
-    //        var champions = objectResult.Value as IEnumerable<DTOChampion>;
-    //        Assert.IsNotNull(champions);
-    //        Assert.AreEqual(expectedCount, champions.Count());
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        }
 
-    //        //Test NoContentObjectResult
-    //        // Arrange
-    //        //IDataManager stubData2 = new StubData();
-    //        //stubData2.ChampionsMgr = new ChampionsManager(new List<Champion>());
-    //        //ChampionsController controller2 = new ChampionsController(stubData2);
+        [TestMethod]
+        public async Task Delete_ReturnOk()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "Champion1";
+            var rune = new DTOChampion { Name = name, Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>() , Skins = new List<DTOSkin>() };
+            await controller.Post(rune);
 
-    //        //// Act
-    //        //var result = await controller2.GetAll();
+            // Act
+            var result = await controller.Delete(name);
+            var objectResult = (ObjectResult)result;
 
-    //        //// Assert
-    //        //Assert.IsInstanceOfType(result, typeof(ObjectResult));
-    //        //var noContentResult = (ObjectResult)result;
-    //        //Assert.AreEqual((int)HttpStatusCode.NoContent, noContentResult.StatusCode);
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+        }
 
-    //        // Arrange
-    //        IDataManager stubData3 = new StubData();
-    //        stubData3.ChampionsMgr = new ChampionsManager((StubData)null);
-    //        ChampionsController controller3 = new ChampionsController(stubData3);
+        [TestMethod]
+        public async Task Put_ReturnBadRequest_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "Champion1";
 
-    //        // Act
-    //        var result2 = await controller3.GetAll();
+            // Act
+            var invalidRune = new DTOChampion {  Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+            var putResult = await controller.Put(name, invalidRune);
+            var objectResult = (ObjectResult)putResult;
 
-    //        // Assert
-    //        Assert.IsInstanceOfType(result2, typeof(ObjectResult));
-    //        var objectResult2 = (ObjectResult)result2;
-    //        Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult2.StatusCode);
-    //    }
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        }
 
-    //    //[TestMethod]
-    //    //public async Task TestGetPage()
-    //    //{
-    //    //    IDataManager stubData = new StubData();
-    //    //    ChampionsController controller = new ChampionsController(stubData);
-    //    //    int page = 1;
-    //    //    int nbItem = 1;
-    //    //    int nbItemTotal = stubData.ChampionsMgr.GetNbItems().Result;
+        [TestMethod]
+        public async Task Put_ReturnBadRequest_WhenRuneDataIsIncomplete()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "Skin1";
 
-    //    //    // Test avec des entrées valides
-    //    //    var championResult = await controller.GetPage(page, nbItem);
-    //    //    var objectValue = (ObjectResult)championResult;
-    //    //    Assert.IsNotNull(objectValue);
-    //    //    Assert.AreEqual((int)HttpStatusCode.OK, objectValue.StatusCode);
+            // Act
+            var incompleteRune = new DTOChampion { Name = "", Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+            var putResult = await controller.Put(name, incompleteRune);
+            var objectResult = (ObjectResult)putResult;
 
-    //    //    var valeur = objectValue.Value as IEnumerable<DTOChampion>;
-    //    //    Assert.IsNotNull(valeur);
-    //    //    Assert.AreEqual(nbItem, valeur.Count());
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        }
 
-    //    //    // Test avec des entrées non valides (page ou nbItem < 0)
-    //    //    championResult = await controller.GetPage(-1, nbItem);
-    //    //    var statusCodeResult = (ObjectResult)championResult;
-    //    //    Assert.IsNotNull(statusCodeResult);
-    //    //    Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
+        [TestMethod]
+        public async Task Put_ReturnNotFound()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "NonExistingRune";
+            var rune = new DTOChampion { Name = name, Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
 
-    //    //    championResult = await controller.GetPage(page, -1);
-    //    //    statusCodeResult = (ObjectResult)championResult;
-    //    //    Assert.IsNotNull(statusCodeResult);
-    //    //    Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
+            // Act
+            var putResult = await controller.Put(name, rune);
+            var objectResult = (ObjectResult)putResult;
 
-    //    //    // Test avec une page trop grande
-    //    //    championResult = await controller.GetPage(nbItemTotal / nbItem + 1, nbItem);
-    //    //    statusCodeResult = (ObjectResult)championResult;
-    //    //    Assert.IsNotNull(statusCodeResult);
-    //    //    Assert.AreEqual((int)HttpStatusCode.RequestedRangeNotSatisfiable, statusCodeResult.StatusCode);
-    //    //}
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
 
-    //    [TestMethod]
-    //    public async Task TestGetChampionByName()
-    //    {
-    //        // Arrange
-    //        IDataManager stubData = new StubData();
-    //        ChampionsController controller = new ChampionsController(stubData);
+        [TestMethod]
+        public async Task Put_ReturnOk()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "Rune1";
+            var rune = new DTOChampion { Name = name, Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+            var result = await controller.Post(rune);
 
-    //        // Act
-    //        // Test avec un nom valide
-    //        var championResult = await controller.Get("Akali");
-    //        var objectResult = (ObjectResult)championResult;
+            // Act
+            var updatedRune = new DTOChampion { Name = name, Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+            var putResult = await controller.Put(name, updatedRune);
+            var objectResult = (ObjectResult)putResult;
 
-    //        // Assert
-    //        Assert.IsNotNull(objectResult);
-    //        Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+        }
 
-    //        var champion = (DTOChampion)objectResult.Value;
-    //        Assert.IsNotNull(champion);
-    //        Assert.AreEqual("Akali", champion.Name);
+        [TestMethod]
+        public async Task Post_ReturnBadRequest_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var rune = new DTOChampion { Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
 
-    //        // Act
-    //        // Test avec un nom vide
-    //        championResult = await controller.Get("");
-    //        var statusCodeResult = (ObjectResult)championResult;
+            // Act
+            var result = await controller.Post(rune);
+            var objectResult = (ObjectResult)result;
 
-    //        // Assert
-    //        Assert.IsNotNull(statusCodeResult);
-    //        Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
-    //        // Act
-    //        // Test avec un nom invalide
-    //        championResult = await controller.Get("InvalidName");
-    //        statusCodeResult = (ObjectResult)championResult;
+        }
 
-    //        // Assert
-    //        Assert.IsNotNull(statusCodeResult);
-    //        Assert.AreEqual((int)HttpStatusCode.NotFound, statusCodeResult.StatusCode);
-    //    }
+        [TestMethod]
+        public async Task Post_ReturnBadRequest_WhenRuneDataIsIncomplete()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var rune = new DTOChampion { Name = "", Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
 
-    //    [TestMethod]
-    //    [DataRow("Test", "Test", "Test", "Test", "Test", HttpStatusCode.Created)]
-    //    [DataRow("", "Test", "Test", "Test", "Test", HttpStatusCode.BadRequest)]
-    //    [DataRow("Test", "", "Test", "Test", "Test", HttpStatusCode.BadRequest)]
-    //    [DataRow("Test", "Test", "", "Test", "Test", HttpStatusCode.BadRequest)]
-    //    [DataRow("Test", "Test", "Test", "", "Test", HttpStatusCode.BadRequest)]
-    //    [DataRow("Test", "Test", "Test", "Test", "", HttpStatusCode.BadRequest)]
-    //    public async Task TestPost(string name, string image, string bio, string championClass, string icon, HttpStatusCode expectedStatusCode)
-    //    {
-    //        IDataManager stubData = new StubData();
-    //        ChampionsController controller = new ChampionsController(stubData);
+            // Act
+            var result = await controller.Post(rune);
+            var objectResult = (ObjectResult)result;
 
-    //        // Arrange
-    //        DTOChampion champion = new DTOChampion
-    //        {
-    //            Name = name,
-    //            Image = image,
-    //            Bio = bio,
-    //            Class = championClass,
-    //            Icon = icon
-    //        };
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
-    //        // Act
-    //        var championResult = await controller.Post(champion);
-    //        var statusCodeResult = (ObjectResult)championResult;
+        }
 
-    //        // Assert
-    //        Assert.AreEqual((int)expectedStatusCode, statusCodeResult.StatusCode);
-    //    }
+        [TestMethod]
+        public async Task Post_ReturnBadRequest_WhenRuneAlreadyExists()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var rune = new DTOChampion { Name = "Champ1", Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+            await controller.Post(rune);
 
-    //    [TestMethod]
-    //    public async Task TestPost_ModelStateInvalid()
-    //    {
-    //        IDataManager stubData = new StubData();
-    //        ChampionsController controller = new ChampionsController(stubData);
-    //        controller.ModelState.AddModelError("Test", "Test");
+            // Act
+            var result = await controller.Post(rune);
+            var objectResult = (ObjectResult)result;
 
-    //        // Arrange
-    //        DTOChampion champion = new DTOChampion
-    //        {
-    //            Name = "Test",
-    //            Image = "Test",
-    //            Bio = "Test",
-    //            Class = "Test",
-    //            Icon = "Test"
-    //        };
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
-    //        // Act
-    //        var championResult = await controller.Post(champion);
-    //        var statusCodeResult = (ObjectResult)championResult;
+        }
 
-    //        // Assert
-    //        Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
-    //    }
+        [TestMethod]
+        public async Task Post_ReturnCreated_WhenRuneAddedSuccessfully()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var rune = new DTOChampion { Name = "Champ1", Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
 
-    //    [TestMethod]
-    //    public async Task TestPost_ChampionAlreadyExists()
-    //    {
-    //        // Arrange
-    //        IDataManager stubData = new StubData();
-    //        ChampionsController controller = new ChampionsController(stubData);
+            // Act
+            var result = await controller.Post(rune);
+            var objectResult = (ObjectResult)result;
 
-    //        DTOChampion champion = new DTOChampion
-    //        {
-    //            Name = "Test",
-    //            Image = "Test",
-    //            Bio = "Test",
-    //            Class = "Test",
-    //            Icon = "Test"
-    //        };
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.Created, objectResult.StatusCode);
+        }
 
-    //        await controller.Post(champion);
+        [TestMethod]
+        public async Task Get_ReturnBadRequest()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "";
 
-    //        // Act
-    //        var championResult = await controller.Post(champion);
-    //        var statusCodeResult = (ObjectResult)championResult;
+            // Act
+            var result = await controller.Get(name);
+            var objectResult = (ObjectResult)result;
 
-    //        // Assert
-    //        Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        }
 
-    //    }
+        [TestMethod]
+        public async Task Get_ReturnNotFound()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "NonExistingRune";
 
-    //    [TestMethod]
-    //    public async Task TestPost_CreateChampion()
-    //    {
-    //        // Arrange
-    //        IDataManager stubData = new StubData();
-    //        ChampionsController controller = new ChampionsController(stubData);
+            // Act
+            var result = await controller.Get(name);
+            var objectResult = (ObjectResult)result;
 
-    //        DTOChampion champion = new DTOChampion
-    //        {
-    //            Name = "Test",
-    //            Image = "Test",
-    //            Bio = "Test",
-    //            Class = "Test",
-    //            Icon = "Test"
-    //        };
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
 
-    //        // Act
-    //        var championResult = await controller.Post(champion);
-    //        var statusCodeResult = (ObjectResult)championResult;
+        [TestMethod]
+        public async Task Get_ReturnOk()
+        {
+            // Arrange
+            var controller = new ChampionsController(_stubData, _logger);
+            var name = "Skin1";
+            var rune = new DTOChampion { Name = name, Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+            var test = await controller.Post(rune);
 
-    //        // Assert
-    //        Assert.AreEqual((int)HttpStatusCode.Created, statusCodeResult.StatusCode);
+            // Act
+            var result = await controller.Get(name);
+            var objectResult = (ObjectResult)result;
 
-    //    }
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+        }
+        //    [TestMethod]
+        //    public async Task TestGetChampion()
+        //    {
+        //        //Test OkObjectResult
+        //        //Arrange 
+        //        IDataManager stubData = new StubData();
+        //        ChampionsController controller = new ChampionsController(stubData);
+        //        var expectedCount = await stubData.ChampionsMgr.GetNbItems();
 
-    //    //[TestMethod]
-    //    //public async Task TestUpdateChampion()
-    //    //{
-    //    //    // Arrange
-    //    //    var stubData = new StubData();
-    //    //    var controller = new ChampionsController(stubData);
-    //    //    var championName = "Akali";
-    //    //    var champion = new DTOChampion
-    //    //    {
-    //    //        Name = "Akali",
-    //    //        Image = "ashe.png",
-    //    //        Bio = "Ashe's Bio",
-    //    //        Class = "Marksman",
-    //    //        Icon = "ashe-icon.png"
-    //    //    };
-    //    //    var updatedChampion = new DTOChampion
-    //    //    {
-    //    //        Name = "Akali",
-    //    //        Image = "new-ashe.png",
-    //    //        Bio = "New Ashe's Bio",
-    //    //        Class = "Assassin",
-    //    //        Icon = "new-ashe-icon.png"
-    //    //    };
+        //        // Act
+        //        var championResult = await controller.GetAll();
 
-    //    //    // Act
-    //    //    var result = await controller.Put(championName, updatedChampion);
-    //    //    var objectResult = (ObjectResult)result;
+        //        // Assert
+        //        Assert.IsInstanceOfType(championResult, typeof(ObjectResult));
+        //        var objectResult = (ObjectResult)championResult;
+        //        //var objectResult = (ObjectResult)championResult;
+        //        Assert.IsNotNull(objectResult);
+        //        //pas utile on vérifie le code de retour
+        //        Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
 
-    //    //    // Assert
-    //    //    Assert.IsNotNull(objectResult);
-    //    //    Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+        //        var champions = objectResult.Value as IEnumerable<DTOChampion>;
+        //        Assert.IsNotNull(champions);
+        //        Assert.AreEqual(expectedCount, champions.Count());
 
-    //    //    var updatedChampionEntity = await stubData.ChampionsMgr.GetItemByName(championName);
-    //    //    Assert.IsNotNull(updatedChampionEntity);
-    //    //    Assert.AreEqual(updatedChampion.Image, updatedChampionEntity.Image.Base64);
-    //    //    Assert.AreEqual(updatedChampion.Bio, updatedChampionEntity.Bio);
-    //    //    Assert.AreEqual(updatedChampion.Class, updatedChampionEntity.Class.ToString());
-    //    //    Assert.AreEqual(updatedChampion.Icon, updatedChampionEntity.Icon);
+        //        //Test NoContentObjectResult
+        //        // Arrange
+        //        //IDataManager stubData2 = new StubData();
+        //        //stubData2.ChampionsMgr = new ChampionsManager(new List<Champion>());
+        //        //ChampionsController controller2 = new ChampionsController(stubData2);
 
-    //    //    // Test with incomplete data
-    //    //    champion = new DTOChampion
-    //    //    {
-    //    //        Name = "Ashe",
-    //    //        Image = "ashe.png",
-    //    //        Bio = "Ashe's Bio",
-    //    //        Class = "Marksman",
-    //    //    };
-    //    //    result = await controller.Put(championName, champion);
-    //    //    objectResult = (ObjectResult)result;
-    //    //    Assert.IsNotNull(objectResult);
-    //    //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        //        //// Act
+        //        //var result = await controller2.GetAll();
 
-    //    //    // Test with non-existent champion
-    //    //    var nonExistentChampionName = "NonExistentChampion";
-    //    //    result = await controller.Put(nonExistentChampionName, updatedChampion);
-    //    //    objectResult = (ObjectResult)result;
-    //    //    Assert.IsNotNull(objectResult);
-    //    //    Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
-    //    //}
+        //        //// Assert
+        //        //Assert.IsInstanceOfType(result, typeof(ObjectResult));
+        //        //var noContentResult = (ObjectResult)result;
+        //        //Assert.AreEqual((int)HttpStatusCode.NoContent, noContentResult.StatusCode);
 
-    //    [TestMethod]
-    //    public async Task TestDeleteChampion()
-    //    {
-    //        IDataManager stubData = new StubData();
-    //        ChampionsController controller = new ChampionsController(stubData);
-    //        // Test avec un nom de champion existant
-    //        var result = await controller.Delete("Aatrox");
-    //        var objectResult = (ObjectResult)result;
-    //        Assert.IsNotNull(objectResult);
-    //        Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+        //        // Arrange
+        //        IDataManager stubData3 = new StubData();
+        //        stubData3.ChampionsMgr = new ChampionsManager((StubData)null);
+        //        ChampionsController controller3 = new ChampionsController(stubData3);
 
-    //        // Test avec un nom de champion non existant
-    //        result = await controller.Delete("Unknown Champion");
-    //        objectResult = (ObjectResult)result;
-    //        Assert.IsNotNull(objectResult);
-    //        Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
-    //    }
+        //        // Act
+        //        var result2 = await controller3.GetAll();
 
-    //    [TestMethod]
-    //    public async Task TestDelete_ExistingChampion()
-    //    {
-    //        // Arrange
-    //        var existingChampionName = "Aatrox";
-    //        var stubData = new StubData();
-    //        await stubData.ChampionsMgr.AddItem(new Champion(existingChampionName));
-    //        var controller = new ChampionsController(stubData);
+        //        // Assert
+        //        Assert.IsInstanceOfType(result2, typeof(ObjectResult));
+        //        var objectResult2 = (ObjectResult)result2;
+        //        Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult2.StatusCode);
+        //    }
 
-    //        // Act
-    //        var result = await controller.Delete(existingChampionName);
-    //        var objectResult = (ObjectResult)result;
+        //    //[TestMethod]
+        //    //public async Task TestGetPage()
+        //    //{
+        //    //    IDataManager stubData = new StubData();
+        //    //    ChampionsController controller = new ChampionsController(stubData);
+        //    //    int page = 1;
+        //    //    int nbItem = 1;
+        //    //    int nbItemTotal = stubData.ChampionsMgr.GetNbItems().Result;
 
-    //        // Assert
-    //        Assert.IsNotNull(objectResult);
-    //        Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+        //    //    // Test avec des entrées valides
+        //    //    var championResult = await controller.GetPage(page, nbItem);
+        //    //    var objectValue = (ObjectResult)championResult;
+        //    //    Assert.IsNotNull(objectValue);
+        //    //    Assert.AreEqual((int)HttpStatusCode.OK, objectValue.StatusCode);
 
-    //        // Vérifiez que le champion a été supprimé en appelant GetItemByName, qui devrait renvoyer null
-    //        var deletedChampion = await stubData.ChampionsMgr.GetItemByName(existingChampionName);
-    //        Assert.IsNull(deletedChampion);
-    //    }
+        //    //    var valeur = objectValue.Value as IEnumerable<DTOChampion>;
+        //    //    Assert.IsNotNull(valeur);
+        //    //    Assert.AreEqual(nbItem, valeur.Count());
 
-    //    [TestMethod]
-    //    public async Task TestDelete_NotExistingChampion()
-    //    {
-    //        // Arrange
-    //        var nonExistentChampionName = "Unknown Champion";
-    //        var stubData = new StubData();
-    //        var controller = new ChampionsController(stubData);
+        //    //    // Test avec des entrées non valides (page ou nbItem < 0)
+        //    //    championResult = await controller.GetPage(-1, nbItem);
+        //    //    var statusCodeResult = (ObjectResult)championResult;
+        //    //    Assert.IsNotNull(statusCodeResult);
+        //    //    Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
 
-    //        // Act
-    //        var result = await controller.Delete(nonExistentChampionName);
-    //        var objectResult = (ObjectResult)result;
+        //    //    championResult = await controller.GetPage(page, -1);
+        //    //    statusCodeResult = (ObjectResult)championResult;
+        //    //    Assert.IsNotNull(statusCodeResult);
+        //    //    Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
 
-    //        // Assert
-    //        Assert.IsNotNull(objectResult);
-    //        Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
-    //    }
+        //    //    // Test avec une page trop grande
+        //    //    championResult = await controller.GetPage(nbItemTotal / nbItem + 1, nbItem);
+        //    //    statusCodeResult = (ObjectResult)championResult;
+        //    //    Assert.IsNotNull(statusCodeResult);
+        //    //    Assert.AreEqual((int)HttpStatusCode.RequestedRangeNotSatisfiable, statusCodeResult.StatusCode);
+        //    //}
+
+        //    [TestMethod]
+        //    public async Task TestGetChampionByName()
+        //    {
+        //        // Arrange
+        //        IDataManager stubData = new StubData();
+        //        ChampionsController controller = new ChampionsController(stubData);
+
+        //        // Act
+        //        // Test avec un nom valide
+        //        var championResult = await controller.Get("Akali");
+        //        var objectResult = (ObjectResult)championResult;
+
+        //        // Assert
+        //        Assert.IsNotNull(objectResult);
+        //        Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+
+        //        var champion = (DTOChampion)objectResult.Value;
+        //        Assert.IsNotNull(champion);
+        //        Assert.AreEqual("Akali", champion.Name);
+
+        //        // Act
+        //        // Test avec un nom vide
+        //        championResult = await controller.Get("");
+        //        var statusCodeResult = (ObjectResult)championResult;
+
+        //        // Assert
+        //        Assert.IsNotNull(statusCodeResult);
+        //        Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
+
+        //        // Act
+        //        // Test avec un nom invalide
+        //        championResult = await controller.Get("InvalidName");
+        //        statusCodeResult = (ObjectResult)championResult;
+
+        //        // Assert
+        //        Assert.IsNotNull(statusCodeResult);
+        //        Assert.AreEqual((int)HttpStatusCode.NotFound, statusCodeResult.StatusCode);
+        //    }
+
+        //    [TestMethod]
+        //    [DataRow("Test", "Test", "Test", "Test", "Test", HttpStatusCode.Created)]
+        //    [DataRow("", "Test", "Test", "Test", "Test", HttpStatusCode.BadRequest)]
+        //    [DataRow("Test", "", "Test", "Test", "Test", HttpStatusCode.BadRequest)]
+        //    [DataRow("Test", "Test", "", "Test", "Test", HttpStatusCode.BadRequest)]
+        //    [DataRow("Test", "Test", "Test", "", "Test", HttpStatusCode.BadRequest)]
+        //    [DataRow("Test", "Test", "Test", "Test", "", HttpStatusCode.BadRequest)]
+        //    public async Task TestPost(string name, string image, string bio, string championClass, string icon, HttpStatusCode expectedStatusCode)
+        //    {
+        //        IDataManager stubData = new StubData();
+        //        ChampionsController controller = new ChampionsController(stubData);
+
+        //        // Arrange
+        //        DTOChampion champion = new DTOChampion
+        //        {
+        //            Name = name,
+        //            Image = image,
+        //            Bio = bio,
+        //            Class = championClass,
+        //            Icon = icon
+        //        };
+
+        //        // Act
+        //        var championResult = await controller.Post(champion);
+        //        var statusCodeResult = (ObjectResult)championResult;
+
+        //        // Assert
+        //        Assert.AreEqual((int)expectedStatusCode, statusCodeResult.StatusCode);
+        //    }
+
+        //    [TestMethod]
+        //    public async Task TestPost_ModelStateInvalid()
+        //    {
+        //        IDataManager stubData = new StubData();
+        //        ChampionsController controller = new ChampionsController(stubData);
+        //        controller.ModelState.AddModelError("Test", "Test");
+
+        //        // Arrange
+        //        DTOChampion champion = new DTOChampion
+        //        {
+        //            Name = "Test",
+        //            Image = "Test",
+        //            Bio = "Test",
+        //            Class = "Test",
+        //            Icon = "Test"
+        //        };
+
+        //        // Act
+        //        var championResult = await controller.Post(champion);
+        //        var statusCodeResult = (ObjectResult)championResult;
+
+        //        // Assert
+        //        Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
+        //    }
+
+        //    [TestMethod]
+        //    public async Task TestPost_ChampionAlreadyExists()
+        //    {
+        //        // Arrange
+        //        IDataManager stubData = new StubData();
+        //        ChampionsController controller = new ChampionsController(stubData);
+
+        //        DTOChampion champion = new DTOChampion
+        //        {
+        //            Name = "Test",
+        //            Image = "Test",
+        //            Bio = "Test",
+        //            Class = "Test",
+        //            Icon = "Test"
+        //        };
+
+        //        await controller.Post(champion);
+
+        //        // Act
+        //        var championResult = await controller.Post(champion);
+        //        var statusCodeResult = (ObjectResult)championResult;
+
+        //        // Assert
+        //        Assert.AreEqual((int)HttpStatusCode.BadRequest, statusCodeResult.StatusCode);
+
+        //    }
+
+        //    [TestMethod]
+        //    public async Task TestPost_CreateChampion()
+        //    {
+        //        // Arrange
+        //        IDataManager stubData = new StubData();
+        //        ChampionsController controller = new ChampionsController(stubData);
+
+        //        DTOChampion champion = new DTOChampion
+        //        {
+        //            Name = "Test",
+        //            Image = "Test",
+        //            Bio = "Test",
+        //            Class = "Test",
+        //            Icon = "Test"
+        //        };
+
+        //        // Act
+        //        var championResult = await controller.Post(champion);
+        //        var statusCodeResult = (ObjectResult)championResult;
+
+        //        // Assert
+        //        Assert.AreEqual((int)HttpStatusCode.Created, statusCodeResult.StatusCode);
+
+        //    }
+
+        //    //[TestMethod]
+        //    //public async Task TestUpdateChampion()
+        //    //{
+        //    //    // Arrange
+        //    //    var stubData = new StubData();
+        //    //    var controller = new ChampionsController(stubData);
+        //    //    var championName = "Akali";
+        //    //    var champion = new DTOChampion
+        //    //    {
+        //    //        Name = "Akali",
+        //    //        Image = "ashe.png",
+        //    //        Bio = "Ashe's Bio",
+        //    //        Class = "Marksman",
+        //    //        Icon = "ashe-icon.png"
+        //    //    };
+        //    //    var updatedChampion = new DTOChampion
+        //    //    {
+        //    //        Name = "Akali",
+        //    //        Image = "new-ashe.png",
+        //    //        Bio = "New Ashe's Bio",
+        //    //        Class = "Assassin",
+        //    //        Icon = "new-ashe-icon.png"
+        //    //    };
+
+        //    //    // Act
+        //    //    var result = await controller.Put(championName, updatedChampion);
+        //    //    var objectResult = (ObjectResult)result;
+
+        //    //    // Assert
+        //    //    Assert.IsNotNull(objectResult);
+        //    //    Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+
+        //    //    var updatedChampionEntity = await stubData.ChampionsMgr.GetItemByName(championName);
+        //    //    Assert.IsNotNull(updatedChampionEntity);
+        //    //    Assert.AreEqual(updatedChampion.Image, updatedChampionEntity.Image.Base64);
+        //    //    Assert.AreEqual(updatedChampion.Bio, updatedChampionEntity.Bio);
+        //    //    Assert.AreEqual(updatedChampion.Class, updatedChampionEntity.Class.ToString());
+        //    //    Assert.AreEqual(updatedChampion.Icon, updatedChampionEntity.Icon);
+
+        //    //    // Test with incomplete data
+        //    //    champion = new DTOChampion
+        //    //    {
+        //    //        Name = "Ashe",
+        //    //        Image = "ashe.png",
+        //    //        Bio = "Ashe's Bio",
+        //    //        Class = "Marksman",
+        //    //    };
+        //    //    result = await controller.Put(championName, champion);
+        //    //    objectResult = (ObjectResult)result;
+        //    //    Assert.IsNotNull(objectResult);
+        //    //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
+        //    //    // Test with non-existent champion
+        //    //    var nonExistentChampionName = "NonExistentChampion";
+        //    //    result = await controller.Put(nonExistentChampionName, updatedChampion);
+        //    //    objectResult = (ObjectResult)result;
+        //    //    Assert.IsNotNull(objectResult);
+        //    //    Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        //    //}
+
+        //    [TestMethod]
+        //    public async Task TestDeleteChampion()
+        //    {
+        //        IDataManager stubData = new StubData();
+        //        ChampionsController controller = new ChampionsController(stubData);
+        //        // Test avec un nom de champion existant
+        //        var result = await controller.Delete("Aatrox");
+        //        var objectResult = (ObjectResult)result;
+        //        Assert.IsNotNull(objectResult);
+        //        Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+
+        //        // Test avec un nom de champion non existant
+        //        result = await controller.Delete("Unknown Champion");
+        //        objectResult = (ObjectResult)result;
+        //        Assert.IsNotNull(objectResult);
+        //        Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        //    }
+
+        //    [TestMethod]
+        //    public async Task TestDelete_ExistingChampion()
+        //    {
+        //        // Arrange
+        //        var existingChampionName = "Aatrox";
+        //        var stubData = new StubData();
+        //        await stubData.ChampionsMgr.AddItem(new Champion(existingChampionName));
+        //        var controller = new ChampionsController(stubData);
+
+        //        // Act
+        //        var result = await controller.Delete(existingChampionName);
+        //        var objectResult = (ObjectResult)result;
+
+        //        // Assert
+        //        Assert.IsNotNull(objectResult);
+        //        Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+
+        //        // Vérifiez que le champion a été supprimé en appelant GetItemByName, qui devrait renvoyer null
+        //        var deletedChampion = await stubData.ChampionsMgr.GetItemByName(existingChampionName);
+        //        Assert.IsNull(deletedChampion);
+        //    }
+
+        //    [TestMethod]
+        //    public async Task TestDelete_NotExistingChampion()
+        //    {
+        //        // Arrange
+        //        var nonExistentChampionName = "Unknown Champion";
+        //        var stubData = new StubData();
+        //        var controller = new ChampionsController(stubData);
+
+        //        // Act
+        //        var result = await controller.Delete(nonExistentChampionName);
+        //        var objectResult = (ObjectResult)result;
+
+        //        // Assert
+        //        Assert.IsNotNull(objectResult);
+        //        Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        //    }
     }
 }
