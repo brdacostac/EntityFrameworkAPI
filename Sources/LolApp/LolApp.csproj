@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
+		<OutputType>Exe</OutputType>
+		<RootNamespace>LolApp</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- Display name -->
+		<ApplicationTitle>LolApp</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>fr.uca.iut.lolapp</ApplicationId>
+		<ApplicationIdGuid>d3cd18a9-c614-4933-bd36-3008e72004d5</ApplicationIdGuid>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<ProjectGuid>{0C898A04-092A-49AA-BE65-8AE818A2AF50}</ProjectGuid>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	  <CodesignProvision>appleIUT_TP2022</CodesignProvision>
+	  <CodesignKey>iPhone Developer: Cedric BOUHOURS (M2E3ZQNZ3K)</CodesignKey>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	  <CodesignKey>Developer ID Application</CodesignKey>
+	  <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+	  <CreatePackage>false</CreatePackage>
+	</PropertyGroup>
+	<PropertyGroup>
+	  <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.22621.0</TargetFrameworks>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiIcon Include="Resources\AppIcon\appicon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Images\fighter.svg" />
+	  <None Remove="Resources\Images\lollogo.jpg" />
+	  <None Remove="Resources\Images\sword.png" />
+	  <None Remove="Resources\Images\lol.png" />
+	  <None Remove="Resources\Fonts\Font Awesome 6 Free-Solid-900.otf" />
+	  <None Remove="Resources\Images\support.svg" />
+	  <None Remove="Resources\Images\tank.svg" />
+	  <None Remove="Resources\Images\marksman.svg" />
+	  <None Remove="Resources\Images\assassin.svg" />
+	  <None Remove="Resources\Images\mage.svg" />
+	  <None Remove="Resources\AppIcon\appicon.png" />
+	  <None Remove="Resources\Splash\tank.svg" />
+	  <None Remove="Resources\Splash\splash.png" />
+	  <None Remove="Resources\Images\rp.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiImage Include="Resources\Images\lollogo.jpg" />
+	  <MauiImage Include="Resources\Images\sword.png" />
+	  <MauiImage Include="Resources\Images\lol.png" />
+	  <MauiImage Include="Resources\Images\tank.svg" />
+	  <MauiImage Include="Resources\Images\support.svg" />
+	  <MauiImage Include="Resources\Images\marksman.svg" />
+	  <MauiImage Include="Resources\Images\mage.svg" />
+	  <MauiImage Include="Resources\Images\fighter.svg" />
+	  <MauiImage Include="Resources\Images\assassin.svg" />
+	  <MauiImage Include="Resources\Images\rp.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Model\Model.csproj" />
+	  <ProjectReference Include="..\Shared\Shared.csproj" />
+	  <ProjectReference Include="..\StubLib\StubLib.csproj" />
+	  <ProjectReference Include="..\ViewModels\ViewModels.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
+	  <PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.1.0" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="7.0.59" />
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiSplashScreen Include="Resources\Splash\splash.png" />
+	</ItemGroup>
+</Project>

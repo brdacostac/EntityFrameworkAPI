@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LolApp.AddOrEditSkinPage"
+             Title="AddOrEditSkinPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <Grid RowDefinitions="Auto,*, Auto" BackgroundColor="{StaticResource Black}">
+        <VerticalStackLayout>
+            <Label Text="Nouveau Skin" IsVisible="{Binding IsNew}"
+                   Style="{StaticResource title}"/>
+            <Label Text="Modifier le Skin" IsVisible="{Binding IsNew, Converter={StaticResource invertedBoolConverter}}"
+                   Style="{StaticResource title}"/>
+            <Grid><Line Stroke="{StaticResource Primary}"
+                  X1="0" Y1="0" X2="200" Y2="0"
+                  HorizontalOptions="Center"/>
+            </Grid>
+        </VerticalStackLayout>
+        <ScrollView Grid.Row="1">
+            <Grid ColumnDefinitions="*, 3*" RowDefinitions="Auto, Auto, Auto, Auto, 162">
+                <Label Text="Nom :"
+                       Style="{StaticResource labelForEntry}"/>
+                <Entry Grid.Column="1" Placeholder="Nom du skin" Text="{Binding Skin.Name}"
+                       Style="{StaticResource defaultEntry}"
+                       IsEnabled="{Binding IsNew}"/>
+
+                <Label Text="Icone :" Grid.Row="1" Style="{StaticResource labelForEntry}"/>
+                <ImageButton Grid.Row="1" Grid.Column="1" HeightRequest="42" WidthRequest="42"
+                             Source="{Binding Skin.IconBase64, TargetNullValue='lol.png',
+                             Converter={StaticResource base64ToImageSourceConverter}}"
+                             BackgroundColor="{StaticResource Secondary}"
+                             HorizontalOptions="Start"
+                             Margin="6"
+                             Command="{Binding PickIconCommand}"/>
+                <Label Text="Image :" Grid.Row="2" Style="{StaticResource labelForEntry}"/>
+                <Grid Grid.Row="2" Grid.Column="1" x:Name="largeImageGrid" Margin="0, 0, 12, 0">
+                    <ImageButton WidthRequest="{Binding Width, Source={x:Reference largeImageGrid}}"
+                                 HeightRequest="150"
+                                 Source="{Binding Skin.LargeImageBase64, TargetNullValue='lollogo.jpg',
+                                 Converter={StaticResource base64ToImageSourceConverter}}"
+                                 BackgroundColor="{StaticResource Secondary}"
+                                 HorizontalOptions="Start" 
+                                 Margin="6" 
+                                 Command="{Binding PickLargeImageCommand}"/>
+                </Grid>
+                <Label Text="Prix :" Grid.Row="3"
+                       Style="{StaticResource labelForEntry}"/>
+                <HorizontalStackLayout Grid.Column="1" Grid.Row="3" Margin="6">
+                     <Image Source="rp.png" HeightRequest="16" WidthRequest="16"/>
+                     <Entry Grid.Column="1" Placeholder="Nom du skin" Text="{Binding Skin.Price}"
+                       Style="{StaticResource defaultEntry}" Margin="4, 0, 0, 0" HorizontalTextAlignment="Start">
+                        <Entry.Behaviors>
+                            <toolkit:NumericValidationBehavior Flags="ValidateOnValueChanged"
+                                                               MinimumValue="0"
+                                                               MaximumValue="9999999"
+                                                               MaximumDecimalPlaces="0"
+                                                               InvalidStyle="{StaticResource InvalidEntryStyle}"
+                                                               ValidStyle="{StaticResource defaultEntry}"/>
+                        </Entry.Behaviors>
+                     </Entry>
+                </HorizontalStackLayout>
+                <Label Text="Description :" Grid.Row="4"
+                       Style="{StaticResource labelForEntry}"/>
+                <Editor Grid.Column="1" Grid.Row="4"
+                        Text="{Binding Skin.Description}" Style="{StaticResource defaultEditor}"/>
+            </Grid>
+        </ScrollView>
+        <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center" Spacing="40" Margin="0, 10, 0, 20">
+            <Button Text="Ajouter" Command="{Binding AddSkinCommand}" IsVisible="{Binding IsNew}"/>
+            <Button Text="Modifier" Command="{Binding EditSkinCommand}" IsVisible="{Binding IsNew, Converter={StaticResource invertedBoolConverter}}"/>
+            <Button Text="Annuler" Command="{Binding CancelCommand}"/>
+        </HorizontalStackLayout>
+    </Grid>
+</ContentPage>
