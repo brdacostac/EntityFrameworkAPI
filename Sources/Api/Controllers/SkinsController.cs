@@ -187,8 +187,8 @@ namespace Api.Controllers
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
-
-                var skinResult = _dataManager.SkinsMgr.AddItem(skin.ToSkin());
+                Champion champion = await _dataManager.ChampionsMgr.GetItemByName(skin.ChampionName);
+                var skinResult = _dataManager.SkinsMgr.AddItem(skin.ToSkin(champion));
                 /*return CreatedAtAction((GetByName),new {id = 1 },championResult) */
 
                 var successMessage = $"Le skin {skin.Name} a été ajouté avec succès.";
@@ -232,7 +232,9 @@ namespace Api.Controllers
                 }
 
                 Skin skinUpdate = await _dataManager.SkinsMgr.GetItemByName(name);
-                await _dataManager.SkinsMgr.UpdateItem(skinUpdate, skin.ToSkin());
+                Champion champion = await _dataManager.ChampionsMgr.GetItemByName(skin.ChampionName);
+
+                await _dataManager.SkinsMgr.UpdateItem(skinUpdate, skin.ToSkin(champion));
                 var successMessage = $"Le skin {name} a été modifié avec succès.";
                 _logger.LogInformation(successMessage);
                 return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate(successMessage));

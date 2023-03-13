@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DTOLol
@@ -11,9 +12,13 @@ namespace DTOLol
         public string Message { get; set; }
 
         public T Data { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int? CurrentPage { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int? NextPage { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int? TotalPages { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int? TotalCount { get; set; }
 
         public DTOMessage(string message, T data = default)
@@ -38,6 +43,7 @@ namespace DTOLol
     public class DTOMessage
     {
         public string Message { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public List<DTOLink> Links { get; set; }
 
         public DTOMessage(string message)

@@ -19,15 +19,11 @@ namespace Api.Mapper
             return dTOSkin;
         }
 
-        public static Skin ToSkin(this DTOSkin dTOSkin)
+        public static Skin ToSkin(this DTOSkin dTOSkin,Champion champion)
         {
-            return null;
-            //return new Skin(dTOSkin.Name, dTOSkin.ChampionName.ToDto(), dTOSkin.Price, dTOSkin.Icon, dTOSkin.Image, dTOSkin.Description);
-        }
-
-        public static Skin ToSkin(this DTOSkinPost dTOSkin, Champion champion)
-        {
+            
             return new Skin(dTOSkin.Name, champion, dTOSkin.Price, dTOSkin.Icon, dTOSkin.Image, dTOSkin.Description);
         }
+
     }
 }
