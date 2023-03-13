@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <x:String x:Key="angle-left">&#xf104;</x:String>
+    <x:String x:Key="angle-right">&#xf105;</x:String>
+    <x:String x:Key="caret-left">&#xf0d9;</x:String>
+    <x:String x:Key="caret-down">&#xf0d7;</x:String>
+    <x:String x:Key="magnifying-glass">&#xf002;</x:String>
+    <x:String x:Key="plus">&#x2b;</x:String>
+
+</ResourceDictionary>

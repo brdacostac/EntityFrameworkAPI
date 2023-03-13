@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="LolApp.ChampionPage"
+             Title="ChampionPage"
+             x:Name="root"
+             BackgroundColor="Black">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Modifier" Command="{Binding AppVM.NavigateToEditChampionPageCommand, Source={x:Reference root}}"
+                     CommandParameter="{Binding}"/>
+    </ContentPage.ToolbarItems>
+    <ScrollView>
+        <VerticalStackLayout>
+            <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                            MaximumHeightRequest="{OnPlatform WinUI=300}"
+                            HeightRequest="{Binding Width,
+                                                    Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                    Converter={StaticResource imageRatioConverter},
+                                                    ConverterParameter={StaticResource imageRatio}}">
+                <Image Source="{Binding Image, Converter={StaticResource base64ToImageSourceConverter}}"
+                            Aspect="AspectFit"
+                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                        AbsoluteLayout.LayoutFlags="All"
+                        MaximumHeightRequest="{OnPlatform WinUI=300}"/>
+            </AbsoluteLayout>
+        
+        
+            <Grid Padding="10" BackgroundColor="{StaticResource Black}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="{StaticResource Primary}"
+                    FontSize="Title"/>
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                    <Image Source="{Binding Class, Converter={StaticResource championClassToIconConverter}}"
+                           HeightRequest="26" WidthRequest="26" x:Name="imgClass" PropertyChanged="imgClass_PropertyChanged">
+                        <Image.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="{StaticResource Primary}"
+                                   x:Name="tintColor"/>
+                        </Image.Behaviors>
+                    </Image>
+                    <Label Text="{Binding Class}" TextColor="{StaticResource Primary}"
+                            FontSize="Micro"/>
+                </VerticalStackLayout>
+            </Grid>
+            
+            
+            <ScrollView VerticalScrollBarVisibility="Always" BackgroundColor="Black" >
+                
+                    <Label Text="{Binding Bio}" TextColor="{StaticResource Primary}" Padding="10" FontAttributes="Italic"/>
+                
+            </ScrollView>
+
+            <Label Padding="10" Text="Caractéristiques" FontSize="Title" TextColor="{StaticResource Primary}"
+                   BackgroundColor="Black"/>
+
+            <Grid MaximumHeightRequest="240">
+                <Grid.Resources>
+                    <x:Double x:Key="gridHeight">120</x:Double>
+                    <x:Int32 x:Key="nbCellsPerLine">3</x:Int32>
+                </Grid.Resources>
+                <Grid.HeightRequest>
+                    <MultiBinding Converter="{StaticResource multiMathExpressionConverter}"
+                                  ConverterParameter="ceiling(x1/x2)*x0">
+                        <Binding Source="{StaticResource gridHeight}"/>
+                        <Binding Path="Characteristics.Count"/>
+                        <Binding Source="{StaticResource nbCellsPerLine}"/>
+                    </MultiBinding>
+                </Grid.HeightRequest>
+                <CollectionView ItemsSource="{Binding Characteristics}"
+                                ItemsLayout="VerticalGrid, 3"
+                                VerticalScrollBarVisibility="Always"> 
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10" HeightRequest="120">
+                                <Border Stroke="{StaticResource PrimaryBrush}" StrokeThickness="2" BackgroundColor="{StaticResource Black}">
+                                    <Grid RowDefinitions="4*,3*">
+                                        <Label Text="{Binding Key}" HorizontalOptions="Center" TextColor="{StaticResource Primary}"
+                                               FontSize="Small" FontAttributes="Bold" VerticalOptions="End" HorizontalTextAlignment="Center"
+                                               Margin="0, 0, 0, 5"/>
+                                        <Label Grid.Row="1" Text="{Binding Value}" HorizontalOptions="Center" TextColor="{StaticResource Primary}"
+                                               VerticalOptions="Start" HorizontalTextAlignment="Center"
+                                               FontSize="Small"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+            </Grid>
+            <Label Padding="10" Text="Compétences" FontSize="Title" TextColor="{StaticResource Primary}"
+                   BackgroundColor="Black"/>
+            <ListView ItemsSource="{Binding Skills}" Margin="10"
+                      BackgroundColor="Black" HasUnevenRows="True" VerticalScrollBarVisibility="Always"
+                      MaximumHeightRequest="400">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.Resources>
+                                    <Style TargetType="Label">
+                                        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+                                    </Style>
+
+                                </Grid.Resources>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Label Text="{Binding Name}" FontSize="Medium" FontAttributes="Bold" VerticalOptions="Center"/>
+                                <Label Text="{Binding Type}" Grid.Column="1" VerticalOptions="Center" FontAttributes="Italic" FontSize="Micro"/>
+                                <Label Text="{Binding Description}" FontSize="Micro" FontAttributes="Italic"
+                                       Grid.ColumnSpan="2" Grid.Row="1"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+
+                </ListView.ItemTemplate>
+
+            </ListView>
+            <Grid ColumnDefinitions="*, Auto">
+                <Label Padding="10" Text="Skins" FontSize="Title" TextColor="{StaticResource Primary}"
+                   BackgroundColor="Black"/>
+                <Button Grid.Column="1" Text="{StaticResource plus}" CornerRadius="22" BackgroundColor="{StaticResource Primary}"
+                        TextColor="{StaticResource Black}" FontSize="Header"
+                        Command="{Binding AppVM.NavigateToAddNewSkinPageCommand, Source={x:Reference root}}"
+                        CommandParameter="{Binding}"
+                        VerticalOptions="Center" HorizontalOptions="Center"
+                        Margin="6"/>
+            </Grid>
+            
+
+                <ListView BindingContext="{Binding AppVM, Source={x:Reference root}}"
+                          ItemsSource="{Binding SkinsMgrVM.Skins}" HasUnevenRows="True"
+                          BackgroundColor="{StaticResource Black}"
+                          x:Name="listSkins">
+                    <ListView.Behaviors>
+                        <toolkit:EventToCommandBehavior
+                            EventName="ItemSelected"
+                            Command="{Binding NavigateToSkinDetailsPageCommand}"
+                            EventArgsConverter="{StaticResource SelectedItemEventArgsConverter}"
+                            />
+
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <ViewCell.ContextActions>
+                                    <MenuItem IsDestructive="True"
+                                              Text="Supprimer"
+                                              Command="{Binding BindingContext.SkinsMgrVM.DeleteSkinCommand, Source={x:Reference listSkins}}"
+                                              CommandParameter="{Binding .}"/>
+                                    <MenuItem Text="Modifier"
+                                              Command="{Binding Source={x:Reference listSkins}, Path=BindingContext.NavigateToEditSkinPageCommand}"
+                                              CommandParameter="{Binding .}"/>
+                                </ViewCell.ContextActions>
+                                <Border Stroke="{StaticResource Primary}" Padding="8,4" HeightRequest="60" Margin="4"
+                                        StrokeThickness="3" BackgroundColor="{StaticResource Black}">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="0, 10, 10, 10"/>
+                                    </Border.StrokeShape>
+                                    <HorizontalStackLayout VerticalOptions="Center">
+                                        <Image Source="{Binding Icon, Converter={StaticResource base64ToImageSourceConverter}}"
+                                           HeightRequest="46" WidthRequest="46"/>
+                                        <Label Text="{Binding Name}" TextColor="{StaticResource Primary}" FontSize="Small"
+                                               VerticalOptions="Center" Margin="10,4"/>
+                                    </HorizontalStackLayout>
+                                </Border>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                </ListView>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

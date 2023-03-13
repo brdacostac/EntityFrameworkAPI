@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:Model;assembly=Model" 
+             x:Class="LolApp.ContentViews.ChampionClassSelector"
+             x:Name="root">
+
+    <ContentView.Resources>
+        <model:ChampionClass x:Key="assassin">Assassin</model:ChampionClass>
+        <model:ChampionClass x:Key="fighter">Fighter</model:ChampionClass>
+        <model:ChampionClass x:Key="mage">Mage</model:ChampionClass>
+        <model:ChampionClass x:Key="marksman">Marksman</model:ChampionClass>
+        <model:ChampionClass x:Key="support">Support</model:ChampionClass>
+        <model:ChampionClass x:Key="tank">Tank</model:ChampionClass>
+
+        <ControlTemplate x:Key="RadioButtonTemplate">
+                <Border Stroke="{StaticResource Transparent}"
+                        BackgroundColor="{StaticResource Transparent}"
+                        
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill"
+                        Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="40, 40, 0, 40"/>
+                </Border.StrokeShape>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CheckedStates">
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor"
+                                                Value="{Binding CheckedColor, Source={x:Reference root}}" />
+                                        <Setter Property="Stroke"
+                                                Value="{Binding CheckedColor, Source={x:Reference root}}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor"
+                                                Value="{Binding UncheckedColor, Source={x:Reference root}}" />
+                                        <Setter Property="Stroke"
+                                                Value="{Binding UncheckedColor, Source={x:Reference root}}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                    <Grid>
+                        <ContentPresenter VerticalOptions="Center" HorizontalOptions="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+
+        <Style TargetType="RadioButton">
+            <Setter Property="ControlTemplate"
+                    Value="{StaticResource RadioButtonTemplate}" />
+        </Style>
+    </ContentView.Resources>
+
+    <Grid ColumnDefinitions="*, *, *" RowDefinitions="*, *"
+            Margin="6" ColumnSpacing="6" RowSpacing="6"
+            RadioButtonGroup.GroupName="championClasses"
+            RadioButtonGroup.SelectedValue="{Binding SelectedValue, Source={x:Reference root}, Mode=TwoWay}">
+        <Grid.Resources>
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="{OnPlatform Micro, WinUI=12}"/>
+            </Style>
+        </Grid.Resources>
+        <RadioButton Value="{Binding Source={StaticResource assassin}}">
+            <RadioButton.Content>
+                <VerticalStackLayout>
+                    <Image Source="{Binding Source={StaticResource assassin}, Converter={StaticResource championClassToIconConverter}}"
+                                WidthRequest="26" HeightRequest="26" HorizontalOptions="Center"/>
+                    <Label Text="Assassin"  HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </RadioButton.Content>
+        </RadioButton>
+        <RadioButton Grid.Column="1"
+                        Value="{Binding Source={StaticResource fighter}}">
+            <RadioButton.Content>
+                <VerticalStackLayout>
+                    <Image Source="{Binding Source={StaticResource fighter}, Converter={StaticResource championClassToIconConverter}}"
+                                WidthRequest="26" HeightRequest="26" HorizontalOptions="Center"/>
+                    <Label Text="Fighter"  HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </RadioButton.Content>
+        </RadioButton>
+        <RadioButton Grid.Column="2"
+                        Value="{Binding Source={StaticResource mage}}">
+            <RadioButton.Content>
+                <VerticalStackLayout>
+                    <Image Source="{Binding Source={StaticResource mage}, Converter={StaticResource championClassToIconConverter}}"
+                                WidthRequest="26" HeightRequest="26" HorizontalOptions="Center"/>
+                    <Label Text="Mage"  HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </RadioButton.Content>
+        </RadioButton>
+        <RadioButton Grid.Row="1" Grid.Column="0"
+                        Value="{Binding Source={StaticResource marksman}}">
+            <RadioButton.Content>
+                <VerticalStackLayout>
+                    <Image Source="{Binding Source={StaticResource marksman}, Converter={StaticResource championClassToIconConverter}}"
+                                WidthRequest="26" HeightRequest="26" HorizontalOptions="Center"/>
+                    <Label Text="Marksman"  HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </RadioButton.Content>
+        </RadioButton>
+        <RadioButton Grid.Row="1" Grid.Column="1"
+                        Value="{Binding Source={StaticResource support}}">
+            <RadioButton.Content>
+                <VerticalStackLayout>
+                    <Image Source="{Binding Source={StaticResource support}, Converter={StaticResource championClassToIconConverter}}"
+                                WidthRequest="26" HeightRequest="26" HorizontalOptions="Center"/>
+                    <Label Text="Support"  HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </RadioButton.Content>
+        </RadioButton>
+        <RadioButton Grid.Row="1" Grid.Column="2"
+                        Value="{Binding Source={StaticResource tank}}">
+            <RadioButton.Content>
+                <VerticalStackLayout>
+                    <Image Source="{Binding Source={StaticResource tank}, Converter={StaticResource championClassToIconConverter}}"
+                                WidthRequest="26" HeightRequest="26" HorizontalOptions="Center"/>
+                    <Label Text="Tank"  HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </RadioButton.Content>
+        </RadioButton>
+
+    </Grid>
+</ContentView>
+

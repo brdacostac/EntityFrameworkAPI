@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:myviews="clr-namespace:LolApp.ContentViews"
+             xmlns:vm="clr-namespace:ViewModels;assembly=ViewModels"
+             xmlns:appvm="clr-namespace:LolApp.ViewModels"
+             x:Class="LolApp.ChampionsPage"
+             Title="Champions"
+             x:Name="root">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Ajouter" Command="{Binding AppVM.NavigateToAddNewChampionPageCommand}"  />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ControlTemplate x:Key="searchByStringControl">
+            <Grid Margin="20,4" HeightRequest="{OnPlatform 30, Android=40}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Entry Placeholder="{TemplateBinding PlaceHolder}"
+                       Text="{TemplateBinding Text, Mode=TwoWay}"/>
+                <Button Text="{StaticResource magnifying-glass}"
+                        FontFamily="FASolid"
+                        Grid.Column="1" Margin="4, 0, 0, 0"
+                        Command="{TemplateBinding Command}"
+                        CommandParameter="{TemplateBinding CommandParameter}"/>
+            </Grid>
+        </ControlTemplate>
+
+    </ContentPage.Resources>
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName = "Loaded"
+            Command="{Binding AppVM.ChampionsMgrVM.LoadChampionsCommand}"/>
+
+    </ContentPage.Behaviors>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+
+        </Grid.RowDefinitions>
+        <toolkit:Expander Grid.Row="1">
+            <toolkit:Expander.Header>
+                <HorizontalStackLayout>
+                    <Label Text="Chercher par "
+                           HorizontalOptions="Center"/>
+                    <Label Text="nom" IsVisible="{Binding VM.SearchedName, Converter={StaticResource isStringNotNullOrWhiteSpaceConverter}}"/>
+                    <Label Text="compétence" IsVisible="{Binding VM.SearchedSkill, Converter={StaticResource isStringNotNullOrWhiteSpaceConverter}}"/>
+                    <Label Text="   "/>
+                    <Label Text="{Binding IsExpanded,
+                                          Source={RelativeSource AncestorType={x:Type toolkit:Expander}},
+                                          Converter={StaticResource isExpandedToCaretConverter}}"
+                           FontFamily="FASolid"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </toolkit:Expander.Header>
+            <VerticalStackLayout HorizontalOptions="Fill" BackgroundColor="WhiteSmoke">
+                <myviews:SearchByStringView ControlTemplate="{StaticResource searchByStringControl}"
+                            PlaceHolder="Entrez un nom"
+                            Text="{Binding VM.SearchedName, Mode=TwoWay}"
+                            Command="{Binding AppVM.ChampionsMgrVM.LoadChampionsByNameCommand}"
+                            CommandParameter="{Binding VM.SearchedName}"/>
+                <myviews:SearchByStringView ControlTemplate="{StaticResource searchByStringControl}"
+                            PlaceHolder="Entrez une compétence"
+                            Text="{Binding VM.SearchedSkill, Mode=TwoWay}"
+                            Command="{Binding AppVM.ChampionsMgrVM.LoadChampionsBySkillCommand}"
+                            CommandParameter="{Binding VM.SearchedSkill}"/>
+                <myviews:SearchByStringView ControlTemplate="{StaticResource searchByStringControl}"
+                            PlaceHolder="Entrez une caractéristique"
+                            Text="{Binding VM.SearchedCharacteristic, Mode=TwoWay}"
+                            Command="{Binding AppVM.ChampionsMgrVM.LoadChampionsByCharacteristicCommand}"
+                            CommandParameter="{Binding VM.SearchedCharacteristic}"/>
+                <Label Text="Filtrer par classe :" Margin="20, 4, 0, 0"
+                                        FontSize="Micro"/>
+                <CollectionView ItemsSource="{x:Static appvm:ChampionClassVM.Classes}" ItemsLayout="VerticalGrid, 3"
+                                SelectionMode="Single" HeightRequest="110" x:Name="classesView"
+                                SelectionChangedCommand="{Binding AppVM.ChampionsMgrVM.LoadChampionsByClassCommand}"
+                                SelectionChangedCommandParameter="{Binding VM.SelectedItem, Source={RelativeSource Self}}"
+                                SelectedItem="{Binding VM.SelectedClass, Source={x:Reference root}, Mode=TwoWay}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                             <Grid HorizontalOptions="Center" RowDefinitions="*, *" WidthRequest="100" Padding="10, 10, 10, 0"
+                                   BackgroundColor="{Binding IsSelected, Converter={StaticResource isSelectedToColorConverter}}">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference root}, Path=BindingContext.VM.SelectedChampionClassChangedCommand}"
+                                                          CommandParameter="{Binding}" />
+
+                                </Grid.GestureRecognizers>
+                                <Image Source="{Binding Model, Converter={StaticResource championClassToIconConverter}}" HeightRequest="26" WidthRequest="26"
+                                       />
+                                <Label Text="{Binding Model}" TextColor="{StaticResource Black}"
+                                       HorizontalOptions="Center" Grid.Row="1"
+                                        FontSize="Micro">
+                                </Label>
+                                        
+                            </Grid>
+
+                        </DataTemplate>
+
+                    </CollectionView.ItemTemplate>
+                    </CollectionView>
+            </VerticalStackLayout>
+        </toolkit:Expander>
+        <ListView Grid.Row="2" CachingStrategy="RecycleElementAndDataTemplate"
+                  ItemsSource="{Binding AppVM.ChampionsMgrVM.Champions}"
+                  RowHeight="50"
+                  SelectedItem="{Binding AppVM.ChampionsMgrVM.SelectedChampion, Mode=TwoWay}">
+            <ListView.Behaviors>
+                <toolkit:EventToCommandBehavior
+                    EventName="ItemSelected"
+                    Command="{Binding AppVM.NavigateToChampionDetailsPageCommand}"
+                    EventArgsConverter="{StaticResource SelectedItemEventArgsConverter}"
+                    />
+
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.ContextActions>
+                            <MenuItem Command="{Binding Source={x:Reference root}, Path=BindingContext.AppVM.ChampionsMgrVM.DeleteChampionCommand}"
+                                      CommandParameter="{Binding .}"
+                                      IsDestructive="True" Text="Supprimer"/>
+                            <MenuItem Command="{Binding Source={x:Reference root}, Path=BindingContext.AppVM.NavigateToEditChampionPageCommand}"
+                                      CommandParameter="{Binding .}"
+                                      IsDestructive="False" Text="Modifier"/>
+                        </ViewCell.ContextActions>
+                        <Grid Margin="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Image Source="{Binding Icon, Converter={StaticResource base64ToImageSourceConverter}}"
+                                   HeightRequest="40"
+                                   WidthRequest="40"
+                                   Grid.RowSpan="2"
+                                   VerticalOptions="Center"
+                                   Margin="0, 0, 10, 0"/>
+                            <Label Text="{Binding Name}" Grid.Column="1"
+                                   FontAttributes="Bold"
+                                   FontSize="{OnPlatform Header, WinUI=Small}"
+                                   VerticalOptions="Center"/>
+                            <Label Text="{Binding Class}" Grid.Row="1" Grid.Column="1"
+                                   FontAttributes="Italic"
+                                   FontSize="Caption"
+                                   VerticalOptions="Center"/>
+                        </Grid>
+
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+       
+        <Grid Grid.Row="3" HorizontalOptions="Center" HeightRequest="45"
+              IsVisible="{Binding AppVM.ChampionsMgrVM.NbChampions, Converter={StaticResource intToBoolConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource iconButton}"
+                    Command="{Binding AppVM.ChampionsMgrVM.PreviousPageCommand}">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{StaticResource angle-left}"
+                                        FontFamily="FASolid"
+                                        Size="Title"/>
+                </Button.ImageSource>
+            </Button>
+            <StackLayout Orientation="Horizontal" Grid.Column="1"
+                            HorizontalOptions="Center" VerticalOptions="Center">
+                <StackLayout.Resources>
+                    <Style BasedOn="{StaticResource defaultLabel}" TargetType="Label">
+                        <Setter Property="Margin" Value="2"/>
+                    </Style>
+                </StackLayout.Resources>
+                <Label Text="{Binding AppVM.ChampionsMgrVM.Index, Converter={StaticResource plusOneConverter}}" HorizontalOptions="End"/>
+                <Label Text="/"/>
+                <Label Text="{Binding AppVM.ChampionsMgrVM.NbPages}" HorizontalOptions="Start"/>
+            </StackLayout>
+            <Button Grid.Column="2" Style="{StaticResource iconButton}"
+                    Command="{Binding AppVM.ChampionsMgrVM.NextPageCommand}">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="{StaticResource angle-right}" FontFamily="FASolid"
+                                        Size="Title"/>
+                </Button.ImageSource>
+            </Button>
+        </Grid>
+    </Grid>
+</ContentPage>

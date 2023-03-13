@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LolApp.SkinPage"
+             Title="SkinPage"
+             x:Name="root"
+             BackgroundColor="{StaticResource Black}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Modifier" Command="{Binding AppVM.NavigateToEditSkinPageCommand, Source={x:Reference root}}"
+                     CommandParameter="{Binding}"/>
+    </ContentPage.ToolbarItems>
+    <ScrollView>
+        <VerticalStackLayout>
+            <AbsoluteLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                            MaximumHeightRequest="{OnPlatform WinUI=300}"
+                            HeightRequest="{Binding Width,
+                                                    Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                    Converter={StaticResource imageRatioConverter},
+                                                    ConverterParameter={StaticResource imageRatio}}">
+                <Image Source="{Binding Image, Converter={StaticResource base64ToImageSourceConverter}}"
+                            Aspect="AspectFit"
+                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                        AbsoluteLayout.LayoutFlags="All"
+                        MaximumHeightRequest="{OnPlatform WinUI=300}"/>
+            </AbsoluteLayout>
+        
+        
+            <Grid Padding="10" BackgroundColor="{StaticResource Black}"
+                  ColumnDefinitions="*, Auto">
+                <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="{StaticResource Primary}"
+                    FontSize="Title"/>
+                <HorizontalStackLayout Grid.Column="1">
+                    <Image Source="rp.png" HeightRequest="16" WidthRequest="16"/>
+                    <Label Text="{Binding Price}" TextColor="{StaticResource Primary}"
+                        FontSize="Small" VerticalOptions="Center" Margin="4, 0, 0, 0"/>
+                </HorizontalStackLayout>
+            </Grid>
+            
+            
+            <ScrollView VerticalScrollBarVisibility="Always" BackgroundColor="Black" >
+                <Label Text="{Binding Description}" TextColor="{StaticResource Primary}"
+                       Margin="10" FontAttributes="Italic"/>
+            </ScrollView>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
