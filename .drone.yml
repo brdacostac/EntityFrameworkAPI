@@ -7,15 +7,20 @@ trigger:
     - push
 
 steps:
-  - name: build
+  - name: build-7
     image: mcr.microsoft.com/dotnet/sdk:7.0
     commands:
       - cd Sources/
       - dotnet workload install android
-      - dotnet workload restore /drone/src/Sources/ViewModels/ViewModels.csproj
-      - dotnet restore LeagueOfLegends.sln
-      - dotnet build LeagueOfLegends.sln -c Release --no-restore
-      - dotnet publish LeagueOfLegends.sln -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet build --configuration Release --no-restore ViewModels/ViewModels.csproj
+      - dotnet publish --configuration Release --no-restore --output CI_PROJECT_DIR/build/release ViewModels/ViewModels.csproj
+  
+  - name: build-6
+    image: mcr.microsoft.com/dotnet/sdk:6.0
+    commands:
+      - cd Sources/
+      - dotnet build --configuration Release --no-restore LeagueOfLegends.sln --project ViewModels/ViewModels.csproj
+      - dotnet publish --configuration Release --no-restore --output CI_PROJECT_DIR/build/release LeagueOfLegends.sln
 
   - name: tests
     image: mcr.microsoft.com/dotnet/sdk:6.0
