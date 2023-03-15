@@ -8,7 +8,7 @@ trigger:
 
 steps:
   - name: build
-    image: mcr.microsoft.com/dotnet/sdk:7.0
+    image: mcr.microsoft.com/dotnet/sdk:6.0
     commands:
       - cd Sources/
       - dotnet restore LeagueOfLegends.sln --no-restore ViewModels/ViewModels.csproj
