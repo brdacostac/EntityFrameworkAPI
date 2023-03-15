@@ -11,21 +11,11 @@ steps:
     image: mcr.microsoft.com/dotnet/sdk:6.0
     commands:
       - cd Sources/
-      - dotnet restore Api/Api.csproj
-      - dotnet restore Champion_TestMemory/TestEntityUT.csproj
-      - dotnet restore ClientApi/ClientApi.csproj
-      - dotnet restore Console/BiblioMilieu.csproj
-      - dotnet restore DTOLol/DTOLol.csproj
-      - dotnet restore DbManager/DbManager.csproj
-      - dotnet restore Entity_framework/Entity_framework.csproj
-      - dotnet restore Model/Model.csproj
-      - dotnet restore Shared/Shared.csproj
-      - dotnet restore StubLib/StubLib.csproj
-      - dotnet restore TestChampion/TestControllerApiUt.csproj
-      - dotnet restore Tests/ConsoleTests/ConsoleTests.csproj
-      - dotnet restore Tests/ConsoleTests/ConsoleTests.csproj
-      - dotnet build LeagueOfLegends.sln -c Release --no-restore 
-      - dotnet publish LeagueOfLegends.sln -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet workload install android
+      - dotnet workload restore ViewModels/ViewModels.csproj
+      - dotnet restore ViewModels/ViewModels.csproj
+      - dotnet build ViewModels/ViewModels.csproj -c Release --no-restore
+      - dotnet publish ViewModels/ViewModels.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
 
   - name: tests
     image: mcr.microsoft.com/dotnet/sdk:6.0
