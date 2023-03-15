@@ -39,7 +39,7 @@ steps:
       - dotnet build Shared/Shared.csproj -c Release --no-restore
       - dotnet build StubLib/StubLib.csproj -c Release --no-restore
       - dotnet build TestChampion/TestControllerApiUt.csproj -c Release --no-restore
-      - dotnet build Tests/ConsoleTests/ConsoleTests.csproj-c Release --no-restore
+      - dotnet build Tests/ConsoleTests/ConsoleTests.csproj -c Release --no-restore
       - dotnet publish Api/Api.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
       - dotnet publish Champion_TestMemory/TestEntityUT.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
       - dotnet publish ClientApi/ClientApi.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
