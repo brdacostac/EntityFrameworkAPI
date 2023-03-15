@@ -8,10 +8,22 @@ trigger:
 
 steps:
   - name: build
-    image: mcr.microsoft.com/dotnet/sdk:7.0
+    image: mcr.microsoft.com/dotnet/sdk:6.0
     commands:
       - cd Sources/
-      - dotnet restore LeagueOfLegends.sln 
+      - dotnet restore Api/Api.csproj
+      - dotnet restore Champion_TestMemory/TestEntityUT.csproj
+      - dotnet restore ClientApi/ClientApi.csproj
+      - dotnet restore Console/BiblioMilieu.csproj
+      - dotnet restore DTOLol/DTOLol.csproj
+      - dotnet restore DbManager/DbManager.csproj
+      - dotnet restore Entity_framework/Entity_framework.csproj
+      - dotnet restore Model/Model.csproj
+      - dotnet restore Shared/Shared.csproj
+      - dotnet restore StubLib/StubLib.csproj
+      - dotnet restore TestChampion/TestControllerApiUt.csproj
+      - dotnet restore Tests/ConsoleTests/ConsoleTests.csproj
+      - dotnet restore Tests/ConsoleTests/ConsoleTests.csproj
       - dotnet build LeagueOfLegends.sln -c Release --no-restore 
       - dotnet publish LeagueOfLegends.sln -c Release --no-restore -o CI_PROJECT_DIR/build/release
 
