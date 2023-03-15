@@ -14,7 +14,7 @@ namespace BiblioMilieu
                 Bio = champion.Bio,
                 Class = champion.Class.ToDb(),
                 Icon = champion.Icon,
-                Image = champion.Image.Base64
+                Image = champion.Image.Base64,
             };
             return championDb;
         }

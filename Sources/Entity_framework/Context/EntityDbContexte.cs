@@ -38,8 +38,11 @@ namespace Entity_framework
             //Contrainte
             
             modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithOne(skin => skin.Champion).HasForeignKey(skin => skin.ChampionForeignKey);
-            modelBuilder.Entity<SkillDB>().HasOne(skill => skill.Champion).WithMany(champ => champ.Skills);
+            modelBuilder.Entity<SkillDB>().HasOne(skill => skill.Champion).WithMany(champ => champ.Skills).HasForeignKey(skill => skill.ChampionForeignKey);
             modelBuilder.Entity<ChampionDB>().HasIndex(champ => champ.Name).IsUnique();
+
+            modelBuilder.Entity<CategoryDicDB>().HasIndex(categoryDicDB => categoryDicDB.category).IsUnique();
+
 
             modelBuilder.Entity<RunePagesDb>().HasMany(runePage => runePage.champions).WithMany(champ => champ.RunePages);
             //modelBuilder.Entity<ChampionDB>().HasMany(champ => champ.Skins).WithMany(skin => skin.Champion);
