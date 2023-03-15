@@ -12,7 +12,7 @@ steps:
     commands:
       - cd Sources/
       - dotnet workload restore ViewModels/ViewModels.csproj
-      - dotnet workload restore LolApp/LolApp.csproj::TargetFramework=net7.0-android
+      #- dotnet workload restore LolApp/LolApp.csproj::TargetFramework=net7.0-android
       - dotnet restore LeagueOfLegends.sln
       - dotnet build LeagueOfLegends.sln -c Release --no-restore
       - dotnet publish LeagueOfLegends.sln -c Release --no-restore -o CI_PROJECT_DIR/build/release
