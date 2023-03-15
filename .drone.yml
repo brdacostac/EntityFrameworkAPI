@@ -8,11 +8,12 @@ trigger:
 
 steps:
   - name: build
-    image: mcr.microsoft.com/dotnet/sdk:6.0
+    image: mcr.microsoft.com/dotnet/sdk:7.0
     commands:
       - cd Sources/
-      - dotnet restore LeagueOfLegends.sln --no-restore ViewModels/ViewModels.csproj
-      - dotnet build LeagueOfLegends.sln -c Release --no-restore --no-build ViewModels/ViewModels.csproj
+      - dotnet new maui -n MyApp # Ajout de la création d'un nouveau projet MAUI nommé MyApp
+      - dotnet restore LeagueOfLegends.sln 
+      - dotnet build LeagueOfLegends.sln -c Release --no-restore 
       - dotnet publish LeagueOfLegends.sln -c Release --no-restore -o CI_PROJECT_DIR/build/release
 
   - name: tests
