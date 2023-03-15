@@ -34,6 +34,25 @@ using (var context = new EntityDbContexte())
 
     context.SaveChanges();
     championList= context.ChampionsSet;
+
+    foreach(Champion champion in championListModel)
+    {
+
+        foreach(var caractPair in champion.Characteristics)
+        {
+            CaracteristicDb carac = new CaracteristicDb()
+            {
+                key = caractPair.Key,
+                valeur = caractPair.Value,
+                champion = championList.FirstOrDefault(e => e.Name == champion.Name)
+            };
+            context.CaracteristicSet.Add(carac);
+        }
+            
+    }
+        
+
+    
     var listSkinNew = new List<SkinDB>();
 
     foreach(SkinDB skin in skinList)

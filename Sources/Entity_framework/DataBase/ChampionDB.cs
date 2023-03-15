@@ -48,6 +48,8 @@ namespace Entity_framework
         {
             get; set;
         }
+
+        public ICollection<CaracteristicDb> caracteristics { get; set; } =new List<CaracteristicDb>();
         public ICollection<SkinDB> Skins { get; set; } = new List<SkinDB>();
         public ICollection<SkillDB> Skills { get; set; } = new List<SkillDB>();
 
