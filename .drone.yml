@@ -57,6 +57,30 @@ steps:
     image: mcr.microsoft.com/dotnet/sdk:6.0
     commands:
       - cd Sources/
+      - dotnet restore Api/Api.csproj
+      - dotnet restore Champion_TestMemory/TestEntityUT.csproj
+      - dotnet restore ClientApi/ClientApi.csproj
+      - dotnet restore Console/BiblioMilieu.csproj
+      - dotnet restore DTOLol/DTOLol.csproj
+      - dotnet restore DbManager/DbManager.csproj
+      - dotnet restore Entity_framework/Entity_framework.csproj
+      - dotnet restore Model/Model.csproj
+      - dotnet restore Shared/Shared.csproj
+      - dotnet restore StubLib/StubLib.csproj
+      - dotnet restore TestChampion/TestControllerApiUt.csproj
+      - dotnet restore Tests/ConsoleTests/ConsoleTests.csproj
+      - dotnet test Api/Api.csproj --no-restore
+      - dotnet test Champion_TestMemory/TestEntityUT.csproj --no-restore
+      - dotnet test ClientApi/ClientApi.csproj --no-restore
+      - dotnet test Console/BiblioMilieu.csproj --no-restore
+      - dotnet test DTOLol/DTOLol.csproj --no-restore
+      - dotnet test DbManager/DbManager.csproj --no-restore
+      - dotnet test Entity_framework/Entity_framework.csproj --no-restore
+      - dotnet test Model/Model.csproj --no-restore
+      - dotnet test Shared/Shared.csproj --no-restore
+      - dotnet test StubLib/StubLib.csproj --no-restore
+      - dotnet test TestChampion/TestControllerApiUt.csproj --no-restore
+      - dotnet test Tests/ConsoleTests/ConsoleTests.csproj --no-restore
       - dotnet restore LeagueOfLegends.sln
       - dotnet test LeagueOfLegends.sln --no-restore
     depends_on: [build]
