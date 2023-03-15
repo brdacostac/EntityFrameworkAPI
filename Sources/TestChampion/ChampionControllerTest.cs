@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Model;
+using Moq;
 using StubLib;
 using System.Net;
 using static StubLib.StubData;
@@ -30,6 +31,82 @@ namespace TestControllerApiUt
             // Assert
             Assert.IsNotNull(objectResult);
             Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Delete_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.ChampionsMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new ChampionsController(mockDataManager.Object, _logger);
+            var name = "ExistingRune";
+
+            // Act
+            var result = await controller.Delete(name);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Put_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.ChampionsMgr.GetNbItemsByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new ChampionsController(mockDataManager.Object, _logger);
+            var champion =  new DTOChampion { Name = "test", Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>() , Skins = new List<DTOSkin>() };
+
+            // Act
+            var result = await controller.Put("ExistingChampion", champion);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task Get_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.ChampionsMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new ChampionsController(mockDataManager.Object, _logger);
+
+            // Act
+            var result = await controller.Get("ExistingChampion");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Post_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.ChampionsMgr.GetNbItems()).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new ChampionsController(mockDataManager.Object, _logger);
+            var champion = new DTOChampion { Name = "test", Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+
+            // Act
+            var result = await controller.Post(champion);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
         }
 
         [TestMethod]
@@ -119,6 +196,8 @@ namespace TestControllerApiUt
             Assert.IsNotNull(objectResult);
             Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
         }
+
+
 
         [TestMethod]
         public async Task Post_ReturnBadRequest_WhenModelStateIsInvalid()

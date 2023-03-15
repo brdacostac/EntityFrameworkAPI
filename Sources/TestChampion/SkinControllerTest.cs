@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Model;
+using Moq;
 using StubLib;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,82 @@ namespace TestControllerApiUt
             // Assert
             Assert.IsNotNull(objectResult);
             Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Delete_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.RunesMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new SkinsController(mockDataManager.Object, _logger);
+            var name = "ExistingRune";
+
+            // Act
+            var result = await controller.Delete(name);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Put_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.RunesMgr.GetNbItemsByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new SkinsController(mockDataManager.Object, _logger);
+            var champion = new DTOSkin { Name = "test", Description = "test", ChampionName = "Annie", Icon = "test", Image = "test", Price = 3 };
+
+            // Act
+            var result = await controller.Put("ExistingChampion", champion);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task Get_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.RunesMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new SkinsController(mockDataManager.Object, _logger);
+
+            // Act
+            var result = await controller.Get("ExistingChampion");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Post_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.RunesMgr.GetNbItems()).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new SkinsController(mockDataManager.Object, _logger);
+            var champion = new DTOSkin { Name="test", Description = "test", ChampionName = "Annie", Icon = "test", Image = "test", Price = 3 };
+
+            // Act
+            var result = await controller.Post(champion);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
         }
 
         [TestMethod]

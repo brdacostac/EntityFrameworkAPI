@@ -8,13 +8,51 @@ trigger:
 
 steps:
   - name: build
-    image: mcr.microsoft.com/dotnet/sdk:6.0
+    image: mcr.microsoft.com/dotnet/sdk:7.0
     commands:
       - cd Sources/
-      - dotnet restore LeagueOfLegends.sln
-      - dotnet build LeagueOfLegends.sln -c Release --no-restore
-      - dotnet publish LeagueOfLegends.sln -c Release --no-restore -o CI_PROJECT_DIR/build/release
-
+      - dotnet workload install android
+      - dotnet workload restore ViewModels/ViewModels.csproj
+      - dotnet restore ViewModels/ViewModels.csproj
+      - dotnet build ViewModels/ViewModels.csproj -c Release --no-restore
+      - dotnet publish ViewModels/ViewModels.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet restore Api/Api.csproj
+      - dotnet restore Champion_TestMemory/TestEntityUT.csproj
+      - dotnet restore ClientApi/ClientApi.csproj
+      - dotnet restore Console/BiblioMilieu.csproj
+      - dotnet restore DTOLol/DTOLol.csproj
+      - dotnet restore DbManager/DbManager.csproj
+      - dotnet restore Entity_framework/Entity_framework.csproj
+      - dotnet restore Model/Model.csproj
+      - dotnet restore Shared/Shared.csproj
+      - dotnet restore StubLib/StubLib.csproj
+      - dotnet restore TestChampion/TestControllerApiUt.csproj
+      - dotnet restore Tests/ConsoleTests/ConsoleTests.csproj
+      - dotnet build Api/Api.csproj -c Release --no-restore
+      - dotnet build Champion_TestMemory/TestEntityUT.csproj -c Release --no-restore
+      - dotnet build ClientApi/ClientApi.csproj -c Release --no-restore
+      - dotnet build Console/BiblioMilieu.csproj -c Release --no-restore
+      - dotnet build DTOLol/DTOLol.csproj -c Release --no-restore
+      - dotnet build DbManager/DbManager.csproj -c Release --no-restore
+      - dotnet build Entity_framework/Entity_framework.csproj -c Release --no-restore
+      - dotnet build Model/Model.csproj -c Release --no-restore
+      - dotnet build Shared/Shared.csproj -c Release --no-restore
+      - dotnet build StubLib/StubLib.csproj -c Release --no-restore
+      - dotnet build TestChampion/TestControllerApiUt.csproj -c Release --no-restore
+      - dotnet build Tests/ConsoleTests/ConsoleTests.csproj-c Release --no-restore
+      - dotnet publish Api/Api.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish Champion_TestMemory/TestEntityUT.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish ClientApi/ClientApi.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish Console/BiblioMilieu.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish DTOLol/DTOLol.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish DbManager/DbManager.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish Entity_framework/Entity_framework.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish Model/Model.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish Shared/Shared.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish StubLib/StubLib.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish TestChampion/TestControllerApiUt.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      - dotnet publish Tests/ConsoleTests/ConsoleTests.csproj -c Release --no-restore -o CI_PROJECT_DIR/build/release
+      
   - name: tests
     image: mcr.microsoft.com/dotnet/sdk:6.0
     commands:
