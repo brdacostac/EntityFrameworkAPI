@@ -22,13 +22,7 @@ namespace Api.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetRunePages(
-[FromQuery(Name = "startIndex")] int? startIndex = 0,
-[FromQuery(Name = "count")] int? count = 4,
-[FromQuery(Name = "descending")] bool descending = false,
-[FromQuery(Name = "NameSubstring")] string? nameSubstring = null,
-[FromBody] Champion champion = null,
-[FromQuery(Name = "Rune")] Rune rune = null)
+        public async Task<IActionResult> GetRunePages([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] string nameChampion = null, [FromQuery(Name = "Rune")] string nameRune = null)
         {
             try
             {
@@ -72,13 +66,14 @@ namespace Api.Controllers
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTORunePage>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, runePageList.Select(e => e.ToDto())));
                 }
-                else if (champion != null)
+                else if (!string.IsNullOrEmpty(nameChampion))
                 {
-                    var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByChampion(champion);
+                    var champObj = await _dataManager.ChampionsMgr.GetItemByName(nameChampion);
+                    var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByChampion(champObj);
                     int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
-                    IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByChampion(champion, actualStartIndex, actualCount, null, descending);
+                    IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByChampion(champObj, actualStartIndex, actualCount, null, descending);
                     //if (!string.IsNullOrEmpty(skillName))
                     //{
                     //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
@@ -86,7 +81,7 @@ namespace Api.Controllers
 
                     if (!runePageList.Any())
                     {
-                        var message = $"Aucune page de rune correspond au champion {champion.Name} n'a été trouvé.";
+                        var message = $"Aucune page de rune correspond au champion {champObj.Name} n'a été trouvé.";
                         _logger.LogInformation(message);
                         return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
                     }
@@ -95,12 +90,13 @@ namespace Api.Controllers
                     int currentPage = actualStartIndex / actualCount + 1;
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
-                    var successMessage = $"Les pages runes correspondantes au champion {champion.Name} ont été récupéré avec succès.";
+                    var successMessage = $"Les pages runes correspondantes au champion {champObj.Name} ont été récupéré avec succès.";
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTORunePage>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, runePageList.Select(e => e.ToDto())));
                 }
-                else if (rune != null)
+                else if (!string.IsNullOrEmpty(nameRune))
                 {
+                    var rune = await _dataManager.RunesMgr.GetItemByName(nameRune);
                     var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByRune(rune);
                     int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
                     int actualCount = count.HasValue ? count.Value : totalItemCount;

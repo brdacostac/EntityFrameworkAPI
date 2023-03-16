@@ -13,15 +13,19 @@ namespace ClientApi
         public ChampionHttpManager(HttpClient client) : base(client){ }
 
 
-        //Complet
         public async Task<Champion> AddItem(Champion item)
         {
             var resp=await _client.PostAsJsonAsync($"{UrlApiChampions}", item.ToDto());
-
             return item;
         }
 
-        //Complet
+        public async Task<Champion> UpdateItem(Champion oldItem, Champion newItem)
+        {
+            var resp = await _client.PutAsJsonAsync($"{UrlApiChampions}/{oldItem.Name}", newItem.ToDto());
+            return newItem;
+        }
+
+
         public async Task<bool> DeleteItem(Champion item)
         {
 
@@ -29,14 +33,12 @@ namespace ClientApi
             return true;
         }
 
-        //Complet
         public async Task<Champion> GetItemByName(string name)
         {
             var champions = await _client.GetFromJsonAsync<DTOChampion>($"{UrlApiChampions}/{name}");
             return champions.ToChampion();
         }
 
-        //Améliorable
         public async Task<IEnumerable<Champion>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
             var dtoChampions = await _client.GetFromJsonAsync<List<DTOChampion>>(UrlApiChampions);
@@ -78,12 +80,6 @@ namespace ClientApi
 
         //A améliorer
         public Task<IEnumerable<Champion?>> GetItemsBySkill(Skill? skill, int index, int count, string? orderingPropertyName = null, bool descending = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        //Complet à completer ici
-        public Task<Champion> UpdateItem(Champion oldItem, Champion newItem)
         {
             throw new NotImplementedException();
         }
