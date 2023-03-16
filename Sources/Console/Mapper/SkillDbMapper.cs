@@ -6,13 +6,14 @@ namespace BiblioMilieu
 {
     public static class SkillDbMapper
     {
-        public static SkillDB ToDb(this Skill skill)
+        public static SkillDB ToDb(this Skill skill,ChampionDB champion)
         {
             SkillDB skillDb = new SkillDB()
             {
                 Name = skill.Name,
                 Description = skill.Description,
                 Type = skill.Type.ToDb(),
+                Champion= champion
             };
             return skillDb;
         }

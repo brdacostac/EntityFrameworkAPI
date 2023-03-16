@@ -17,12 +17,11 @@ var skinListModel = await stub.SkinsMgr.GetItems(0, nbSkins);
 var skinList = skinListModel.ToList().Select(e => e.ToDb());
 int nbRunePage = await stub.RunePagesMgr.GetNbItems();
 var runePageList = await stub.RunePagesMgr.GetItems(0, nbRunePage);
-
+var skillList = championListModel.ToList().Select(e => e.Skills.Select(s => s.ToDb(e.ToDb())));
 
 int nbRunes = await stub.RunesMgr.GetNbItems();
 var runesListModel = await stub.RunesMgr.GetItems(0, nbRunes);
 var runesList = runesListModel.ToList().Select(e => e.ToDb());
-var runesPagesList = runesListModel.ToList().Select(e => e.ToDb());
 
 using (var context = new EntityDbContexte())
 {
@@ -31,8 +30,29 @@ using (var context = new EntityDbContexte())
     Console.WriteLine("Creates and inserts new champions");
 
     championList.ToList().ForEach(champion => context.ChampionsSet.Add(champion));
+
+
     context.SaveChanges();
     championList= context.ChampionsSet;
+
+    foreach(Champion champion in championListModel)
+    {
+
+        foreach(var caractPair in champion.Characteristics)
+        {
+            CaracteristicDb carac = new CaracteristicDb()
+            {
+                key = caractPair.Key,
+                valeur = caractPair.Value,
+                champion = championList.FirstOrDefault(e => e.Name == champion.Name)
+            };
+            context.CaracteristicSet.Add(carac);
+        }
+            
+    }
+        
+
+    
     var listSkinNew = new List<SkinDB>();
 
     foreach(SkinDB skin in skinList)
@@ -40,15 +60,29 @@ using (var context = new EntityDbContexte())
         var champ = championList.FirstOrDefault(e => e.Name == skin.Champion.Name);
         skin.Champion = champ;
         listSkinNew.Add(skin);
+        context.SkinsSet.Add(skin);
 
         Console.WriteLine($" Add skin { champ.Id} - {champ.Name} - { skin.ChampionForeignKey}");
     }
+
+    foreach (var skills in skillList)
+    {
+        foreach(SkillDB skill in skills)
+        {
+            var champ = championList.FirstOrDefault(e => e.Name == skill.Champion.Name);
+            skill.Champion = champ;
+            context.SkillSet.Add(skill);
+
+            Console.WriteLine($" Add skill {champ.Id} - {champ.Name} - {skill.ChampionForeignKey}");
+        }
+      
+    }
+
     runesList.ToList().ForEach(rune => context.RunesSet.Add(rune));
     context.SaveChanges();
     runesList= context.RunesSet;
     foreach (RunePage runePages in runePageList)
     {
-
         foreach ( var couple in runePages.Runes)
         {
             CategoryDicDB categoryDicDB = new CategoryDicDB();
@@ -57,24 +91,9 @@ using (var context = new EntityDbContexte())
             categoryDicDB.rune = runesList.FirstOrDefault(runeDb => runeDb.Name == couple.Value.Name);
             context.CategoryRunePageSet.Add(categoryDicDB);
         }
-
-
     }
 
-    /*runePageList.ToList().ForEach(runePage => context.CategoryRunePageSet.);
-    foreach (RunePagesDb runePage in runesList)*/
-
-    /* foreach (SkinDB skin in listSkinNew)
-     {
-         Console.WriteLine($" Result skin { skin.Champion.Name} - {skin.Name} - { skin.ChampionForeignKey}");
-     }*/
-
-
-
-    listSkinNew.ToList().ForEach(skin => context.SkinsSet.Add(skin));
-
-
-    //runesList.ToList().ForEach(runes => context.RunesSet.Add(runes));
+  
     context.SaveChanges();
 
    
