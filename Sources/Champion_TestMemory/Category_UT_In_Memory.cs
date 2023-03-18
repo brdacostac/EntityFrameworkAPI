@@ -48,7 +48,7 @@ namespace TestEntityUT
             {
                 Assert.Equal(2, context.RunePagesSet.Count());
                 Assert.Equal(4, context.CategoryRunePageSet.Count());
-                Assert.Equal(3, context.RunesSet.Count());
+                Assert.Equal(6, context.RunesSet.Count());
                 Assert.Equal(CategoryDb.Major, context.CategoryRunePageSet.First().category);
                 Assert.Equal("Rune 1", context.CategoryRunePageSet.Include(x => x.rune).First().rune.Name);
                 Assert.Equal("Rune Page 1", context.CategoryRunePageSet.Include(x => x.runePage).First().runePage.Name);
