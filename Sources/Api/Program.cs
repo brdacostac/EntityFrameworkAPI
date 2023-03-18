@@ -3,7 +3,7 @@ using StubLib;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();s
+builder.Services.AddControllers();
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -34,7 +34,7 @@ if (app.Environment.IsDevelopment())
     });
 }*/
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

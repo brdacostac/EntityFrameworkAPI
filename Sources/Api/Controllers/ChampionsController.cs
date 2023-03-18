@@ -377,5 +377,49 @@ namespace Api.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate("Une erreur s'est produite lors de la récupération des données."));
             }
         }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetItemCount(
+        [FromQuery(Name = "charName")] string charName = null,
+        [FromQuery(Name = "class")] string championClass = null,
+        [FromQuery(Name = "name")] string name = null,
+        [FromQuery(Name = "runePage")] string runePage = null,
+        [FromQuery(Name = "skill")] string skill = null,
+        [FromQuery(Name = "skillName")] string skillName = null)
+        {
+            int count = 0;
+
+            if (charName != null)
+            {
+                count = await _dataManager.ChampionsMgr.GetNbItemsByCharacteristic(charName);
+            }
+            else if (championClass != null)
+            {
+                ChampionClass championClassEnum = Enum.TryParse<ChampionClass>(championClass, true, out championClassEnum) ? championClassEnum : ChampionClass.Unknown;
+                count = await _dataManager.ChampionsMgr.GetNbItemsByClass(championClassEnum);
+            }
+            else if (name != null)
+            {
+                count = await _dataManager.ChampionsMgr.GetNbItemsByName(name);
+            }
+            /*else if (runePage != null)
+            {
+                count = await _dataManager.ChampionsMgr.GetNbItemsByRunePage(await _dataManager.ChampionsMgr.GetItemsByRunePage(runePage));
+            }*/
+            /*else if (skill != null)
+            {
+                count = await _dataManager.ChampionsMgr.GetNbItemsBySkill();
+            }*/
+            else if (skillName != null)
+            {
+                count = await _dataManager.ChampionsMgr.GetNbItemsBySkill(skillName);
+            }
+            else
+            {
+                count = await _dataManager.ChampionsMgr.GetNbItems();
+            }
+
+            return Ok(count);
+        }
     }
 }
