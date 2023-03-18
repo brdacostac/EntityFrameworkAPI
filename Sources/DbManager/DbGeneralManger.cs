@@ -8,7 +8,7 @@ namespace DbManager
 {
     public class DbGeneralManger
     {
-        private readonly DbManger parent;
+        protected readonly DbManger parent;
 
         public DbGeneralManger(DbManger parent) => this.parent = parent;
     }

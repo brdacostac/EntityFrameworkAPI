@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace DbManager
 {
-    public class DbManger : IDataManager
+    public partial class DbManger : IDataManager
     {
         protected EntityDbContexte DbContext;
-        public DbManger(EntityDbContexte dbContext)
+        public DbManger()
         {
-            DbContext = dbContext;
+            DbContext = new EntityDbContexte();
             ChampionsMgr = new DbChampionManger(this);
             SkinsMgr = new DbSkinManger(this);
             RunesMgr = new DbRunesManger(this);

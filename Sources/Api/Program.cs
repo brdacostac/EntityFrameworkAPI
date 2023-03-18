@@ -1,3 +1,4 @@
+using DbManager;
 using Model;
 using StubLib;
 
@@ -7,7 +8,7 @@ builder.Services.AddControllers();
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IDataManager, StubData>(); //un seul pour tout le monde //il y a des semaphore et de concurrence d acces
+builder.Services.AddSingleton<IDataManager, DbManger>(); //un seul pour tout le monde //il y a des semaphore et de concurrence d acces
 
 builder.Services.AddControllers().AddControllersAsServices(); // Add controllers as services
 
