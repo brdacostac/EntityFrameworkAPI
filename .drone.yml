@@ -87,7 +87,18 @@ steps:
     image: hub.codefirst.iut.uca.fr/thomas.bellembois/codefirst-dronesonarplugin-dotnet6
     commands:
       - cd Sources/
-      - dotnet restore LeagueOfLegends.sln
+      - dotnet restore Api/Api.csproj
+      - dotnet restore Champion_TestMemory/TestEntityUT.csproj
+      - dotnet restore ClientApi/ClientApi.csproj
+      - dotnet restore Console/BiblioMilieu.csproj
+      - dotnet restore DTOLol/DTOLol.csproj
+      - dotnet restore DbManager/DbManager.csproj
+      - dotnet restore Entity_framework/Entity_framework.csproj
+      - dotnet restore Model/Model.csproj
+      - dotnet restore Shared/Shared.csproj
+      - dotnet restore StubLib/StubLib.csproj
+      - dotnet restore TestChampion/TestControllerApiUt.csproj
+      - dotnet restore Tests/ConsoleTests/ConsoleTests.csproj
       - dotnet sonarscanner begin /k:EntityApiFrameworkLol /d:sonar.host.url=$${PLUGIN_SONAR_HOST} /d:sonar.coverageReportPaths="coveragereport/SonarQube.xml" /d:sonar.coverage.exclusions="Tests/**" /d:sonar.login=$${PLUGIN_SONAR_TOKEN} 
       - dotnet build Api/Api.csproj -c Release --no-restore
       - dotnet build Champion_TestMemory/TestEntityUT.csproj -c Release --no-restore
