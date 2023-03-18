@@ -81,8 +81,6 @@ steps:
       - dotnet test StubLib/StubLib.csproj --no-restore
       - dotnet test TestChampion/TestControllerApiUt.csproj --no-restore
       - dotnet test Tests/ConsoleTests/ConsoleTests.csproj --no-restore
-      - dotnet restore LeagueOfLegends.sln
-      - dotnet test LeagueOfLegends.sln --no-restore
     depends_on: [build]
 
   - name: code-analysis
