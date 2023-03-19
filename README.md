@@ -1,4 +1,4 @@
-# PrepaLoL
+# Entity Framework & Api (League Of Legends)
 
 ## Diagramme de classes du modèle
 ```mermaid
