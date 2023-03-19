@@ -26,6 +26,7 @@ namespace Entity_framework
         {
             if (!optionsBuilder.IsConfigured)
             {
+
                 optionsBuilder.UseSqlite("Data Source=../Entity_framework/Entity_framework.LolDB.db");
             }
         }
