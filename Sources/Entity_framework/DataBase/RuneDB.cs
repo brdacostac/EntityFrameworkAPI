@@ -34,9 +34,6 @@ namespace Entity_framework
         {
             get; set;
         }
-
-
-
         public ICollection<CategoryDicDB> runesPages { get; set; }
 
         public string? Image

@@ -1,4 +1,6 @@
-﻿using Model;
+﻿using BiblioMilieu;
+using Microsoft.EntityFrameworkCore;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,54 +15,72 @@ namespace DbManager
         {
             public DbSkinManger(DbManger parent) : base(parent) { }
 
-            public Task<Skin?> AddItem(Skin? item)
+            public async Task<Skin?> AddItem(Skin? item)
             {
-                throw new NotImplementedException();
+                var itemAdded = await parent.DbContext.SkinsSet.AddAsync(item.ToDb());
+                await parent.DbContext.SaveChangesAsync();
+
+                return itemAdded.Entity.ToSkin();
             }
 
-            public Task<bool> DeleteItem(Skin? item)
+            public async Task<bool> DeleteItem(Skin? item)
             {
-                throw new NotImplementedException();
+                var itemDeleted = parent.DbContext.SkinsSet.Remove(item.ToDb());
+                await parent.DbContext.SaveChangesAsync();
+                return parent.DbContext.SkinsSet.Find(item.Name) != null;
             }
 
-            public Task<Skin?> GetItemByName(string name)
+            public async Task<Skin?> GetItemByName(string name)
             {
-                throw new NotImplementedException();
+                var itemByName = await parent.DbContext.SkinsSet.Include(c => c.Champion).FirstOrDefaultAsync(item => item.Name == name);
+                return itemByName.ToSkin();
             }
 
-            public Task<IEnumerable<Skin?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<Skin?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.SkinsSet.Include(c => c.Champion).GetItemsWithFilterAndOrdering(
+                       c => true,
+                       index, count,
+                       orderingPropertyName, descending).Result.Select(c => c.ToSkin());
             }
 
-            public Task<IEnumerable<Skin?>> GetItemsByChampion(Champion? champion, int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<Skin?>> GetItemsByChampion(Champion? champion, int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.SkinsSet.Include(c => c.Champion).GetItemsWithFilterAndOrdering(
+                       c =>  c.Champion.Name.Contains(champion.Name),
+                       index, count,
+                       orderingPropertyName, descending).Result.Select(c => c.ToSkin());
             }
 
-            public Task<IEnumerable<Skin?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<Skin?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.SkinsSet.Include(c => c.Champion).GetItemsWithFilterAndOrdering(
+                         c => c.Name.Contains(substring),
+                         index, count,
+                         orderingPropertyName, descending).Result.Select(c => c.ToSkin());
             }
 
             public Task<int> GetNbItems()
             {
-                throw new NotImplementedException();
+                return parent.DbContext.SkinsSet.CountAsync();
             }
 
             public Task<int> GetNbItemsByChampion(Champion? champion)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.SkinsSet.Where(c => c.Champion.Name.Contains(champion.Name)).CountAsync();
             }
 
             public Task<int> GetNbItemsByName(string substring)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.SkinsSet.Where(c => c.Name.Equals(substring)).CountAsync();
             }
 
-            public Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
+            public async Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
             {
-                throw new NotImplementedException();
+                var itemUpdated = parent.DbContext.SkinsSet.Find(oldItem.Name);
+                itemUpdated = newItem.ToDb();
+                parent.DbContext.SaveChanges();
+                return itemUpdated.ToSkin();
             }
         }
     }

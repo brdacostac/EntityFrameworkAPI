@@ -1,4 +1,7 @@
-﻿using Model;
+﻿using BiblioMilieu;
+using BiblioMilieu.Mapper.EnumsMapper;
+using Microsoft.EntityFrameworkCore;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,54 +16,72 @@ namespace DbManager
         {
             public DbRunesManger(DbManger parent) : base(parent) { }
 
-            public Task<Model.Rune?> AddItem(Model.Rune? item)
+            public async Task<Model.Rune?> AddItem(Model.Rune? item)
             {
-                throw new NotImplementedException();
+                var itemAdded = await parent.DbContext.RunesSet.AddAsync(item.ToDb());
+                await parent.DbContext.SaveChangesAsync();
+
+                return itemAdded.Entity.ToRune();
             }
 
-            public Task<bool> DeleteItem(Model.Rune? item)
+            public async Task<bool> DeleteItem(Model.Rune? item)
             {
-                throw new NotImplementedException();
+                var itemDeleted = parent.DbContext.RunesSet.Remove(item.ToDb());
+                await parent.DbContext.SaveChangesAsync();
+                return parent.DbContext.SkinsSet.Find(item.Name) != null;
             }
 
-            public Task<Model.Rune?> GetItemByName(string name)
+            public async Task<Model.Rune?> GetItemByName(string name)
             {
-                throw new NotImplementedException();
+                var itemByName = await parent.DbContext.RunesSet.FirstOrDefaultAsync(item => item.Name == name);
+                return itemByName.ToRune();
             }
 
-            public Task<IEnumerable<Model.Rune?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<Model.Rune?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunesSet.GetItemsWithFilterAndOrdering(
+                       c => true,
+                       index, count,
+                       orderingPropertyName, descending).Result.Select(c => c.ToRune());
             }
 
-            public Task<IEnumerable<Model.Rune?>> GetItemsByFamily(RuneFamily family, int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<Model.Rune?>> GetItemsByFamily(RuneFamily family, int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunesSet.GetItemsWithFilterAndOrdering(
+                         c => c.Family.ToRuneFamily().Equals(family),
+                         index, count,
+                         orderingPropertyName, descending).Result.Select(c => c.ToRune());
             }
 
-            public Task<IEnumerable<Model.Rune?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<Model.Rune?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunesSet.GetItemsWithFilterAndOrdering(
+                          c => c.Name.Contains(substring),
+                          index, count,
+                          orderingPropertyName, descending).Result.Select(c => c.ToRune());
             }
 
             public Task<int> GetNbItems()
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunesSet.CountAsync();
             }
 
             public Task<int> GetNbItemsByFamily(RuneFamily family)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunesSet.Where(r => r.Family.ToRuneFamily().Equals(family)).CountAsync();
             }
 
             public Task<int> GetNbItemsByName(string substring)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunesSet.Where(c => c.Name.Equals(substring)).CountAsync();
             }
 
-            public Task<Model.Rune?> UpdateItem(Model.Rune? oldItem, Model.Rune? newItem)
+            public async Task<Model.Rune?> UpdateItem(Model.Rune? oldItem, Model.Rune? newItem)
             {
-                throw new NotImplementedException();
+                var itemUpdated = parent.DbContext.RunesSet.Find(oldItem.Name);
+                itemUpdated = newItem.ToDb();
+                parent.DbContext.SaveChanges();
+                return itemUpdated.ToRune();
             }
         }
     }
