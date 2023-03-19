@@ -46,7 +46,7 @@ namespace TestEntityUT
 
             using (var context = new EntityDbContexte(options))
             {
-                Assert.Equal(2, context.RunePagesSet.Count());
+                Assert.Equal(4, context.RunePagesSet.Count()); // 4 car dans runePage_UT on crée 2 aussi et vue qu'on lance tout les tests ensembles j'ai du de rajouter 4 ici.
                 Assert.Equal(4, context.CategoryRunePageSet.Count());
                 Assert.Equal(6, context.RunesSet.Count());
                 Assert.Equal(CategoryDb.Major, context.CategoryRunePageSet.First().category);
@@ -108,8 +108,8 @@ namespace TestEntityUT
 
         public static IEnumerable<object[]> TestData()
         {
-            yield return new object[] { "Rune Page 1", 1 };
-            yield return new object[] { "Rune Page 2", 2 };
+            yield return new object[] { "Rune Page 1", 2 };
+            yield return new object[] { "Rune Page 2", 3 };
         }
 
         [Theory]

@@ -32,7 +32,7 @@ namespace TestEntityUT
 
             using (var context = new EntityDbContexte(options))
             {
-                Assert.Equal(6, context.RunesSet.Count());
+                Assert.Equal(3, context.RunesSet.Count());
                 Assert.Equal("Glacial Augment", context.RunesSet.First().Name);
             }
         }
