@@ -1,7 +1,10 @@
-﻿using Model;
+﻿using Api.Mapper;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,20 +12,22 @@ namespace ClientApi
 {
     public class RuneHttpManager : HttpManager, IRunesManager
     {
-        private const string UrlApiChampions = "/api/Runes";
+        private const string UrlApiRunes = "/api/Runes";
 
         public RuneHttpManager(HttpClient client) : base(client) { }
 
         //Ok
-        public Task<Model.Rune?> AddItem(Model.Rune? item)
+        public async Task<Model.Rune?> AddItem(Model.Rune? item)
         {
-            throw new NotImplementedException();
+            await _client.PostAsJsonAsync($"{UrlApiRunes}", item.ToDto());
+            return item;
         }
 
         //Ok
-        public Task<bool> DeleteItem(Model.Rune? item)
+        public async Task<bool> DeleteItem(Model.Rune? item)
         {
-            throw new NotImplementedException();
+            var champions = await _client.DeleteAsync($"{UrlApiRunes}/{item.Name}");
+            return champions.StatusCode == HttpStatusCode.OK;
         }
 
         
@@ -51,9 +56,10 @@ namespace ClientApi
         }
 
         //OK
-        public Task<Model.Rune?> UpdateItem(Model.Rune? oldItem, Model.Rune? newItem)
+        public async Task<Model.Rune?> UpdateItem(Model.Rune? oldItem, Model.Rune? newItem)
         {
-            throw new NotImplementedException();
+            await _client.PutAsJsonAsync($"{UrlApiRunes}/{oldItem.Name}", newItem.ToDto());
+            return newItem;
         }
 
 

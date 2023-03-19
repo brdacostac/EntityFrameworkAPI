@@ -1,7 +1,11 @@
-﻿using Model;
+﻿using Api.Mapper;
+using DTOLol;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,32 +16,37 @@ namespace ClientApi
 
 
 
-        private const string UrlApiChampions = "/api/Skins";
+        private const string UrlApiSkins = "/api/Skins";
 
         public SkinHttpManager(HttpClient client) : base(client) { }
-        public Task<Skin?> AddItem(Skin? item)
+        public async Task<Skin?> AddItem(Skin? item)
         {
-            throw new NotImplementedException();
+            await _client.PostAsJsonAsync($"{UrlApiSkins}", item.ToDto());
+            return item;
         }
 
-        public Task<bool> DeleteItem(Skin? item)
+        public async Task<bool> DeleteItem(Skin? item)
         {
-            throw new NotImplementedException();
+            var champions = await _client.DeleteAsync($"{UrlApiSkins}/{item.Name}");
+            return champions.StatusCode == HttpStatusCode.OK;
         }
 
-        public Task<Skin?> GetItemByName(string name)
+        public async Task<Skin?> GetItemByName(string name)
         {
-            throw new NotImplementedException();
+            var champions = await _client.GetFromJsonAsync<DTOMessage<DTOSkin>>($"{UrlApiSkins}/{name}");
+            return champions.Data.ToSkin();
         }
 
-        public Task<IEnumerable<Skin?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
+        public async Task<IEnumerable<Skin?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
-            throw new NotImplementedException();
+            var dtoChampions = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOSkin>>>($"{UrlApiSkins}?index={index}&count={count}&descending={descending}");
+            return dtoChampions.Data.Select(champion => champion.ToSkin()).ToList();
         }
 
-        public Task<IEnumerable<Skin?>> GetItemsByChampion(Champion? champion, int index, int count, string? orderingPropertyName = null, bool descending = false)
+        public async Task<IEnumerable<Skin?>> GetItemsByChampion(Champion? champion, int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
-            throw new NotImplementedException();
+            var dtoChampions = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOSkin>>>($"{UrlApiSkins}?index={index}&count={count}&descending={descending}&champion={champion.Name}");
+            return dtoChampions.Data.Select(champion => champion.ToSkin()).ToList();
         }
 
         public Task<IEnumerable<Skin?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
@@ -45,9 +54,10 @@ namespace ClientApi
             throw new NotImplementedException();
         }
 
-        public Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
+        public async Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
         {
-            throw new NotImplementedException();
+            await _client.PutAsJsonAsync($"{UrlApiSkins}/{oldItem.Name}", newItem.ToDto());
+            return newItem;
         }
         public Task<int> GetNbItems()
         {

@@ -22,7 +22,7 @@ namespace Api.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetRunePages([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] string nameChampion = null, [FromQuery(Name = "Rune")] string nameRune = null)
+        public async Task<IActionResult> GetRunePages([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] string? nameChampion = null, [FromQuery(Name = "Rune")] string? nameRune = null)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace Api.Controllers
 
                     if (!runePageList.Any())
                     {
-                        var message = $"Aucune page de rune correspond a la rune {rune.Name} n'a été trouvé.";
+                        var message = $"Aucune page de rune correspond a la rune {nameRune} n'a été trouvé.";
                         _logger.LogInformation(message);
                         return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }

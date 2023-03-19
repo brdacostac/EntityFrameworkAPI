@@ -254,7 +254,7 @@ namespace Api.Controllers
                     return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                 }
 
-                var successMessage = $"Le champion {name} a été modifié ajouté avec succès.";
+                var successMessage = $"Le champion {name} a été récupéré avec succès.";
                 _logger.LogInformation(successMessage);
                 return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<DTOChampion>(successMessage, champion.ToDto()));
             }
@@ -266,7 +266,6 @@ namespace Api.Controllers
             }
         }
 
-        // POST api/<ValuesController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] DTOChampion champion)
         {
@@ -293,14 +292,14 @@ namespace Api.Controllers
 
                 if (championList.Any(championExist => championExist.Name == champion.Name || championExist.Bio == champion.Bio))
                 {
-                    var message = $"Le champion {champion.Name} a été modifié ajouté avec succès.";
+                    var message = $"Le champion {champion.Name} a été ajouté avec succès.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
                 var championResult = _dataManager.ChampionsMgr.AddItem(champion.ToChampion());
 
-                var successMessage = $"Le champion {champion.Name} a été modifié ajouté avec succès.";
+                var successMessage = $"Le champion {champion.Name} a été ajouté avec succès.";
                 _logger.LogInformation(successMessage);
                 return StatusCode((int)HttpStatusCode.Created, FactoryMessage.MessageCreate(successMessage));
             }
@@ -313,7 +312,6 @@ namespace Api.Controllers
 
         }
 
-        // PUT api/<ValuesController>/5
         [HttpPut("{name}")]
         public async Task<IActionResult> Put(string name, [FromBody] DTOChampion champion)
         {
@@ -333,7 +331,7 @@ namespace Api.Controllers
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
-                int nbItemByName = await _dataManager.ChampionsMgr.GetNbItemsByName(champion.Name);
+                int nbItemByName = await _dataManager.ChampionsMgr.GetNbItemsByName(name);
                 if (nbItemByName == 0)
                 {
                     var message = $"Le champion {name} n'existe pas.";
@@ -380,12 +378,12 @@ namespace Api.Controllers
 
         [HttpGet("count")]
         public async Task<IActionResult> GetItemCount(
-        [FromQuery(Name = "charName")] string charName = null,
-        [FromQuery(Name = "class")] string championClass = null,
-        [FromQuery(Name = "name")] string name = null,
-        [FromQuery(Name = "runePage")] string runePage = null,
-        [FromQuery(Name = "skill")] string skill = null,
-        [FromQuery(Name = "skillName")] string skillName = null)
+        [FromQuery(Name = "characteristic")] string? charName = null,
+        [FromQuery(Name = "class")] string? championClass = null,
+        [FromQuery(Name = "name")] string? name = null,
+        [FromQuery(Name = "runePage")] string? runePage = null,
+        [FromQuery(Name = "skill")] string? skill = null,
+        [FromQuery(Name = "skillName")] string? skillName = null)
         {
             int count = 0;
 

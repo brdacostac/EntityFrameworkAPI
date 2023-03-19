@@ -23,7 +23,7 @@ namespace Api.Controllers
         // GET: api/<ValuesController>
 
         [HttpGet]
-        public async Task<IActionResult> GetRunes([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] Champion champion = null)
+        public async Task<IActionResult> GetRunes([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] string? champion = null)
         {
             try
             {
@@ -47,10 +47,10 @@ namespace Api.Controllers
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByName(nameSubstring, actualStartIndex, actualCount, null, descending);
-                    if (!string.IsNullOrEmpty(nameSubstring))
-                    {
-                        skinList = skinList.Where(r => r.Name.Contains(nameSubstring));
-                    }
+                    //if (!string.IsNullOrEmpty(nameSubstring))
+                    //{
+                    //    skinList = skinList.Where(r => r.Name.Contains(nameSubstring));
+                    //}
 
                     if (!skinList.Any())
                     {
@@ -67,22 +67,18 @@ namespace Api.Controllers
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOSkin>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, skinList.Select(e => e.ToDto())));
                 }
-                //&& runeFamily.IsValid()
-                else if (champion != null)
+                else if (!string.IsNullOrEmpty(champion))
                 {
-                    var totalItemCount = await _dataManager.SkinsMgr.GetNbItemsByChampion(champion);
+                    var championItem = await _dataManager.ChampionsMgr.GetItemByName(champion);
+                    var totalItemCount = await _dataManager.SkinsMgr.GetNbItemsByChampion(championItem);
                     int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
-                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByChampion(champion, actualStartIndex, actualCount, null, descending);
-                    //if (!string.IsNullOrEmpty(skillName))
-                    //{
-                    //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
-                    //}
+                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByChampion(championItem, actualStartIndex, actualCount, null, descending);
 
                     if (!skinList.Any())
                     {
-                        var message = $"Aucune champion {champion.Name} n'a été trouvé.";
+                        var message = $"Aucune champion {championItem.Name} n'a été trouvé.";
                         _logger.LogInformation(message);
                         return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
                     }
@@ -91,7 +87,7 @@ namespace Api.Controllers
                     int currentPage = actualStartIndex / actualCount + 1;
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
-                    var successMessage = $"Les skins {champion.Name} ont été récupéré avec succès.";
+                    var successMessage = $"Les skins {championItem.Name} ont été récupéré avec succès.";
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOSkin>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, skinList.Select(e => e.ToDto())));
                 }
@@ -177,6 +173,13 @@ namespace Api.Controllers
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
+                Champion champion = await _dataManager.ChampionsMgr.GetItemByName(skin.ChampionName);
+                if(champion == null) {
+                    var message = $"Le champion {skin.ChampionName} n'existe pas.";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
+
                 int nbItemTotal = await _dataManager.SkinsMgr.GetNbItems();
                 IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItems(0, nbItemTotal);
 
@@ -186,7 +189,6 @@ namespace Api.Controllers
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
-                Champion champion = await _dataManager.ChampionsMgr.GetItemByName(skin.ChampionName);
                 var skinResult = _dataManager.SkinsMgr.AddItem(skin.ToSkin(champion));
                 /*return CreatedAtAction((GetByName),new {id = 1 },championResult) */
 
@@ -222,6 +224,14 @@ namespace Api.Controllers
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
+                Champion champion = await _dataManager.ChampionsMgr.GetItemByName(skin.ChampionName);
+                if (champion == null)
+                {
+                    var message = $"Le champion {skin.ChampionName} n'existe pas.";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
+
                 int nbItemByName = await _dataManager.SkinsMgr.GetNbItemsByName(skin.Name);
                 if (nbItemByName == 0)
                 {
@@ -231,7 +241,6 @@ namespace Api.Controllers
                 }
 
                 Skin skinUpdate = await _dataManager.SkinsMgr.GetItemByName(name);
-                Champion champion = await _dataManager.ChampionsMgr.GetItemByName(skin.ChampionName);
 
                 await _dataManager.SkinsMgr.UpdateItem(skinUpdate, skin.ToSkin(champion));
                 var successMessage = $"Le skin {name} a été modifié avec succès.";

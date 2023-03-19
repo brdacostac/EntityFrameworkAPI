@@ -1,7 +1,10 @@
-﻿using Model;
+﻿using Api.Mapper;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,17 +12,19 @@ namespace ClientApi
 {
     public class RunePagesHttpManager : HttpManager, IRunePagesManager
     {
-        private const string UrlApiChampions = "/api/RunePages";
+        private const string UrlApiRunePages = "/api/RunePages";
 
         public RunePagesHttpManager(HttpClient client) : base(client) { }
-        public Task<RunePage?> AddItem(RunePage? item)
+        public async Task<RunePage?> AddItem(RunePage? item)
         {
-            throw new NotImplementedException();
+            await _client.PostAsJsonAsync($"{UrlApiRunePages}", item.ToDto());
+            return item;
         }
 
-        public Task<bool> DeleteItem(RunePage? item)
+        public async Task<bool> DeleteItem(RunePage? item)
         {
-            throw new NotImplementedException();
+            var champions = await _client.DeleteAsync($"{UrlApiRunePages}/{item.Name}");
+            return champions.StatusCode == HttpStatusCode.OK;
         }
 
         public Task<RunePage?> GetItemByName(string name)
@@ -47,9 +52,10 @@ namespace ClientApi
             throw new NotImplementedException();
         }
 
-        public Task<RunePage?> UpdateItem(RunePage? oldItem, RunePage? newItem)
+        public async Task<RunePage?> UpdateItem(RunePage? oldItem, RunePage? newItem)
         {
-            throw new NotImplementedException();
+            await _client.PutAsJsonAsync($"{UrlApiRunePages}/{oldItem.Name}", newItem.ToDto());
+            return newItem;
         }
 
         //Nb
