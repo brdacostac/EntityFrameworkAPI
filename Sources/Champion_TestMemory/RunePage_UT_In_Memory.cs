@@ -14,7 +14,7 @@ namespace TestEntityUT
         public void Add_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-            .UseInMemoryDatabase(databaseName: "Add_Test_Database")
+            .UseInMemoryDatabase(databaseName: "Add_Test_Database_RunePage")
             .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -25,8 +25,6 @@ namespace TestEntityUT
 
                 context.RunePagesSet.Add(runePage1);
                 context.RunePagesSet.Add(runePage2);
-    
-
                 context.SaveChanges();
             }
 
@@ -42,7 +40,7 @@ namespace TestEntityUT
         public void Modify_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Modify_Test_Database_RunePage")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -75,7 +73,7 @@ namespace TestEntityUT
 
         public static IEnumerable<object[]> TestData()
         {
-            yield return new object[] { "Rune Page 2", 2 }; // j'ai mis 2 car dans category_UT on crée des rune page aussi donc pour ne pas avoir des erreurs quand je lance tout les tests
+            yield return new object[] { "Rune Page 2", 1 };
         }
 
         [Theory]
@@ -83,7 +81,7 @@ namespace TestEntityUT
         public void Delete_Test(string nameToDelete, int expectedCount)
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Delete_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Delete_Test_Database_RunePage")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -107,7 +105,7 @@ namespace TestEntityUT
         public void GetAllCategory_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "GetAllCategory_Test_Database")
+                .UseInMemoryDatabase(databaseName: "GetAllCategory_Test_Database_RunePage")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -146,7 +144,7 @@ namespace TestEntityUT
         public void ErrorCategory_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "ErrorCategory_Test_Database")
+                .UseInMemoryDatabase(databaseName: "ErrorCategory_Test_Database_RunePage")
                 .Options;
 
             using (var context = new EntityDbContexte(options))

@@ -12,7 +12,7 @@ namespace Champion_TestMemory
         public void Add_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Add_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Add_Test_Database_Champion")
                 .Options;
 
 
@@ -40,7 +40,7 @@ namespace Champion_TestMemory
         public void Modify_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Modify_Test_Database_Champion")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -81,7 +81,7 @@ namespace Champion_TestMemory
         public void Delete_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Delete_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Delete_Test_Database_Champion")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -121,7 +121,7 @@ namespace Champion_TestMemory
         public void GetAllChampion_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "GetAllChampion_Test_Database")
+                .UseInMemoryDatabase(databaseName: "GetAllChampion_Test_Database_Champion")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -162,7 +162,7 @@ namespace Champion_TestMemory
         public void ErrorChampion_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "ErrorChampion_Test_Database")
+                .UseInMemoryDatabase(databaseName: "ErrorChampion_Test_Database_Champion")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
