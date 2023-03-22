@@ -16,29 +16,33 @@ namespace ClientApi
         public ChampionHttpManager(HttpClient client) : base(client){ }
 
 
-        public async Task<Champion> AddItem(Champion item)
+        public async Task<Champion?> AddItem(Champion item)
         {
-            await _client.PostAsJsonAsync($"{UrlApiChampions}", item.ToDto());
-            return item;
+            var champion = await _client.PostAsJsonAsync($"{UrlApiChampions}", item.ToDto());
+            return champion.StatusCode == HttpStatusCode.OK ? item : null;
         }
 
-        public async Task<Champion> UpdateItem(Champion oldItem, Champion newItem)
+        public async Task<Champion?> UpdateItem(Champion oldItem, Champion newItem)
         {
-            await _client.PutAsJsonAsync($"{UrlApiChampions}/{oldItem.Name}", newItem.ToDto());
-            return newItem;
+            var champion = await _client.PutAsJsonAsync($"{UrlApiChampions}/{oldItem.Name}", newItem.ToDto());
+            return champion.StatusCode == HttpStatusCode.OK ? newItem : null;
         }
 
         public async Task<bool> DeleteItem(Champion item)
         {
-
             var champions = await _client.DeleteAsync($"{UrlApiChampions}/{item.Name}"); 
             return champions.StatusCode == HttpStatusCode.OK;
         }
 
-        public async Task<Champion> GetItemByName(string name)
+        public async Task<Champion?> GetItemByName(string name)
         {
-            var champions = await _client.GetFromJsonAsync<DTOMessage<DTOChampion>>($"{UrlApiChampions}/{name}");
-            return champions.Data.ToChampion();
+            var response = await _client.GetAsync($"{UrlApiChampions}/{name}");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var champions = await response.Content.ReadFromJsonAsync<DTOMessage<DTOChampion>>();
+                return champions.Data.ToChampion();
+            }
+            return null;
         }
 
         public async Task<IEnumerable<Champion>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
