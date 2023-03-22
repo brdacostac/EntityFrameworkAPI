@@ -14,7 +14,7 @@ namespace TestEntityUT
         public void Add_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Add_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Add_Test_Database_Skill")
                 .Options;
 
 
@@ -46,7 +46,7 @@ namespace TestEntityUT
         public void Modify_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Modify_Test_Database_Skill")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -91,7 +91,7 @@ namespace TestEntityUT
         public void Delete_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Delete_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Delete_Test_Database_Skill")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -135,7 +135,7 @@ namespace TestEntityUT
         public void GetAllSkill_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "GetAllSkill_Test_Database")
+                .UseInMemoryDatabase(databaseName: "GetAllSkill_Test_Database_Skill")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -190,7 +190,7 @@ namespace TestEntityUT
         public void ErrorSkill_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "ErrorSkill_Test_Database")
+                .UseInMemoryDatabase(databaseName: "ErrorSkill_Test_Database_Skill")
                 .Options;
 
             using (var context = new EntityDbContexte(options))

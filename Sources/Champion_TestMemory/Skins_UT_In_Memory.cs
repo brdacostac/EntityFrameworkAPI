@@ -14,7 +14,7 @@ namespace TestEntityUT
         public void Add_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-            .UseInMemoryDatabase(databaseName: "Add_Test_Database")
+            .UseInMemoryDatabase(databaseName: "Add_Test_Database_Skins")
             .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -43,7 +43,7 @@ namespace TestEntityUT
         public void Modify_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Modify_Test_Database_Skins")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -85,7 +85,7 @@ namespace TestEntityUT
         public void Delete_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Delete_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Delete_Test_Database_Skins")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -130,7 +130,7 @@ namespace TestEntityUT
         public void GetAllSkin_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "GetAllSkin_Test_Database")
+                .UseInMemoryDatabase(databaseName: "GetAllSkin_Test_Database_Skins")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -177,7 +177,7 @@ namespace TestEntityUT
         public void ErrorSkin_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "ErrorSkin_Test_Database")
+                .UseInMemoryDatabase(databaseName: "ErrorSkin_Test_Database_Skins")
                 .Options;
 
             using (var context = new EntityDbContexte(options))

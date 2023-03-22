@@ -14,7 +14,7 @@ namespace TestEntityUT
         public void Add_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Add_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Add_Test_Database_Rune")
                 .Options;
 
 
@@ -41,7 +41,7 @@ namespace TestEntityUT
         public void Modify_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Modify_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Modify_Test_Database_Rune")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -82,7 +82,7 @@ namespace TestEntityUT
         public void Delete_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "Delete_Test_Database")
+                .UseInMemoryDatabase(databaseName: "Delete_Test_Database_Rune")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -121,7 +121,7 @@ namespace TestEntityUT
         public void GetAllRune_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "GetAllRune_Test_Database")
+                .UseInMemoryDatabase(databaseName: "GetAllRune_Test_Database_Rune")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
@@ -162,7 +162,7 @@ namespace TestEntityUT
         public void ErrorRune_Test()
         {
             var options = new DbContextOptionsBuilder<EntityDbContexte>()
-                .UseInMemoryDatabase(databaseName: "ErrorRune_Test_Database")
+                .UseInMemoryDatabase(databaseName: "ErrorRune_Test_Database_Rune")
                 .Options;
 
             using (var context = new EntityDbContexte(options))
