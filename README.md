@@ -42,10 +42,9 @@ Students Second Year - BUT Informatique - IUT Clermont Auvergne - 2022-2023
 *******
 
 <div id='technologies'/>
-
-- Languages used       
-    ![](https://img.shields.io/badge/Entity-Framework-blue)   
-    ![](https://img.shields.io/badge/API-Rest-Informational)
+    
+![](https://img.shields.io/badge/Entity-Framework-blue)   
+![](https://img.shields.io/badge/API-Rest-Informational)
 
 
 *******
