@@ -5,7 +5,7 @@ namespace BiblioMilieu
 {
     public static class SkinDbMapper
     {
-        public static SkinDB ToDb(this Skin skin)
+        public static SkinDB ToDb(this Skin skin,ChampionDB champion=null)
         {
             SkinDB skinDb = new SkinDB()
             {
@@ -14,7 +14,7 @@ namespace BiblioMilieu
                 Icon = skin.Icon,
                 Image = skin.Image.Base64,
                 Price = skin.Price,
-                Champion = skin.Champion.ToDb(),
+                Champion = champion==null ? skin.Champion.ToDb() : champion,
             };
             return skinDb;
         }

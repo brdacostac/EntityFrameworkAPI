@@ -1,4 +1,5 @@
-﻿
+﻿/*
+// ce programe sert à voler le stub de M.Chevaldonné ;) comme ça on le fait pas nous mm
 using BiblioMilieu;
 using BiblioMilieu.Mapper.EnumsMapper;
 using Entity_framework;
@@ -105,4 +106,4 @@ using (var context = new EntityDbContexte())
     {
        Console.WriteLine($"{n.Id} - {n.Name}");
     }
-}
+}*/

@@ -17,7 +17,9 @@ namespace DbManager
 
             public async Task<Skin?> AddItem(Skin? item)
             {
-                var itemAdded = await parent.DbContext.SkinsSet.AddAsync(item.ToDb());
+                var champ = parent.DbContext.ChampionsSet.FirstOrDefault(champion => champion.Name==item.Name);
+              
+                var itemAdded = await parent.DbContext.SkinsSet.AddAsync(item.ToDb(champ));
                 await parent.DbContext.SaveChangesAsync();
 
                 return itemAdded.Entity.ToSkin();
