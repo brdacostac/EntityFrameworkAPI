@@ -51,7 +51,7 @@ namespace ClientApi
 
         public Task<IEnumerable<Skin?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException();, 
         }
 
         public async Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
