@@ -25,7 +25,7 @@ namespace Entity_framework
         {
             get; set;
         }
-        public string Icon
+        public string? Icon
         {
             get; set;
         }

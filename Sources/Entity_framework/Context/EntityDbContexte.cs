@@ -1,6 +1,8 @@
 ﻿using Entity_framework.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Model;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Entity_framework
 {
@@ -26,8 +28,10 @@ namespace Entity_framework
         {
             if (!optionsBuilder.IsConfigured)
             {
-
-                optionsBuilder.UseSqlite("Data Source=../Entity_framework/Entity_framework.LolDB.db");
+                var test = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                // string path = "..\\Entity_framework\\Entity_framework.LolDB.db"; // decomenter si vous faite trouner le Bilblio de milieu
+                string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..\\..\\..\\..\\..\\..\\Entity_framework\\Entity_framework.LolDB.db");
+                optionsBuilder.UseSqlite($"Data Source={path}");
             }
         }
 
