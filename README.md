@@ -10,8 +10,7 @@ Sommaire
  1. [Introduction](#introduction)
  2. [Team](#team)
  3. [Installer](#installation)
- 4. [Technologies used](#tech)
- 5. [Diagrams](#diagrams)
+ 4. [Diagrams](#diagrams)
 
 
 
@@ -39,9 +38,6 @@ Students Second Year - BUT Informatique - IUT Clermont Auvergne - 2022-2023
 
 - installation
 
-*******
-
-<div id='technologies'/>
     
 ![](https://img.shields.io/badge/Entity-Framework-blue)   
 ![](https://img.shields.io/badge/API-Rest-Informational)
