@@ -20,6 +20,10 @@ namespace DTOLol
         public int? TotalPages { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int? TotalCount { get; set; }
+        public DTOMessage()
+        {
+            
+        }
 
         public DTOMessage(string message, T data = default)
         {

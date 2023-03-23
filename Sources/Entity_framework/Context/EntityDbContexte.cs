@@ -30,7 +30,8 @@ namespace Entity_framework
             {
                 var test = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 // string path = "..\\Entity_framework\\Entity_framework.LolDB.db"; // decomenter si vous faite trouner le Bilblio de milieu
-                string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..\\..\\..\\..\\..\\..\\Entity_framework\\Entity_framework.LolDB.db");
+               // string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..\\..\\..\\..\\..\\..\\Entity_framework\\Entity_framework.LolDB.db");
+                string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..\\..\\..\\..\\Entity_framework\\Entity_framework.LolDB.db"); // decomenter si vous faite trouner le maui avec le Api
                 optionsBuilder.UseSqlite($"Data Source={path}");
             }
         }
