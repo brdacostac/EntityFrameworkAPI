@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ClientApi
 {
-    public class HttpManager
+    public class HttpGeneralManager
     {
         protected readonly HttpClient _client;
 
-        public HttpManager(HttpClient client)
+        public HttpGeneralManager(HttpClient client)
         {
             _client = client;
             client.BaseAddress = new Uri("https://localhost:7091");

@@ -1,4 +1,4 @@
-﻿using Api.Mapper;
+﻿using MapperApi.Mapper;
 using DTOLol;
 using DTOLol.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,7 @@ namespace Api.Controllers
         // [FromQuery(Name = "runePage")] string runePage = null,
 
         [HttpGet]
-        public async Task<IActionResult> GetChampions([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "name")] string name = null, [FromQuery(Name = "characteristic")] string characteristic = null, [FromQuery(Name = "championClass")] ChampionClass? championClass = null, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "skillName")] string skillName = null)
+        public async Task<IActionResult> GetChampions([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "characteristic")] string? characteristic = null, [FromQuery(Name = "championClass")] ChampionClass? championClass = null, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "skillName")] string? skillName = null)
         {
             try
             {

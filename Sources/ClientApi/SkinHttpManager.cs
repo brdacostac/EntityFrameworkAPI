@@ -1,4 +1,4 @@
-﻿using Api.Mapper;
+﻿using MapperApi.Mapper;
 using DTOLol;
 using Model;
 using System;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ClientApi
 {
-    public class SkinHttpManager : HttpManager, ISkinsManager
+    public class SkinHttpManager : HttpGeneralManager, ISkinsManager
     {
 
         private const string UrlApiSkins = "/api/Skins";

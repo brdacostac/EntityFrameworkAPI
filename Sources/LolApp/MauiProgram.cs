@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+﻿using ClientApi;
+using CommunityToolkit.Maui;
 using DbManager;
 using LolApp.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,7 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 				fonts.AddFont("Font Awesome 6 Free-Solid-900.otf", "FASolid");
 			});
-		builder.Services.AddSingleton<IDataManager, DbManger>()
+		builder.Services.AddSingleton<IDataManager, HttpManger>()
 						.AddSingleton<ChampionsMgrVM>()
 						.AddSingleton<SkinsMgrVM>()
 						.AddSingleton<ApplicationVM>()

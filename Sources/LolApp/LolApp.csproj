@@ -82,6 +82,7 @@
 	  <MauiImage Include="Resources\Images\rp.png" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\ClientApi\ClientApi.csproj" />
 	  <ProjectReference Include="..\DbManager\DbManager.csproj" />
 	  <ProjectReference Include="..\Model\Model.csproj" />
 	  <ProjectReference Include="..\Shared\Shared.csproj" />

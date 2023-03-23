@@ -2,7 +2,7 @@
 using Model;
 using static Model.RunePage;
 
-namespace Api.Mapper
+namespace MapperApi.Mapper
 {
     public static class RunePageMapper
     {

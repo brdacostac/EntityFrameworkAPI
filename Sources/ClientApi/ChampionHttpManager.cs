@@ -2,14 +2,13 @@
 using System.Net.Http.Json;
 using Shared;
 using Model;
-using Api.Mapper;
 using System.Net;
-using Microsoft.AspNetCore.Mvc;
 using DTOLol.Factory;
+using MapperApi.Mapper;
 
 namespace ClientApi
 {
-    public class ChampionHttpManager: HttpManager, IChampionsManager 
+    public class ChampionHttpManager: HttpGeneralManager, IChampionsManager 
     {
         private const string UrlApiChampions = "/api/Champions";
 

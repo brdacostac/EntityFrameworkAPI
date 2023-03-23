@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LolApp", "LolApp\LolApp.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModels", "ViewModels\ViewModels.csproj", "{5C8778AF-2848-453D-A2A9-FB5C218E2FD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapperApi", "MapperApi\MapperApi.csproj", "{7E250B6C-9964-4931-BC3C-D55A54E47697}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,10 @@ Global
 		{5C8778AF-2848-453D-A2A9-FB5C218E2FD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C8778AF-2848-453D-A2A9-FB5C218E2FD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C8778AF-2848-453D-A2A9-FB5C218E2FD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E250B6C-9964-4931-BC3C-D55A54E47697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E250B6C-9964-4931-BC3C-D55A54E47697}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E250B6C-9964-4931-BC3C-D55A54E47697}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E250B6C-9964-4931-BC3C-D55A54E47697}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +136,7 @@ Global
 		{66C6FF31-33B1-4CE0-9CFF-394DF8B32052} = {50B0CF1D-4203-44CC-BA31-B6CC8E5D2798}
 		{0C898A04-092A-49AA-BE65-8AE818A2AF50} = {21B95173-ABA6-4B80-9E55-B0D8637AECF7}
 		{5C8778AF-2848-453D-A2A9-FB5C218E2FD5} = {21B95173-ABA6-4B80-9E55-B0D8637AECF7}
+		{7E250B6C-9964-4931-BC3C-D55A54E47697} = {762FFDCA-735E-496B-B4AA-8D73AA7F872E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92F3083D-793F-4552-8A9A-0AD6534159C9}

@@ -1,4 +1,5 @@
 using DbManager;
+using Microsoft.EntityFrameworkCore;
 using Model;
 using StubLib;
 
@@ -9,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDataManager, DbManger>(); //un seul pour tout le monde //il y a des semaphore et de concurrence d acces
-
+//builder.Services.AddDbContext<DataDb>(opt=> opt.UseSqlite)
 builder.Services.AddControllers().AddControllersAsServices(); // Add controllers as services
 
 builder.Logging.AddConsole();

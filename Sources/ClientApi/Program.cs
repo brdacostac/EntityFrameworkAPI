@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿/*// See https://aka.ms/new-console-template for more information
 using ClientApi;
 using DTOLol;
 using Model;
@@ -21,4 +21,4 @@ await championHttpManager.AddItem(champ1);
 
 Console.WriteLine(champ1.Name);
 
-Console.ReadLine();
+Console.ReadLine();*/

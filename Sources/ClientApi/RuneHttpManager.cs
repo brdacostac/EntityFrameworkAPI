@@ -1,4 +1,4 @@
-﻿using Api.Mapper;
+﻿using MapperApi.Mapper;
 using Model;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ClientApi
 {
-    public class RuneHttpManager : HttpManager, IRunesManager
+    public class RuneHttpManager : HttpGeneralManager, IRunesManager
     {
         private const string UrlApiRunes = "/api/Runes";
 

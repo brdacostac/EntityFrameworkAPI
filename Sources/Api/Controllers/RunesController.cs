@@ -1,4 +1,4 @@
-﻿using Api.Mapper;
+﻿using MapperApi.Mapper;
 using DTOLol;
 using DTOLol.Factory;
 using Microsoft.AspNetCore.Mvc;

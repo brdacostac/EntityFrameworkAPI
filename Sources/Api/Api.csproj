@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DbManager\DbManager.csproj" />
     <ProjectReference Include="..\DTOLol\DTOLol.csproj" />
+    <ProjectReference Include="..\MapperApi\MapperApi.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
     <ProjectReference Include="..\StubLib\StubLib.csproj" />
   </ItemGroup>

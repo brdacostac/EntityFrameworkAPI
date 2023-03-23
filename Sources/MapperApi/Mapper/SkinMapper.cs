@@ -1,7 +1,7 @@
 ﻿using DTOLol;
 using Model;
 
-namespace Api.Mapper
+namespace MapperApi.Mapper
 {
     public static class SkinMapper
     {
