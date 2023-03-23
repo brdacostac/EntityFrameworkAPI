@@ -28,7 +28,7 @@ Entity Framework is an open-source object-relational mapping (ORM) tool develope
 ### **Presentation de l'équipe**
 
 Students Second Year - BUT Informatique - IUT Clermont Auvergne - 2022-2023   
-`DA COSTA CUNHA Bruno` - `KHEDAIR Rami` - `RANDON Noan`
+`DA COSTA CUNHA Bruno`  -  `KHEDAIR Rami` - `RANDON Noan`
 
 *******  
 
