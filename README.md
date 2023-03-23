@@ -1,168 +1,54 @@
-# Entity Framework & Api (League Of Legends)
+![](images_readme/banner_API.jpg)   
 
-## Diagramme de classes du modèle
-```mermaid
-classDiagram
-class LargeImage{
-    +/Base64 : string
-}
-class Champion{
-    +/Name : string
-    +/Bio : string
-    +/Icon : string
-    +/Characteristics : Dictionary~string, int~
-    ~ AddSkin(skin : Skin) bool
-    ~ RemoveSkin(skin: Skin) bool
-    + AddSkill(skill: Skill) bool
-    + RemoveSkill(skill: Skill) bool
-    + AddCharacteristics(someCharacteristics : params Tuple~string, int~[])
-    + RemoveCharacteristics(label : string) bool
-    + this~label : string~ : int?
-}
-Champion --> "1" LargeImage : Image
-class ChampionClass{
-    <<enumeration>>
-    Unknown,
-    Assassin,
-    Fighter,
-    Mage,
-    Marksman,
-    Support,
-    Tank,
-}
-Champion --> "1" ChampionClass : Class
-class Skin{
-    +/Name : string    
-    +/Description : string
-    +/Icon : string
-    +/Price : float
-}
-Skin --> "1" LargeImage : Image
-Champion "1" -- "*" Skin 
-class Skill{
-    +/Name : string    
-    +/Description : string
-}
-class SkillType{
-    <<enumeration>>
-    Unknown,
-    Basic,
-    Passive,
-    Ultimate,
-}
-Skill --> "1" SkillType : Type
-Champion --> "*" Skill
-class Rune{
-    +/Name : string    
-    +/Description : string
-}
-Rune --> "1" LargeImage : Image
-class RuneFamily{
-    <<enumeration>>
-    Unknown,
-    Precision,
-    Domination
-}
-Rune --> "1" RuneFamily : Family
-class Category{
-    <<enumeration>>
-    Major,
-    Minor1,
-    Minor2,
-    Minor3,
-    OtherMinor1,
-    OtherMinor2
-}
-class RunePage{
-    +/Name : string
-    +/this[category : Category] : Rune?
-    - CheckRunes(newRuneCategory : Category)
-    - CheckFamilies(cat1 : Category, cat2 : Category) bool?
-    - UpdateMajorFamily(minor : Category, expectedValue : bool)
-}
-RunePage --> "*" Rune : Dictionary~Category,Rune~
-```
+# **EntityFramework-API**
 
-## Diagramme de classes des interfaces de gestion de l'accès aux données
-```mermaid
-classDiagram
-direction LR;
-class IGenericDataManager~T~{
-    <<interface>>
-    GetNbItems() Task~int~
-    GetItems(index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~T~~
-    GetNbItemsByName(substring : string)
-    GetItemsByName(substring : string, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~T~~
-    UpdateItem(oldItem : T, newItem : T) Task~T~~
-    AddItem(item : T) Task~T~
-    DeleteItem(item : T) Task~bool~
-}
-class IChampionsManager{
-    <<interface>>
-    GetNbItemsByCharacteristic(charName : string)
-    GetItemsByCharacteristic(charName : string, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~Champion?~~
-    GetNbItemsByClass(championClass : ChampionClass)
-    GetItemsByClass(championClass : ChampionClass, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~Champion?~~
-    GetNbItemsBySkill(skill : Skill?)
-    GetItemsBySkill(skill : Skill?, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~Champion?~~
-    GetNbItemsBySkill(skill : string)
-    GetItemsBySkill(skill : string, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~Champion?~~
-    GetNbItemsByRunePage(runePage : RunePage?)
-    GetItemsByRunePage(runePage : RunePage?, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~Champion?~~
-}
-class ISkinsManager{
-    <<interface>>
-    GetNbItemsByChampion(champion : Champion?)
-    GetItemsByChampion(champion : Champion?, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~Skin?~~
-}
-class IRunesManager{
-    <<interface>>
-    GetNbItemsByFamily(family : RuneFamily)
-    GetItemsByFamily(family : RuneFamily, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~Rune?~~
-}
-class IRunePagesManager{
-    <<interface>>
-    GetNbItemsByRune(rune : Rune?)
-    GetItemsByRune(rune : Rune?, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~RunePage?~~
-    GetNbItemsByChampion(champion : Champion?)
-    GetItemsByChampion(champion : Champion?, index : int, count : int, orderingPropertyName : string?, descending : bool) Task~IEnumerable~RunePage?~~
-}
+## Hello and Welcome to our repository ! 👋
 
-IGenericDataManager~Champion?~ <|.. IChampionsManager : T--Champion?
-IGenericDataManager~Skin?~ <|.. ISkinsManager : T--Skin?
-IGenericDataManager~Rune?~ <|.. IRunesManager : T--Rune?
-IGenericDataManager~RunePage?~ <|.. IRunePagesManager : T--RunePage?
-class IDataManager{
-    <<interface>>
-}
-IChampionsManager <-- IDataManager : ChampionsMgr
-ISkinsManager <-- IDataManager : SkinsMgr
-IRunesManager <-- IDataManager : RunesMgr
-IRunePagesManager <-- IDataManager : RunePagesMgr
-```
+*******
 
-## Diagramme de classes simplifié du Stub
-```mermaid
-classDiagram
-direction TB;
+Sommaire 
+ 1. [Introduction](#introduction)
+ 2. [Team](#team)
+ 3. [Installer](#installation)
+ 4. [Diagrams](#diagrams)
 
-IDataManager <|.. StubData
 
-ChampionsManager ..|> IChampionsManager
-StubData --> ChampionsManager
 
-RunesManager ..|> IRunesManager
-StubData --> RunesManager
+*******
+<div id='introduction'/>
 
-RunePagesManager ..|> IRunePagesManager
-StubData --> RunePagesManager
+### **Project Introduction**
 
-SkinsManager ..|> ISkinsManager
-StubData --> SkinsManager
+Entity Framework is an open-source object-relational mapping (ORM) tool developed by Microsoft. It enables developers to map data stored in a relational database to .NET objects. In our project, we are using Entity Framework to create a League of Legends database, and we also create a REST API based on the game to access and manipulate the data.
 
-StubData --> RunesManager
-StubData --> "*" Champion
-StubData --> "*" Rune
-StubData --> "*" RunePages
-StubData --> "*" Skins
-```
+
+*******
+<div id='team'/>
+
+### **Presentation de l'équipe**
+
+Students Second Year - BUT Informatique - IUT Clermont Auvergne - 2022-2023   
+`DA COSTA CUNHA Bruno` - `KHEDAIR Rami` - `RANDON Noan`
+
+*******  
+
+<div id='installation'/>
+
+## Functionalities
+
+- installation
+
+    
+![](https://img.shields.io/badge/Entity-Framework-blue)   
+![](https://img.shields.io/badge/API-Rest-Informational)
+
+
+*******
+
+<div id='conception'/>
+
+## Diagrams
+
+[Diagrams](On ira mettre ici le lien du diagramme)
+
+*******
