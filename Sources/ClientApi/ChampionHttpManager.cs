@@ -46,7 +46,8 @@ namespace ClientApi
 
         public async Task<IEnumerable<Champion>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
-            var dtoChampions = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOChampion>>>($"{UrlApiChampions}?index={index}&count={count}&descending={descending}");
+            var dtoChampions = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOChampion>>>($"{UrlApiChampions}?startIndex={index}&count={count}&descending={descending}");
+            var items = dtoChampions.Data.Select(champion => champion.ToChampion()).ToList();
             return dtoChampions.Data.Select(champion => champion.ToChampion()).ToList();
         }
 
@@ -58,7 +59,7 @@ namespace ClientApi
 
         public async Task<IEnumerable<Champion?>> GetItemsByClass(ChampionClass championClass, int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
-            var dtoChampions = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOChampion>>>($"{UrlApiChampions}?championClass={championClass.ToString()}&index={index}&count={count}&descending={descending}");
+            var dtoChampions = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOChampion>>>($"{UrlApiChampions}?championClass={championClass}&index={index}&count={count}&descending={descending}");
             return dtoChampions.Data.Select(champion => champion.ToChampion()).ToList();
         }
 

@@ -25,7 +25,7 @@ namespace Api.Controllers
         // [FromQuery(Name = "runePage")] string runePage = null,
 
         [HttpGet]
-        public async Task<IActionResult> GetChampions([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "characteristic")] string? characteristic = null, [FromQuery(Name = "championClass")] ChampionClass? championClass = null, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "skillName")] string? skillName = null)
+        public async Task<IActionResult> GetChampions([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "characteristic")] string? characteristic = null, [FromQuery(Name = "championClass")] string? championClass = null, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "skillName")] string? skillName = null)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace Api.Controllers
                     IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByCharacteristic(characteristic, actualStartIndex, actualCount, null, descending);
                     if (!string.IsNullOrEmpty(characteristic))
                     {
-                        championList = championList.Where(r => r.Name.Contains(skillName));
+                        championList = championList.Where(r => r.Name.Contains(characteristic));
                     }
 
                     if (!championList.Any())
@@ -151,13 +151,14 @@ namespace Api.Controllers
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOChampion>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, championList.Select(e => e.ToDto())));
                 }
-                else if (championClass != null)
+                else if (!string.IsNullOrEmpty(championClass))
                 {
-                    var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsByClass(championClass.Value);
+                    ChampionClass champClass = Enum.TryParse<ChampionClass>(championClass, true, out champClass) ? champClass : ChampionClass.Unknown;
+                    var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsByClass(champClass);
                     int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
-                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByClass(championClass.Value, actualStartIndex, actualCount, null, descending);
+                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByClass(champClass, actualStartIndex, actualCount, null, descending);
 
 
                     if (!championList.Any())

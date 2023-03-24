@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ClientApi
 {
@@ -15,7 +16,7 @@ namespace ClientApi
     {
 
         private const string UrlApiSkins = "/api/Skins";
-
+        private const string UrlApiChampions = "/api/Champions";
         public SkinHttpManager(HttpClient client) : base(client) { }
         public async Task<Skin?> AddItem(Skin? item)
         {
@@ -31,26 +32,47 @@ namespace ClientApi
 
         public async Task<Skin?> GetItemByName(string name)
         {
-            var skins = await _client.GetFromJsonAsync<DTOMessage<DTOSkin>>($"{UrlApiSkins}/{name}");
-            return skins.Data.ToSkin();
+            var skin = await _client.GetFromJsonAsync<DTOMessage<DTOSkin>>($"{UrlApiSkins}/{name}");
+            var champion = await _client.GetFromJsonAsync<DTOMessage<DTOChampion>>($"{UrlApiChampions}/{skin.Data.ChampionName}");
+            return skin.Data.ToSkin(champion.Data.ToChampion());
         }
 
-        public async Task<IEnumerable<Skin?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
+        public async Task<IEnumerable<Skin>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
             var dtoSkins = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOSkin>>>($"{UrlApiSkins}?index={index}&count={count}&descending={descending}");
-            return dtoSkins.Data.Select(skin => skin.ToSkin()).ToList();
+            var skins = new List<Skin>();
+            foreach (var skin in dtoSkins.Data)
+            {
+                var champion = await _client.GetFromJsonAsync<DTOMessage<DTOChampion>>($"{UrlApiChampions}/{skin.ChampionName}"); 
+                skins.Add(skin.ToSkin(champion.Data.ToChampion()));
+            }
+            return skins;
         }
+
 
         public async Task<IEnumerable<Skin?>> GetItemsByChampion(Champion? champion, int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
-            var dtoChampions = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOSkin>>>($"{UrlApiSkins}?index={index}&count={count}&descending={descending}&champion={champion.Name}");
-            return dtoChampions.Data.Select(champion => champion.ToSkin()).ToList();
+            var dtoSkins = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOSkin>>>($"{UrlApiSkins}?index={index}&count={count}&descending={descending}&champion={champion.Name}");
+            var skins = new List<Skin>();
+            foreach (var skin in dtoSkins.Data)
+            {
+                var champ = await _client.GetFromJsonAsync<DTOMessage<DTOChampion>>($"{UrlApiChampions}/{skin.ChampionName}");
+                skins.Add(skin.ToSkin(champ.Data.ToChampion()));
+            }
+            return skins;
         }
 
         public async Task<IEnumerable<Skin?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
         {
             var dtoSkins = await _client.GetFromJsonAsync<DTOMessage<IEnumerable<DTOSkin>>>($"{UrlApiSkins}?name={substring}&index={index}&count={count}&descending={descending}");
-            return dtoSkins.Data.Select(skin => skin.ToSkin()).ToList();
+            var skins = new List<Skin>();
+            var championHttpManager = new ChampionHttpManager(_client);
+            foreach (var skin in dtoSkins.Data)
+            {
+                var champ = await championHttpManager.GetItemByName(skin.ChampionName);
+                skins.Add(skin.ToSkin(champ));
+            }
+            return skins;
         }
 
         public async Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
