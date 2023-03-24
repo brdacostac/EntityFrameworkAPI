@@ -109,7 +109,7 @@ namespace DbManager
 
             public Task<int> GetNbItemsByClass(ChampionClass championClass)
             {
-                return parent.DbContext.ChampionsSet.Where(c => c.Class.ToChampionClass().Equals(championClass)).CountAsync();
+                return parent.DbContext.ChampionsSet.Where(c => championClass.Equals(c.Class)).CountAsync();
             }
 
             public Task<int> GetNbItemsByName(string substring)
@@ -134,7 +134,7 @@ namespace DbManager
 
             public async Task<Champion?> UpdateItem(Champion? oldItem, Champion? newItem)
             {
-                var itemUpdated = parent.DbContext.ChampionsSet.Find(oldItem.Name);
+                var itemUpdated = parent.DbContext.ChampionsSet.FirstOrDefault(champ => champ.Name == oldItem.Name);
                 itemUpdated = newItem.ToDb();
                 parent.DbContext.SaveChanges();
                 return itemUpdated.ToChampion();

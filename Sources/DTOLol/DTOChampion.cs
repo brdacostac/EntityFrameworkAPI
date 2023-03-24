@@ -14,22 +14,22 @@ namespace DTOLol
             get; set;
         }
 
-        public String Bio
+        public String? Bio
         {
             get;set;
         }
 
-        public String Class
+        public String? Class
         {
             get; set;
         }
 
-        public String Icon
+        public String? Icon
         {
             get; set;
         }
 
-        public String Image
+        public String? Image
         {
             get; set;
         }

@@ -283,12 +283,12 @@ namespace Api.Controllers
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
-                if (string.IsNullOrWhiteSpace(champion.Name) || string.IsNullOrWhiteSpace(champion.Image) || string.IsNullOrWhiteSpace(champion.Bio) || string.IsNullOrWhiteSpace(champion.Class) || string.IsNullOrWhiteSpace(champion.Icon))
-                {
-                    var message = $"Le champion {champion.Name} a des données incomplétés.";
-                    _logger.LogInformation(message);
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
-                }
+                //if (string.IsNullOrWhiteSpace(champion.Name) || string.IsNullOrWhiteSpace(champion.Image) || string.IsNullOrWhiteSpace(champion.Bio) || string.IsNullOrWhiteSpace(champion.Class) || string.IsNullOrWhiteSpace(champion.Icon))
+                //{
+                //    var message = $"Le champion {champion.Name} a des données incomplétés.";
+                //    _logger.LogInformation(message);
+                //    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                //}
 
 
                 int nbItemTotal = await _dataManager.ChampionsMgr.GetNbItems();

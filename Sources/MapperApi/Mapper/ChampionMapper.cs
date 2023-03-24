@@ -26,7 +26,7 @@ namespace MapperApi.Mapper
         {
             ChampionClass championClass = Enum.TryParse<ChampionClass>(dTOchampion.Class, true, out championClass) ? championClass : ChampionClass.Unknown;
             var champion = new Champion(dTOchampion.Name, championClass, dTOchampion.Icon, dTOchampion.Image, dTOchampion.Bio);
-            dTOchampion.Skills.Select(s => champion.AddSkill(s.ToSkill()));
+            dTOchampion.Skills.ToList().ForEach(s => champion.AddSkill(s.ToSkill()));
             champion.AddCharacteristics(dTOchampion.Characteristics.Select(c => Tuple.Create(c.Key, c.Value)).ToArray());
             return champion;
         }

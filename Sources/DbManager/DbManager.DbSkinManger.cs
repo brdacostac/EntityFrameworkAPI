@@ -79,7 +79,7 @@ namespace DbManager
 
             public async Task<Skin?> UpdateItem(Skin? oldItem, Skin? newItem)
             {
-                var itemUpdated = parent.DbContext.SkinsSet.Find(oldItem.Name);
+                var itemUpdated = parent.DbContext.SkinsSet.FirstOrDefault(e => e.Name==oldItem.Name);
                 itemUpdated = newItem.ToDb();
                 parent.DbContext.SaveChanges();
                 return itemUpdated.ToSkin();
