@@ -1,7 +1,10 @@
 using DbManager;
+using Entity_framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Model;
 using StubLib;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDataManager, DbManger>(); //un seul pour tout le monde //il y a des semaphore et de concurrence d acces
-//builder.Services.AddDbContext<DataDb>(opt=> opt.UseSqlite)
+builder.Services.AddDbContext<EntityDbContexte>(opt => opt.UseSqlite($"Filename={Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..\\..\\..\\..\\Entity_framework\\Entity_framework.LolDB.db")}"));
 builder.Services.AddControllers().AddControllersAsServices(); // Add controllers as services
 
 builder.Logging.AddConsole();
