@@ -374,7 +374,7 @@ namespace TestControllerApiUt
             var controller = new ChampionsController(_stubData, _logger);
 
             // Act
-            var result = await controller.GetChampions(startIndex: 2, count: 5, descending: false, characteristic: "testtest");
+            var result = await controller.GetChampions(startIndex: 2, count: 5, descending: false, characteristic: "tesettest");
             var objectResult = (ObjectResult)result;
 
             // Assert
