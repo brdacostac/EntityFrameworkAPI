@@ -39,14 +39,14 @@ Students Second Year - BUT Informatique - IUT Clermont Auvergne - 2022-2023
 - installation
 
 Pour installer notre projet sur Visual Studio, vous devez d'abord vous assurer que vous avez installé .NET Multi-Platform App UI (Maui) dans Visual Studio. Si vous ne l'avez pas encore installé, vous pouvez le faire en cliquant sur l'installeur de Visual Studio, puis en sélectionnant "Modifier".
-![](images_readm/visual.png)  
+![](images_readme/visual.png)  
 Ensuite, sélectionnez "Développement .NET Multi-Platform App UI" dans la liste des fonctionnalités disponibles et installez-le.
-![](images_readm/dev.png)  
+![](images_readme/dev.png)  
 Une fois que vous avez installé Maui, vous pouvez ouvrir le projet en relançant Visual Studio et en cliquant sur "Ouvrir un projet ou une solution" dans le menu Fichier. Sélectionnez le fichier de solution et cliquez sur "Ouvrir".
 Pour exécuter le projet, vous devez sélectionner les projets "Api" et "Lol app" pour le démarrage. Pour ce faire, faites un clic droit sur la solution dans l'Explorateur de solutions, sélectionnez "Propriétés", puis sélectionnez "Plusieurs projets de démarrage". Enfin, sélectionnez "Api" et "Lol app" et cliquez sur "Appliquer".
-![](images_readm/propriete.png) 
+![](images_readme/propriete.png) 
 Vous pouvez maintenant lancer le projet en appuyant sur F5 ou en cliquant sur le bouton "Démarrer" dans Visual Studio.
-![](images_readm/start.png) 
+![](images_readme/start.png) 
 
 
     
