@@ -24,7 +24,7 @@ namespace DbManager
                 var itemAdded = await parent.DbContext.ChampionsSet.AddAsync(item.ToDb());
                 await parent.DbContext.SaveChangesAsync();
 
-                return itemAdded.Entity.ToChampion();
+                return itemAdded.Entity?.ToChampion();
             }
 
             public async Task<bool> DeleteItem(Champion? item)
@@ -37,7 +37,7 @@ namespace DbManager
             public async Task<Champion?> GetItemByName(string name)
             {
                 var itemByName = await parent.DbContext.ChampionsSet.Include(c => c.Skins).Include(c => c.Skills).Include(c => c.caracteristics).FirstOrDefaultAsync(item => item.Name == name);
-                return itemByName!= null ? itemByName.ToChampion() : null;
+                return itemByName?.ToChampion();
             }
 
             public async Task<IEnumerable<Champion?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
@@ -137,7 +137,7 @@ namespace DbManager
                 var itemUpdated = parent.DbContext.ChampionsSet.FirstOrDefault(champ => champ.Name == oldItem.Name);
                 itemUpdated = newItem.ToDb();
                 parent.DbContext.SaveChanges();
-                return itemUpdated.ToChampion();
+                return itemUpdated?.ToChampion();
             }
         }
     }
