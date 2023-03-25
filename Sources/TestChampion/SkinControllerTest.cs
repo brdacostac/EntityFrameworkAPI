@@ -203,6 +203,25 @@ namespace TestControllerApiUt
         }
 
         [TestMethod]
+        public async Task Put_ReturnNotFoundChampion()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+            var name = "Rune1";
+            var rune = new DTOSkin { Name = name, Description = "test", ChampionName = "Annie", Icon = "test", Image = "test", Price = 3 };
+            var result = await controller.Post(rune);
+
+            // Act
+            var updatedRune = new DTOSkin { Name = name, Description = "test", ChampionName = "Test", Icon = "test", Image = "test", Price = 3 };
+            var putResult = await controller.Put(name, updatedRune);
+            var objectResult = (ObjectResult)putResult;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
+
+        [TestMethod]
         public async Task Post_ReturnBadRequest_WhenModelStateIsInvalid()
         {
             // Arrange
@@ -338,6 +357,22 @@ namespace TestControllerApiUt
             // Assert
             Assert.IsNotNull(objectResult);
             Assert.AreEqual((int)HttpStatusCode.Created, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Post_ReturnNotFoundChampion()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+            var rune = new DTOSkin { Name = "Skin1", Description = "test", ChampionName = "test", Icon = "test", Image = "test", Price = 3 };
+
+            // Act
+            var result = await controller.Post(rune);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
         }
 
         [TestMethod]
