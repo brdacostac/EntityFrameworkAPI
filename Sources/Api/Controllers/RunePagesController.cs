@@ -76,22 +76,17 @@ namespace Api.Controllers
                 }
                 else if (!string.IsNullOrEmpty(nameChampion))
                 {
-                    var champObj = await _dataManager.ChampionsMgr.GetItemByName(nameChampion);
+                    Champion champObj = await _dataManager.ChampionsMgr.GetItemByName(nameChampion);
                     var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByChampion(champObj);
                     int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByChampion(champObj, actualStartIndex, actualCount, null, descending);
-                    //if (!string.IsNullOrEmpty(skillName))
-                    //{
-                    //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
-                    //}
-
                     if (!runePageList.Any())
                     {
                         var message = $"Aucune page de rune correspond au champion {champObj.Name} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
@@ -110,11 +105,6 @@ namespace Api.Controllers
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByRune(rune, actualStartIndex, actualCount, null, descending);
-                    //if (!string.IsNullOrEmpty(skillName))
-                    //{
-                    //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
-                    //}
-
                     if (!runePageList.Any())
                     {
                         var message = $"Aucune page de rune correspond a la rune {nameRune} n'a été trouvé.";

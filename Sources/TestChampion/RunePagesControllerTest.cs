@@ -225,7 +225,7 @@ namespace TestControllerApiUt
         {
             // Arrange
             var controller = new RunePagesController(_stubData, _logger);
-            var rune = new DTORunePage { Name = "", DTORuneDic = new Dictionary<string, DTORune>() };
+            var rune = new DTORunePage { Name = null, DTORuneDic = new Dictionary<string, DTORune>() };
 
             // Act
             var result = await controller.Post(rune);
@@ -355,7 +355,7 @@ namespace TestControllerApiUt
             Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
 
         }
-
+        [TestMethod]
         public async Task GetRunePages_ReturnsNotFoundNameChampion()
         {
             // Arrange
@@ -370,7 +370,7 @@ namespace TestControllerApiUt
             Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
 
         }
-
+        [TestMethod]
         public async Task GetRunePages_ReturnsNotFoundNameRune()
         {
             // Arrange
