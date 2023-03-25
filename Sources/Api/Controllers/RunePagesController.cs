@@ -26,19 +26,31 @@ namespace Api.Controllers
         {
             try
             {
-                if (Request.Query.Count > 4)
-                {
-                    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
-                    _logger.LogWarning(errorMessage);
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
-                }
-
                 if (count <= 0 || count > 25)
                 {
                     var message = "startIndex doit être compris entre 1 et 25.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
+                //int queryParametersCount = 0;
+                //foreach (var key in HttpContext.Request.Query.Keys)
+                //{
+                //    var value = HttpContext.Request.Query[key];
+                //    if (!string.IsNullOrEmpty(value))
+                //    {
+                //        queryParametersCount++;
+                //    }
+                //}
+
+                //if (queryParametersCount > 4)
+                //{
+                //    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
+                //    _logger.LogWarning(errorMessage);
+                //    return BadRequest(FactoryMessage.MessageCreate(errorMessage));
+                //}
+
+
+
                 if (!string.IsNullOrEmpty(nameSubstring))
                 {
                     var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByName(nameSubstring);
@@ -46,10 +58,6 @@ namespace Api.Controllers
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByName(nameSubstring, actualStartIndex, actualCount, null, descending);
-                    if (!string.IsNullOrEmpty(nameSubstring))
-                    {
-                        runePageList = runePageList.Where(r => r.Name.Contains(nameSubstring));
-                    }
 
                     if (!runePageList.Any())
                     {
@@ -68,29 +76,24 @@ namespace Api.Controllers
                 }
                 else if (!string.IsNullOrEmpty(nameChampion))
                 {
-                    var champObj = await _dataManager.ChampionsMgr.GetItemByName(nameChampion);
+                    Champion champObj = await _dataManager.ChampionsMgr.GetItemByName(nameChampion);
                     var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByChampion(champObj);
                     int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByChampion(champObj, actualStartIndex, actualCount, null, descending);
-                    //if (!string.IsNullOrEmpty(skillName))
-                    //{
-                    //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
-                    //}
-
                     if (!runePageList.Any())
                     {
-                        var message = $"Aucune page de rune correspond au champion {champObj.Name} n'a été trouvé.";
+                        var message = $"Aucune page de rune correspond au champion {nameChampion} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
                     int currentPage = actualStartIndex / actualCount + 1;
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
-                    var successMessage = $"Les pages runes correspondantes au champion {champObj.Name} ont été récupéré avec succès.";
+                    var successMessage = $"Les pages runes correspondantes au champion {nameChampion} ont été récupéré avec succès.";
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTORunePage>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, runePageList.Select(e => e.ToDto())));
                 }
@@ -102,11 +105,6 @@ namespace Api.Controllers
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByRune(rune, actualStartIndex, actualCount, null, descending);
-                    //if (!string.IsNullOrEmpty(skillName))
-                    //{
-                    //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
-                    //}
-
                     if (!runePageList.Any())
                     {
                         var message = $"Aucune page de rune correspond a la rune {nameRune} n'a été trouvé.";

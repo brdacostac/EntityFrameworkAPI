@@ -1,8 +1,10 @@
 ﻿using Api.Controllers;
 using DTOLol;
+using DTOLol.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Model;
 using Moq;
 using StubLib;
@@ -139,7 +141,7 @@ namespace TestControllerApiUt
             var name = "Rune1";
 
             // Act
-            var invalidRune = new DTORunePage { DTORuneDic = new Dictionary<string, DTORune>() };
+            var invalidRune = new DTORunePage { };
             var putResult = await controller.Put(name, invalidRune);
             var objectResult = (ObjectResult)putResult;
 
@@ -223,7 +225,7 @@ namespace TestControllerApiUt
         {
             // Arrange
             var controller = new RunePagesController(_stubData, _logger);
-            var rune = new DTORunePage { Name = "", DTORuneDic = new Dictionary<string, DTORune>() };
+            var rune = new DTORunePage { Name = null, DTORuneDic = new Dictionary<string, DTORune>() };
 
             // Act
             var result = await controller.Post(rune);
@@ -319,5 +321,102 @@ namespace TestControllerApiUt
             Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
             await controller.Delete(name);
         }
+
+        [TestMethod]
+        public async Task GetRunePages_ReturnsBadRequest()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunePages(startIndex: -1, count: 26);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
+        }
+
+   
+
+        [TestMethod]
+        public async Task GetRunePages_ReturnsNotFoundNameSubstring()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+        [TestMethod]
+        public async Task GetRunePages_ReturnsNotFoundNameChampion()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameChampion: "testtest");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+        [TestMethod]
+        public async Task GetRunePages_ReturnsNotFoundNameRune()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+        //[TestMethod]
+        //public async Task GetRunePages_ReturnsBadRequestParameters()
+        //{
+        //    // Arrange
+        //    var controller = new RunePagesController(_stubData, _logger);
+
+        //    // Act
+        //    var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameSubstring: "test", nameChampion: "test");
+        //    var objectResult = (ObjectResult)result;
+
+        //    // Assert
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
+        //}
+        //[TestMethod]
+        //public async Task GetRunePages_ReturnsOkNameSubstring()
+        //{
+        //    // Arrange
+        //    var controller = new RunePagesController(_stubData, _logger);
+        //    IEnumerable<RunePage> runePageList = await IDataManager.RunePagesMgr.GetItemsByChampion("Akros", 1, 1, null, false);
+
+        //    // Act
+        //    var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
+        //    var objectResult = (ObjectResult)result;
+
+        //    // Assert
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
+        //}
+
+
     }
 }
