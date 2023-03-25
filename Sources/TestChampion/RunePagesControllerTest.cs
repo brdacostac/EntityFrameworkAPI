@@ -62,13 +62,32 @@ namespace TestControllerApiUt
         {
             // Arrange
             var mockDataManager = new Mock<IDataManager>();
-            mockDataManager.Setup(x => x.RunesMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+            mockDataManager.Setup(x => x.RunePagesMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
 
             var controller = new RunePagesController(mockDataManager.Object, _logger);
             var name = "ExistingRune";
 
             // Act
             var result = await controller.Delete(name);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task GetAll_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.RunePagesMgr.GetNbItems()).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new RunePagesController(mockDataManager.Object, _logger);
+            var name = "ExistingRune";
+
+            // Act
+            var result = await controller.GetRunePages(startIndex:5,count: 5);
             var objectResult = (ObjectResult)result;
 
             // Assert
@@ -138,10 +157,11 @@ namespace TestControllerApiUt
         {
             // Arrange
             var controller = new RunePagesController(_stubData, _logger);
-            var name = "Rune1";
+            string? name = null;
+
 
             // Act
-            var invalidRune = new DTORunePage { };
+            var invalidRune = new DTORunePage { DTORuneDic = null };
             var putResult = await controller.Put(name, invalidRune);
             var objectResult = (ObjectResult)putResult;
 
@@ -355,6 +375,23 @@ namespace TestControllerApiUt
             Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
 
         }
+
+        [TestMethod]
+        public async Task GetRunePages_ReturnsNotFound()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunePages(startIndex: 1, count: 1, descending: false);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+
         [TestMethod]
         public async Task GetRunePages_ReturnsNotFoundNameChampion()
         {
@@ -377,7 +414,7 @@ namespace TestControllerApiUt
             var controller = new RunePagesController(_stubData, _logger);
 
             // Act
-            var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
+            var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameRune: "testtest");
             var objectResult = (ObjectResult)result;
 
             // Assert

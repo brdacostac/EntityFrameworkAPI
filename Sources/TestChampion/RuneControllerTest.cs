@@ -73,6 +73,88 @@ namespace TestControllerApiUt
         }
 
         [TestMethod]
+        public async Task Get_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.RunesMgr.GetNbItems()).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new RunesController(mockDataManager.Object, _logger);
+
+            // Act
+            var result = await controller.GetRunes(startIndex:1, count: 1);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task GetRunes_ReturnsNotFoundRuneFamily()
+        {
+            // Arrange
+            var controller = new RunesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunes(startIndex: 2, count: 5, descending: false, runeFamily: "testtest");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetRunes_ReturnsNotFoundRuneName()
+        {
+            // Arrange
+            var controller = new RunesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunes(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetRunes_ReturnsOk()
+        {
+            // Arrange
+            var controller = new RunesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunes(startIndex: 1, count: 1, descending: false);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetRunePages_ReturnsBadRequest()
+        {
+            // Arrange
+            var controller = new RunesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunes(startIndex: -1, count: 26);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
         public async Task Put_ReturnInternalServerError()
         {
             // Arrange
@@ -93,7 +175,7 @@ namespace TestControllerApiUt
         }
 
         [TestMethod]
-        public async Task Get_ReturnInternalServerError()
+        public async Task Get_ReturnInternalServerErro()
         {
             // Arrange
             var mockDataManager = new Mock<IDataManager>();

@@ -100,7 +100,7 @@ namespace TestControllerApiUt
         {
             // Arrange
             var mockDataManager = new Mock<IDataManager>();
-            mockDataManager.Setup(x => x.RunesMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+            mockDataManager.Setup(x => x.SkinsMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
 
             var controller = new SkinsController(mockDataManager.Object, _logger);
 
@@ -140,7 +140,7 @@ namespace TestControllerApiUt
             var name = "Skin1";
 
             // Act
-            var invalidRune = new DTOSkin { Description = "test", ChampionName = "Annie", Icon = "test", Image = "test", Price = 3 };
+            var invalidRune = new DTOSkin { };
             var putResult = await controller.Put(name, invalidRune);
             var objectResult = (ObjectResult)putResult;
 
@@ -203,11 +203,30 @@ namespace TestControllerApiUt
         }
 
         [TestMethod]
+        public async Task Put_ReturnNotFoundChampion()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+            var name = "Rune1";
+            var rune = new DTOSkin { Name = name, Description = "test", ChampionName = "Annie", Icon = "test", Image = "test", Price = 3 };
+            var result = await controller.Post(rune);
+
+            // Act
+            var updatedRune = new DTOSkin { Name = name, Description = "test", ChampionName = "Test", Icon = "test", Image = "test", Price = 3 };
+            var putResult = await controller.Put(name, updatedRune);
+            var objectResult = (ObjectResult)putResult;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
+
+        [TestMethod]
         public async Task Post_ReturnBadRequest_WhenModelStateIsInvalid()
         {
             // Arrange
             var controller = new SkinsController(_stubData, _logger);
-            var rune = new DTOSkin {  Description = "test", ChampionName = "Annie", Icon = "test", Image = "test", Price = 3 };
+            var rune = new DTOSkin {   };
 
             // Act
             var result = await controller.Post(rune);
@@ -234,6 +253,76 @@ namespace TestControllerApiUt
             Assert.IsNotNull(objectResult);
             Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
+        }
+
+        [TestMethod]
+        public async Task GetSkins_ReturnsNotFoundNameRune()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetSkins(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetSkins_ReturnsNotFoundChampion()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetSkins(startIndex: 2, count: 5, descending: false, champion: "testtest");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetSkins_ReturnsOkSkins()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetSkins(startIndex: 2, count: 5, descending: false);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+
+        }
+
+
+
+
+        [TestMethod]
+        public async Task GetAll_ReturnInternalServerError()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.SkinsMgr.GetNbItems()).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new SkinsController(mockDataManager.Object, _logger);
+            var name = "ExistingRune";
+
+            // Act
+            var result = await controller.GetSkins(startIndex: 5, count: 5);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
         }
 
         [TestMethod]
@@ -271,6 +360,22 @@ namespace TestControllerApiUt
         }
 
         [TestMethod]
+        public async Task Post_ReturnNotFoundChampion()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+            var rune = new DTOSkin { Name = "Skin1", Description = "test", ChampionName = "test", Icon = "test", Image = "test", Price = 3 };
+
+            // Act
+            var result = await controller.Post(rune);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
+
+        [TestMethod]
         public async Task Get_ReturnBadRequest()
         {
             // Arrange
@@ -284,6 +389,22 @@ namespace TestControllerApiUt
             // Assert
             Assert.IsNotNull(objectResult);
             Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task GetSkins_ReturnsBadRequest()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetSkins(startIndex: -1, count: 26);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
         }
 
         [TestMethod]
