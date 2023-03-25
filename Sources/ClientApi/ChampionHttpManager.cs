@@ -10,7 +10,7 @@ namespace ClientApi
 {
     public class ChampionHttpManager: HttpGeneralManager, IChampionsManager 
     {
-        private const string UrlApiChampions = "/api/Champions";
+        private const string UrlApiChampions = "/api/v1/Champions";
 
         public ChampionHttpManager(HttpClient client) : base(client){ }
 

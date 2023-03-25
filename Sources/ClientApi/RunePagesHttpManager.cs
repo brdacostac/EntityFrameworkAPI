@@ -12,7 +12,7 @@ namespace ClientApi
 {
     public class RunePagesHttpManager : HttpGeneralManager, IRunePagesManager
     {
-        private const string UrlApiRunePages = "/api/RunePages";
+        private const string UrlApiRunePages = "/api/v1/RunePages";
 
         public RunePagesHttpManager(HttpClient client) : base(client) { }
         public async Task<RunePage?> AddItem(RunePage? item)

@@ -10,7 +10,11 @@ using System.Net;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+
+    [ApiVersion("2.0")]
+    [ApiVersion("3.0")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class ChampionsController : ControllerBase
     {
@@ -239,6 +243,7 @@ namespace Api.Controllers
             }
         }
 
+       
         [HttpGet("{name}")]
         public async Task<IActionResult> Get(string name)
         {

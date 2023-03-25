@@ -37,7 +37,7 @@ namespace DbManager
             public async Task<Champion?> GetItemByName(string name)
             {
                 var itemByName = await parent.DbContext.ChampionsSet.Include(c => c.Skins).Include(c => c.Skills).Include(c => c.caracteristics).FirstOrDefaultAsync(item => item.Name == name);
-                return itemByName.ToChampion();
+                return itemByName!= null ? itemByName.ToChampion() : null;
             }
 
             public async Task<IEnumerable<Champion?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)

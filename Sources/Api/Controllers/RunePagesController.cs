@@ -8,7 +8,10 @@ using System.Net;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("2.0")]
+    [ApiVersion("3.0")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class RunePagesController : ControllerBase
     {
@@ -184,6 +187,39 @@ namespace Api.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
             }
         }
+
+        [HttpGet, MapToApiVersion("3.0")]
+        public async Task<IActionResult> GetV3(string name)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(name))
+                {
+                    var message = $"Le nom de la page de rune ne peut pas être vide. V3 ";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                }
+                RunePage runepage = await _dataManager.RunePagesMgr.GetItemByName(name);
+                if (runepage == null)
+                {
+                    var message = $"Le nom de la page de rune {name} n'est pas existant. V3";
+                    _logger.LogInformation(message);
+                    return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
+                }
+
+                var successMessage = $"La page de rune {name} a été modifié ajoutée avec succès. V3";
+                _logger.LogInformation(successMessage);
+                return StatusCode((int)HttpStatusCode.OK, runepage.ToDto());
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Erreur de base de donnée lors de la récupération de la page de rune {name}. V3";
+                _logger.LogError(errorMessage, ex);
+                return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
+            }
+        }
+
+
 
         // POST api/<ValuesController>
         [HttpPost]

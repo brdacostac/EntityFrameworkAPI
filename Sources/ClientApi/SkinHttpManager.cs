@@ -16,7 +16,7 @@ namespace ClientApi
     {
 
         private const string UrlApiSkins = "/api/Skins";
-        private const string UrlApiChampions = "/api/Champions";
+        private const string UrlApiChampions = "/api/v1/Champions";
         public SkinHttpManager(HttpClient client) : base(client) { }
         public async Task<Skin?> AddItem(Skin? item)
         {
