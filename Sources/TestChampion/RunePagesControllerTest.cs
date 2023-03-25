@@ -228,7 +228,7 @@ namespace TestControllerApiUt
         {
             // Arrange
             var controller = new RunePagesController(_stubData, _logger);
-            var rune = new DTORunePage { };
+            var rune = new DTORunePage { DTORuneDic = new Dictionary<string, DTORune>() };
 
             // Act
             var result = await controller.Post(rune);

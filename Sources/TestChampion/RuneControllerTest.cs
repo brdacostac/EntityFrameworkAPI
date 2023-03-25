@@ -91,13 +91,29 @@ namespace TestControllerApiUt
         }
 
         [TestMethod]
-        public async Task GetRunes_ReturnsNotFoundNameRune()
+        public async Task GetRunes_ReturnsNotFoundRuneFamily()
         {
             // Arrange
             var controller = new RunesController(_stubData, _logger);
 
             // Act
             var result = await controller.GetRunes(startIndex: 2, count: 5, descending: false, runeFamily: "testtest");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetRunes_ReturnsNotFoundRuneName()
+        {
+            // Arrange
+            var controller = new RunesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunes(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
             var objectResult = (ObjectResult)result;
 
             // Assert

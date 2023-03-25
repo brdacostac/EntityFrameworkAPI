@@ -357,6 +357,22 @@ namespace TestControllerApiUt
         }
 
         [TestMethod]
+        public async Task GetSkins_ReturnsBadRequest()
+        {
+            // Arrange
+            var controller = new SkinsController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetSkins(startIndex: -1, count: 26);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
         public async Task Get_ReturnNotFound()
         {
             // Arrange
