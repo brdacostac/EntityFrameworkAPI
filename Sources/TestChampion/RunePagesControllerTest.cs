@@ -375,6 +375,23 @@ namespace TestControllerApiUt
             Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
 
         }
+
+        [TestMethod]
+        public async Task GetRunePages_ReturnsNotFound()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunePages(startIndex: 1, count: 1, descending: false);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+
+        }
+
         [TestMethod]
         public async Task GetRunePages_ReturnsNotFoundNameChampion()
         {
@@ -397,7 +414,7 @@ namespace TestControllerApiUt
             var controller = new RunePagesController(_stubData, _logger);
 
             // Act
-            var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
+            var result = await controller.GetRunePages(startIndex: 2, count: 5, descending: false, nameRune: "testtest");
             var objectResult = (ObjectResult)result;
 
             // Assert

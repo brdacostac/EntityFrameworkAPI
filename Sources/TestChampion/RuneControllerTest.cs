@@ -97,7 +97,7 @@ namespace TestControllerApiUt
             var controller = new RunesController(_stubData, _logger);
 
             // Act
-            var result = await controller.GetRunes(startIndex: 2, count: 5, descending: false, nameSubstring: "testtest");
+            var result = await controller.GetRunes(startIndex: 2, count: 5, descending: false, runeFamily: "testtest");
             var objectResult = (ObjectResult)result;
 
             // Assert
@@ -119,6 +119,22 @@ namespace TestControllerApiUt
             // Assert
             Assert.IsNotNull(objectResult);
             Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetRunePages_ReturnsBadRequest()
+        {
+            // Arrange
+            var controller = new RunesController(_stubData, _logger);
+
+            // Act
+            var result = await controller.GetRunes(startIndex: -1, count: 26);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
         }
 
