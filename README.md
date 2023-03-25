@@ -39,17 +39,18 @@ Students Second Year - BUT Informatique - IUT Clermont Auvergne - 2022-2023
 - installation
 
 Pour installer notre projet sur Visual Studio, vous devez d'abord vous assurer que vous avez installé .NET Multi-Platform App UI (Maui) dans Visual Studio. Si vous ne l'avez pas encore installé, vous pouvez le faire en cliquant sur l'installeur de Visual Studio, puis en sélectionnant "Modifier".
-![](images_readme/visual.png)  
+<br/><img  width="750" src="images_readme/visual.png"/><br/>
 Ensuite, sélectionnez "Développement .NET Multi-Platform App UI" dans la liste des fonctionnalités disponibles et installez-le.
-![](images_readme/dev.png)  
+<br/><img  width="550" src="images_readme/dev.png"/><br/>
+
 Une fois que vous avez installé Maui, vous pouvez ouvrir le projet en relançant Visual Studio et en cliquant sur "Ouvrir un projet ou une solution" dans le menu Fichier. Sélectionnez le fichier de solution et cliquez sur "Ouvrir".
 Pour exécuter le projet, vous devez sélectionner les projets "Api" et "Lol app" pour le démarrage. Pour ce faire, faites un clic droit sur la solution dans l'Explorateur de solutions, sélectionnez "Propriétés", puis sélectionnez "Plusieurs projets de démarrage". Enfin, sélectionnez "Api" et "Lol app" et cliquez sur "Appliquer".
-![](images_readme/propriete.png) 
+<br/><img  width="750" src="images_readme/propriete.png"/><br/><br/>
 Vous pouvez maintenant lancer le projet en appuyant sur F5 ou en cliquant sur le bouton "Démarrer" dans Visual Studio.
-![](images_readme/start.png) 
+<br/><img  width="350" src="images_readme/start.png"/><br/>
 
 
-    
+
 ![](https://img.shields.io/badge/Entity-Framework-blue)   
 ![](https://img.shields.io/badge/API-Rest-Informational)
 
@@ -69,5 +70,16 @@ De plus nous avons utiliser swagger afin de tester notre Api. Nous voulions impl
 Nous avons mis en place des DTO, DTO (Data Transfer Object) est un modèle de conception qui permet de transférer des données entre des couches d'une application. 
 Afin d'adapter les classes du modele à notre Api, c'est pour cela que nous avons mis en place des mapper qui permet de convertir des données d'un format à un autre, soit dans notre cas de transformer les classes du modèle en DTO avec des méthode que l'on appelé par ToDto(). Et inversement par des méthodes du genre ToSkin(), ToChampion()... 
 Et pour faire cela nous avons utiliser le projet Mapper, qui permet d'effectuer ses changements, (mettre image). Afin de communiquer entre l'Api et le client nous avons utiliser le projet HTTPManager.
+
+Dans Entity Framework, nous avons tout d'abord créé le "biblioMilieu", qui établit une liaison entre le modèle et notre base de données.
+Le champion a une relation "many-to-many" avec RunePage, une relation "one-to-many" avec Skin, ainsi qu'une relation "one-to-many" avec Skill.
+Ensuite, pour mettre en place la relation entre RunePage et son dictionnaire de Catégories et Runes, nous avons créé une classe "CategoryDicDB" qui contient une Category, un Rune et un RunePage, chacun ayant une relation "one-to-many" avec les autres.
+De la même manière, nous avons créé une classe "CharacteristicDB" qui contient un int et une string, ainsi qu'un Champion ayant une relation "one-to-many" avec eux.
+Il est important de noter que toutes les relations ont été créées en utilisant le Fluent API, ainsi qu'un grand nombre de contraintes avec les Data Annotations.
+Pour remplir notre base de données, nous avons créé un script qui permet de transférer les données du stub vers la base de données. Vous pouvez trouver ce script dans le fichier "program.cs" du "biblioMilieu".
+En fin de compte, nous avons créé notre "DbManager", qui implémente "IDataManager". Ainsi, nous disposons de toutes les requêtes vers notre base de données pour effectuer les opérations CRUD. Le but étant de pouvoir se connecter à l'API.
+
+Le client Maui a été conçu pour pouvoir utiliser un "IDataManager", que ce soit celui de l'API ou d'Entity Framework. Il est important de noter qu'il faut changer le chemin d'accès si l'on souhaite lancer l'application avec Entity Framework. Pour cela, il suffit de commenter la ligne actuelle dans le fichier "EntityDbContexte" et de décommenter la ligne correspondante.
+
 
 *******
