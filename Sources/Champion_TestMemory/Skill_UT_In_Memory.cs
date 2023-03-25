@@ -151,7 +151,7 @@ namespace TestEntityUT
 
                 SkillDB Passive = new SkillDB { Name = "Frost Shot", Type = SkillTypeSkillDb.Passive, Description = "Teste Passive", Champion = ashe, ChampionForeignKey = 1, Id = 1 };
                 SkillDB FirstSkill = new SkillDB { Name = "Rangers Focus", Type = SkillTypeSkillDb.Basic, Description = "Teste First Skill", Champion = ashe, ChampionForeignKey = 1, Id = 2 };
-                SkillDB SecondSkill = new SkillDB { Name = "Volley", Type = SkillTypeSkillDb.Basic, Description = "Teste Second Skill ", Champion = ashe, ChampionForeignKey = 1, Id = 3 };
+                SkillDB SecondSkill = new SkillDB { Name = "Volley", Type = SkillTypeSkillDb.Basic, Description = "Teste Second Skill", Champion = ashe, ChampionForeignKey = 1, Id = 3 };
                 SkillDB ThirdSkill = new SkillDB { Name = "HawkShot", Type = SkillTypeSkillDb.Basic, Description = "Teste Third Skill", Champion = ashe, ChampionForeignKey = 1, Id = 4 };
                 SkillDB Ultimate = new SkillDB { Name = "Echanted Crystal Arrow", Type = SkillTypeSkillDb.Ultimate, Description = "Teste Ultimate", Champion = ashe, ChampionForeignKey = 1, Id = 5 };
 
