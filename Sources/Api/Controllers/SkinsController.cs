@@ -177,7 +177,7 @@ namespace Api.Controllers
                 if(champion == null) {
                     var message = $"Le champion {skin.ChampionName} n'existe pas.";
                     _logger.LogInformation(message);
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                    return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                 }
 
                 int nbItemTotal = await _dataManager.SkinsMgr.GetNbItems();
@@ -229,7 +229,7 @@ namespace Api.Controllers
                 {
                     var message = $"Le champion {skin.ChampionName} n'existe pas.";
                     _logger.LogInformation(message);
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
+                    return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                 }
 
                 int nbItemByName = await _dataManager.SkinsMgr.GetNbItemsByName(skin.Name);
