@@ -113,7 +113,7 @@ namespace TestControllerApiUt
             var controller = new RunesController(_stubData, _logger);
 
             // Act
-            var result = await controller.GetRunes(startIndex: 2, count: 5, descending: false);
+            var result = await controller.GetRunes(startIndex: 1, count: 1, descending: false);
             var objectResult = (ObjectResult)result;
 
             // Assert

@@ -103,7 +103,7 @@ namespace Api.Controllers
                     {
                         var message = $"Aucune runes en base de données.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
