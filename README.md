@@ -63,22 +63,32 @@ Vous pouvez maintenant lancer le projet en appuyant sur F5 ou en cliquant sur le
 
 <br/><img  width="1000" src="images_readme/Api.png"/><br/>
 
-Description des diagrammes:
+**Description des diagrammes:**
+## **API**
 
 Tout d'abord, pour le dossier ApiGlobale, on retrouve tous ce qui concerne l'Api, on a le projet Api, on l'on retrouve les différents controleurs soit le controleur RunePages, le controleur Runes, le controleur Skins et le controleur Champions. Nous avons réalisé une ApiRestFul de niveau 2, celle-ci respecte les contraintes de l'architecture REST (Representational State Transfer). Les contraintes de niveau 2 incluent l'utilisation d'URI pour identifier les ressources, l'utilisation des méthodes HTTP pour spécifier les actions à effectuer sur ces ressources (GET, POST, PUT, DELETE) et l'utilisation de messages auto-descriptifs. Nous avons donc tout naturellement mis en place de la pagination et du filtrage pour les méthode Get. Cependant on retrouve quelques méthodes que l'on a été contraints d'implanter pour s'adapter au client, ce qui ne reste pas les contraintes d'une ApiRestFul.
 De plus nous avons utiliser swagger afin de tester notre Api. Nous voulions implémenter une Api de niveau 3, cependant la contrainte de temps nous n'a pas permis de le faire. Endin nous avons également pu déployer notre Api sur CodeFirst dans le but de la rendre accessible de n'importe ou, cela à été fait par la mise en place d'un DockerFile.
 Nous avons mis en place des DTO, DTO (Data Transfer Object) est un modèle de conception qui permet de transférer des données entre des couches d'une application. 
 Afin d'adapter les classes du modele à notre Api, c'est pour cela que nous avons mis en place des mapper qui permet de convertir des données d'un format à un autre, soit dans notre cas de transformer les classes du modèle en DTO avec des méthode que l'on appelé par ToDto(). Et inversement par des méthodes du genre ToSkin(), ToChampion()... 
 Et pour faire cela nous avons utiliser le projet Mapper, qui permet d'effectuer ses changements, (mettre image). Afin de communiquer entre l'Api et le client nous avons utiliser le projet HTTPManager.
+## **Entity Framework**
 
 Dans Entity Framework, nous avons tout d'abord créé le "biblioMilieu", qui établit une liaison entre le modèle et notre base de données.
+### **Champion**
+
 Le champion a une relation "many-to-many" avec RunePage, une relation "one-to-many" avec Skin, ainsi qu'une relation "one-to-many" avec Skill.
+### **RunePage**
+
 Ensuite, pour mettre en place la relation entre RunePage et son dictionnaire de Catégories et Runes, nous avons créé une classe "CategoryDicDB" qui contient une Category, un Rune et un RunePage, chacun ayant une relation "one-to-many" avec les autres.
+### **CharacteristicDB**
 De la même manière, nous avons créé une classe "CharacteristicDB" qui contient un int et une string, ainsi qu'un Champion ayant une relation "one-to-many" avec eux.
+<br/>
+### **Autre**
 Il est important de noter que toutes les relations ont été créées en utilisant le Fluent API, ainsi qu'un grand nombre de contraintes avec les Data Annotations.
+<br/>
 Pour remplir notre base de données, nous avons créé un script qui permet de transférer les données du stub vers la base de données. Vous pouvez trouver ce script dans le fichier "program.cs" du "biblioMilieu".
 En fin de compte, nous avons créé notre "DbManager", qui implémente "IDataManager". Ainsi, nous disposons de toutes les requêtes vers notre base de données pour effectuer les opérations CRUD. Le but étant de pouvoir se connecter à l'API.
-
+## **Client Maui**
 Le client Maui a été conçu pour pouvoir utiliser un "IDataManager", que ce soit celui de l'API ou d'Entity Framework. Il est important de noter qu'il faut changer le chemin d'accès si l'on souhaite lancer l'application avec Entity Framework. Pour cela, il suffit de commenter la ligne actuelle dans le fichier "EntityDbContexte" et de décommenter la ligne correspondante.
 
 

@@ -47,21 +47,12 @@ namespace DTOLol
     public class DTOMessage
     {
         public string Message { get; set; }
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public List<DTOLink> Links { get; set; }
 
         public DTOMessage(string message)
         {
             Message = message;
         }
 
-        
-
-        public DTOMessage(string message, List<DTOLink> links)
-        {
-            Message = message;
-            Links = links;
-        }
 
     }
 }

@@ -20,9 +20,9 @@ namespace TestEntityUT
 
             using (var context = new EntityDbContexte(options))
             {
-                RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = RuneFamilyDb.Unknown, Icon = "dzadaz" };
-                RuneDB Guardian = new RuneDB { Name = "Guardian", Description = "Teste Guardian", Family = RuneFamilyDb.Domination, Icon = "dzadaz" };
-                RuneDB Strike = new RuneDB { Name = "First Strike", Description = "Teste First Strike", Family = RuneFamilyDb.Precision, Icon = "dzadaz" };
+                RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = RuneFamilyDb.Unknown, Icon = "dzadaz", Id = 1, Image="TestGlacial" };
+                RuneDB Guardian = new RuneDB { Name = "Guardian", Description = "Teste Guardian", Family = RuneFamilyDb.Domination, Icon = "dzadaz", Id = 2, Image = "TestGuardian" };
+                RuneDB Strike = new RuneDB { Name = "First Strike", Description = "Teste First Strike", Family = RuneFamilyDb.Precision, Icon = "dzadaz", Id = 3, Image = "TestStrike" };
 
                 context.RunesSet.Add(Glacial);
                 context.RunesSet.Add(Guardian);
@@ -47,9 +47,9 @@ namespace TestEntityUT
             using (var context = new EntityDbContexte(options))
             {
 
-                RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = RuneFamilyDb.Unknown, Icon = "dzadaz" };
-                RuneDB Guardian = new RuneDB { Name = "Guardian", Description = "Teste Guardian", Family = RuneFamilyDb.Domination, Icon = "dzadaz" };
-                RuneDB Strike = new RuneDB { Name = "First Strike", Description = "Teste First Strike", Family = RuneFamilyDb.Precision, Icon = "dzadaz" };
+                RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = RuneFamilyDb.Unknown, Icon = "dzadaz", Id = 1, Image = "TestGlacial" };
+                RuneDB Guardian = new RuneDB { Name = "Guardian", Description = "Teste Guardian", Family = RuneFamilyDb.Domination, Icon = "dzadaz", Id = 2, Image = "TestGuardian" };
+                RuneDB Strike = new RuneDB { Name = "First Strike", Description = "Teste First Strike", Family = RuneFamilyDb.Precision, Icon = "dzadaz", Id = 3, Image = "TestStrike" };
 
                 context.RunesSet.Add(Glacial);
                 context.RunesSet.Add(Guardian);
@@ -88,9 +88,9 @@ namespace TestEntityUT
             using (var context = new EntityDbContexte(options))
             {
 
-                RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = RuneFamilyDb.Unknown, Icon = "dzadaz" };
-                RuneDB Guardian = new RuneDB { Name = "Guardian", Description = "Teste Guardian", Family = RuneFamilyDb.Domination, Icon = "dzadaz" };
-                RuneDB Strike = new RuneDB { Name = "First Strike", Description = "Teste First Strike", Family = RuneFamilyDb.Precision, Icon = "dzadaz" };
+                RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = RuneFamilyDb.Unknown, Icon = "dzadaz", Id = 1, Image = "TestGlacial" };
+                RuneDB Guardian = new RuneDB { Name = "Guardian", Description = "Teste Guardian", Family = RuneFamilyDb.Domination, Icon = "dzadaz", Id = 2, Image = "TestGuardian" };
+                RuneDB Strike = new RuneDB { Name = "First Strike", Description = "Teste First Strike", Family = RuneFamilyDb.Precision, Icon = "dzadaz", Id = 3, Image = "TestStrike" };
 
                 context.RunesSet.Add(Glacial);
                 context.RunesSet.Add(Guardian);
@@ -126,9 +126,9 @@ namespace TestEntityUT
 
             using (var context = new EntityDbContexte(options))
             {
-                RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = RuneFamilyDb.Unknown, Icon = "dzadaz" };
-                RuneDB Guardian = new RuneDB { Name = "Guardian", Description = "Teste Guardian", Family = RuneFamilyDb.Domination, Icon = "dzadaz" };
-                RuneDB Strike = new RuneDB { Name = "First Strike", Description = "Teste First Strike", Family = RuneFamilyDb.Precision, Icon = "dzadaz" };
+                RuneDB Glacial = new RuneDB { Name = "Glacial Augment", Description = "Teste Glacial Augment", Family = RuneFamilyDb.Unknown, Icon = "dzadaz", Id = 1, Image = "TestGlacial" };
+                RuneDB Guardian = new RuneDB { Name = "Guardian", Description = "Teste Guardian", Family = RuneFamilyDb.Domination, Icon = "dzadaz", Id = 2, Image = "TestGuardian" };
+                RuneDB Strike = new RuneDB { Name = "First Strike", Description = "Teste First Strike", Family = RuneFamilyDb.Precision, Icon = "dzadaz", Id = 3, Image = "TestStrike" };
 
                 context.RunesSet.Add(Glacial);
                 context.RunesSet.Add(Guardian);
