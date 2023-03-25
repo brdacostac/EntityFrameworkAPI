@@ -214,7 +214,7 @@ namespace TestControllerApiUt
         //    Assert.IsNotNull(objectResult);
         //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
-        }
+        //}
 
         //[TestMethod]
         //public async Task Post_ReturnBadRequest_WhenRuneDataIsIncomplete()
