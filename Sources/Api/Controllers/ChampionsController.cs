@@ -159,10 +159,6 @@ namespace Api.Controllers
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(actualStartIndex, actualCount, name, descending);
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        championList = championList.Where(r => r.Name.Contains(name));
-                    }
 
                     if (!championList.Any())
                     {
