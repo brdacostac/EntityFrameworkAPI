@@ -33,12 +33,12 @@ namespace Api.Controllers
         {
             try
             {
-                if (Request.Query.Count > 5)
-                {
-                    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
-                    _logger.LogWarning(errorMessage);
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
-                }
+                //if (Request.Query.Count > 5)
+                //{
+                //    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
+                //    _logger.LogWarning(errorMessage);
+                //    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
+                //}
 
                 if (count <= 0 || count > 25)
                 {
@@ -62,7 +62,7 @@ namespace Api.Controllers
                     {
                         var message = $"Aucune charactéristique nommé {characteristic} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
@@ -89,7 +89,7 @@ namespace Api.Controllers
                     {
                         var message = $"Aucun skill nommé {skillName} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
@@ -100,34 +100,6 @@ namespace Api.Controllers
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOChampion>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, championList.Select(e => e.ToDto())));
                 }
-                //else if (!string.IsNullOrEmpty(skill))
-                //{
-                //    var skillObject = await _dataManager.ChampionsMgr.GetItemsBySkill(skill, 1, 1);
-                //    var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsBySkill(skill);
-                //    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                //    int actualCount = count.HasValue ? count.Value : totalItemCount;
-
-                //    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsBySkill(skillObject, actualStartIndex, actualCount, null, descending);
-                //    //if (!string.IsNullOrEmpty(skillName))
-                //    //{
-                //    //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
-                //    //}
-
-                //    if (!championList.Any())
-                //    {
-                //        var message = $"Aucun skill nommé {skillObject.Name} n'a été trouvé.";
-                //        _logger.LogInformation(message);
-                //        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
-                //    }
-
-                //    int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                //    int currentPage = actualStartIndex / actualCount + 1;
-                //    int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
-
-                //    var successMessage = $"Les skills avec le nom {skillObject.Name} ont été récupéré avec succès.";
-                //    _logger.LogInformation(successMessage);
-                //    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOChampion>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, championList.Select(e => e.ToDto())));
-                //}
                 else if (!string.IsNullOrEmpty(name))
                 {
                     var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsByName(name);
@@ -144,7 +116,7 @@ namespace Api.Controllers
                     {
                         var message = $"Aucun champion nommé {name} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
@@ -169,7 +141,7 @@ namespace Api.Controllers
                     {
                         var message = $"Aucun champion avec la classe {championClass} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
@@ -180,33 +152,6 @@ namespace Api.Controllers
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOChampion>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, championList.Select(e => e.ToDto())));
                 }
-                //else if (runePage != null)
-                //{
-                //    var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsByRunePage(runePage);
-                //    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                //    int actualCount = count.HasValue ? count.Value : totalItemCount;
-
-                //    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByRunePage(runePage, actualStartIndex, actualCount, null, descending);
-                //    //if (!string.IsNullOrEmpty(runePage))
-                //    //{
-                //    //    championList = championList.Where(r => r.Name.Contains(runePage));
-                //    //}
-
-                //    if (!championList.Any())
-                //    {
-                //        var message = $"Aucun champion avec la page rune {runePage} n'a été trouvé.";
-                //        _logger.LogInformation(message);
-                //        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
-                //    }
-
-                //    int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                //    int currentPage = actualStartIndex / actualCount + 1;
-                //    int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
-
-                //    var successMessage = $"Les champions avec la page rune {runePage} ont été récupéré avec succès.";
-                //    _logger.LogInformation(successMessage);
-                //    return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOChampion>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, championList.Select(e => e.ToDto())));
-                //}
                 else
                 {
                     int totalItemCount = await _dataManager.ChampionsMgr.GetNbItems();
@@ -214,10 +159,6 @@ namespace Api.Controllers
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(actualStartIndex, actualCount, name, descending);
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        championList = championList.Where(r => r.Name.Contains(name));
-                    }
 
                     if (!championList.Any())
                     {
@@ -390,8 +331,6 @@ namespace Api.Controllers
         [FromQuery(Name = "characteristic")] string? charName = null,
         [FromQuery(Name = "class")] string? championClass = null,
         [FromQuery(Name = "name")] string? name = null,
-        [FromQuery(Name = "runePage")] string? runePage = null,
-        [FromQuery(Name = "skill")] string? skill = null,
         [FromQuery(Name = "skillName")] string? skillName = null)
         {
             int count = 0;
@@ -409,14 +348,6 @@ namespace Api.Controllers
             {
                 count = await _dataManager.ChampionsMgr.GetNbItemsByName(name);
             }
-            /*else if (runePage != null)
-            {
-                count = await _dataManager.ChampionsMgr.GetNbItemsByRunePage(await _dataManager.ChampionsMgr.GetItemsByRunePage(runePage));
-            }*/
-            /*else if (skill != null)
-            {
-                count = await _dataManager.ChampionsMgr.GetNbItemsBySkill();
-            }*/
             else if (skillName != null)
             {
                 count = await _dataManager.ChampionsMgr.GetNbItemsBySkill(skillName);

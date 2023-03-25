@@ -134,6 +134,24 @@ namespace TestControllerApiUt
         }
 
         [TestMethod]
+        public async Task Get_ReturnInternalServerErrorV3()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.RunesMgr.GetItemByName(It.IsAny<string>())).Throws(new Exception("Erreur de base de données"));
+
+            var controller = new RunePagesController(mockDataManager.Object, _logger);
+
+            // Act
+            var result = await controller.GetV3("ExistingChampion");
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, objectResult.StatusCode);
+        }
+
+        [TestMethod]
         public async Task Post_ReturnInternalServerError()
         {
             // Arrange
@@ -334,6 +352,57 @@ namespace TestControllerApiUt
 
             // Act
             var result = await controller.Get(name);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult.StatusCode);
+            await controller.Delete(name);
+        }
+
+        [TestMethod]
+        public async Task Get_ReturnBadRequestV3()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+            var name = "";
+
+            // Act
+            var result = await controller.GetV3(name);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Get_ReturnNotFoundV3()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+            var name = "NonExistingRune";
+
+            // Act
+            var result = await controller.GetV3(name);
+            var objectResult = (ObjectResult)result;
+
+            // Assert
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task Get_ReturnOkV3()
+        {
+            // Arrange
+            var controller = new RunePagesController(_stubData, _logger);
+            var name = "Rune1";
+            var rune = new DTORunePage { Name = name, DTORuneDic = new Dictionary<string, DTORune>() };
+            var test = await controller.Post(rune);
+
+            // Act
+            var result = await controller.GetV3(name);
             var objectResult = (ObjectResult)result;
 
             // Assert
