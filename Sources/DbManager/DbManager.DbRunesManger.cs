@@ -21,7 +21,7 @@ namespace DbManager
                 var itemAdded = await parent.DbContext.RunesSet.AddAsync(item.ToDb());
                 await parent.DbContext.SaveChangesAsync();
 
-                return itemAdded.Entity.ToRune();
+                return itemAdded.Entity?.ToRune();
             }
 
             public async Task<bool> DeleteItem(Model.Rune? item)
@@ -34,7 +34,7 @@ namespace DbManager
             public async Task<Model.Rune?> GetItemByName(string name)
             {
                 var itemByName = await parent.DbContext.RunesSet.FirstOrDefaultAsync(item => item.Name == name);
-                return itemByName.ToRune();
+                return itemByName?.ToRune();
             }
 
             public async Task<IEnumerable<Model.Rune?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)

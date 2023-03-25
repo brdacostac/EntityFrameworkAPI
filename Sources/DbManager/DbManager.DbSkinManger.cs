@@ -22,7 +22,7 @@ namespace DbManager
                 var itemAdded = await parent.DbContext.SkinsSet.AddAsync(item.ToDb(champ));
                 await parent.DbContext.SaveChangesAsync();
 
-                return itemAdded.Entity.ToSkin();
+                return itemAdded.Entity?.ToSkin();
             }
 
             public async Task<bool> DeleteItem(Skin? item)
@@ -35,7 +35,7 @@ namespace DbManager
             public async Task<Skin?> GetItemByName(string name)
             {
                 var itemByName = await parent.DbContext.SkinsSet.Include(c => c.Champion).FirstOrDefaultAsync(item => item.Name == name);
-                return itemByName.ToSkin();
+                return itemByName?.ToSkin();
             }
 
             public async Task<IEnumerable<Skin?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
@@ -82,7 +82,7 @@ namespace DbManager
                 var itemUpdated = parent.DbContext.SkinsSet.FirstOrDefault(e => e.Name==oldItem.Name);
                 itemUpdated = newItem.ToDb();
                 parent.DbContext.SaveChanges();
-                return itemUpdated.ToSkin();
+                return itemUpdated?.ToSkin();
             }
         }
     }
