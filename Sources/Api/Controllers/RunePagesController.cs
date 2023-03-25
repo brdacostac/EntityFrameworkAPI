@@ -84,7 +84,7 @@ namespace Api.Controllers
                     IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByChampion(champObj, actualStartIndex, actualCount, null, descending);
                     if (!runePageList.Any())
                     {
-                        var message = $"Aucune page de rune correspond au champion {champObj.Name} n'a été trouvé.";
+                        var message = $"Aucune page de rune correspond au champion {nameChampion} n'a été trouvé.";
                         _logger.LogInformation(message);
                         return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
@@ -93,7 +93,7 @@ namespace Api.Controllers
                     int currentPage = actualStartIndex / actualCount + 1;
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
-                    var successMessage = $"Les pages runes correspondantes au champion {champObj.Name} ont été récupéré avec succès.";
+                    var successMessage = $"Les pages runes correspondantes au champion {nameChampion} ont été récupéré avec succès.";
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTORunePage>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, runePageList.Select(e => e.ToDto())));
                 }
