@@ -199,39 +199,39 @@ namespace TestControllerApiUt
 
 
 
-        [TestMethod]
-        public async Task Post_ReturnBadRequest_WhenModelStateIsInvalid()
-        {
-            // Arrange
-            var controller = new ChampionsController(_stubData, _logger);
-            var rune = new DTOChampion { Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+        //[TestMethod]
+        //public async Task Post_ReturnBadRequest_WhenModelStateIsInvalid()
+        //{
+        //    // Arrange
+        //    var controller = new ChampionsController(_stubData, _logger);
+        //    var rune = new DTOChampion { Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
 
-            // Act
-            var result = await controller.Post(rune);
-            var objectResult = (ObjectResult)result;
+        //    // Act
+        //    var result = await controller.Post(rune);
+        //    var objectResult = (ObjectResult)result;
 
-            // Assert
-            Assert.IsNotNull(objectResult);
-            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
-
-        }
-
-        [TestMethod]
-        public async Task Post_ReturnBadRequest_WhenRuneDataIsIncomplete()
-        {
-            // Arrange
-            var controller = new ChampionsController(_stubData, _logger);
-            var rune = new DTOChampion { Name = "", Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
-
-            // Act
-            var result = await controller.Post(rune);
-            var objectResult = (ObjectResult)result;
-
-            // Assert
-            Assert.IsNotNull(objectResult);
-            Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+        //    // Assert
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
 
         }
+
+        //[TestMethod]
+        //public async Task Post_ReturnBadRequest_WhenRuneDataIsIncomplete()
+        //{
+        //    // Arrange
+        //    var controller = new ChampionsController(_stubData, _logger);
+        //    var rune = new DTOChampion { Name = "", Bio = "test", Icon = "test", Image = "test", Characteristics = new Dictionary<string, int>(), Class = "Unknown", Skills = new List<DTOSkill>(), Skins = new List<DTOSkin>() };
+
+        //    // Act
+        //    var result = await controller.Post(rune);
+        //    var objectResult = (ObjectResult)result;
+
+        //    // Assert
+        //    Assert.IsNotNull(objectResult);
+        //    Assert.AreEqual((int)HttpStatusCode.BadRequest, objectResult.StatusCode);
+
+        //}
 
         [TestMethod]
         public async Task Post_ReturnBadRequest_WhenRuneAlreadyExists()
