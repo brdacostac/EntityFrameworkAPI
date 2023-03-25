@@ -23,16 +23,16 @@ namespace Api.Controllers
         // GET: api/<ValuesController>
 
         [HttpGet]
-        public async Task<IActionResult> GetRunes([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] string? champion = null)
+        public async Task<IActionResult> GetSkins([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "Champion")] string? champion = null)
         {
             try
             {
-                if (Request.Query.Count > 4)
-                {
-                    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
-                    _logger.LogWarning(errorMessage);
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
-                }
+                //if (Request.Query.Count > 4)
+                //{
+                //    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
+                //    _logger.LogWarning(errorMessage);
+                //    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
+                //}
 
                 if (count <= 0 || count > 25)
                 {
@@ -78,16 +78,16 @@ namespace Api.Controllers
 
                     if (!skinList.Any())
                     {
-                        var message = $"Aucune champion {championItem.Name} n'a été trouvé.";
+                        var message = $"Aucune champion {champion} n'a été trouvé.";
                         _logger.LogInformation(message);
-                        return StatusCode((int)HttpStatusCode.NoContent, FactoryMessage.MessageCreate(message));
+                        return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
                     int currentPage = actualStartIndex / actualCount + 1;
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
-                    var successMessage = $"Les skins {championItem.Name} ont été récupéré avec succès.";
+                    var successMessage = $"Les skins {champion} ont été récupéré avec succès.";
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTOSkin>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, skinList.Select(e => e.ToDto())));
                 }

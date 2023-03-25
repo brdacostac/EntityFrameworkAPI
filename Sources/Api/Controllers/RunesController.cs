@@ -22,16 +22,16 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRunes([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false,  [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "RuneFamily")] RuneFamily? runeFamily = null)
+        public async Task<IActionResult> GetRunes([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "descending")] bool descending = false,  [FromQuery(Name = "NameSubstring")] string? nameSubstring = null, [FromQuery(Name = "RuneFamily")] string? runeFamily = null)
         {
             try
             {
-                if (Request.Query.Count > 4)
-                {
-                    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
-                    _logger.LogWarning(errorMessage);
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
-                }
+                //if (Request.Query.Count > 4)
+                //{
+                //    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
+                //    _logger.LogWarning(errorMessage);
+                //    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
+                //}
 
                 if (count <= 0 || count > 25)
                 {
@@ -67,21 +67,18 @@ namespace Api.Controllers
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTORune>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, runeList.Select(e => e.ToDto())));
                 }
                 //&& runeFamily.IsValid()
-                else if (runeFamily != null )
+                else if (!string.IsNullOrEmpty(runeFamily))
                 {
-                    var totalItemCount = await _dataManager.RunesMgr.GetNbItemsByFamily(runeFamily.Value);
+                    RuneFamily runeFamilyEnum = Enum.TryParse<RuneFamily>(runeFamily, true, out runeFamilyEnum) ? runeFamilyEnum : RuneFamily.Unknown;
+                    var totalItemCount = await _dataManager.RunesMgr.GetNbItemsByFamily(runeFamilyEnum);
                     int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
-                    IEnumerable<Rune> runeList = await _dataManager.RunesMgr.GetItemsByFamily(runeFamily.Value, actualStartIndex, actualCount, null, descending);
-                    //if (!string.IsNullOrEmpty(skillName))
-                    //{
-                    //    championListSkillName = championListSkillName.Where(r => r.Name.Contains(skillName));
-                    //}
+                    IEnumerable<Rune> runeList = await _dataManager.RunesMgr.GetItemsByFamily(runeFamilyEnum, actualStartIndex, actualCount, null, descending);
 
                     if (!runeList.Any())
                     {
-                        var message = $"Aucune rune correspond à la famille {runeFamily.Value} n'a été trouvé.";
+                        var message = $"Aucune rune correspond à la famille {runeFamily} n'a été trouvé.";
                         _logger.LogInformation(message);
                         return StatusCode((int)HttpStatusCode.NotFound, FactoryMessage.MessageCreate(message));
                     }
@@ -90,7 +87,7 @@ namespace Api.Controllers
                     int currentPage = actualStartIndex / actualCount + 1;
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
-                    var successMessage = $"Les runes correspondantes à la famille {runeFamily.Value} ont été récupéré avec succès.";
+                    var successMessage = $"Les runes correspondantes à la famille {runeFamily} ont été récupéré avec succès.";
                     _logger.LogInformation(successMessage);
                     return StatusCode((int)HttpStatusCode.OK, FactoryMessage.MessageCreate<IEnumerable<DTORune>>(successMessage, currentPage, nextPage, totalPages, totalItemCount, runeList.Select(e => e.ToDto())));
                 }
