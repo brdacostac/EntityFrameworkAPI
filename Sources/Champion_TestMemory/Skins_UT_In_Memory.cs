@@ -22,9 +22,9 @@ namespace TestEntityUT
                 ChampionDB champion = new ChampionDB { Name = "Lux", Bio = "The Lady of Luminosity", Icon = "Icon Lux" };
                 context.ChampionsSet.Add(champion);
 
-                SkinDB skin1 = new SkinDB { Name = "Classic", Price = 0, Champion = champion, Description = "Description skin1", Icon = "Icon skin1" };
-                SkinDB skin2 = new SkinDB { Name = "Elementalist", Price = 3250, Champion = champion, Description = "Description skin2", Icon = "Icon skin2" };
-                SkinDB skin3 = new SkinDB { Name = "Steel Legion", Price = 975, Champion = champion, Description = "Description skin3", Icon = "Icon skin3" };
+                SkinDB skin1 = new SkinDB { Name = "Classic", Price = 0, Id = 1, ChampionForeignKey=1, Image="imageClassic", Champion = champion, Description = "Description skin1", Icon = "Icon skin1" };
+                SkinDB skin2 = new SkinDB { Name = "Elementalist", Price = 3250, Id = 2, ChampionForeignKey = 2, Image = "imageElementalist", Champion = champion, Description = "Description skin2", Icon = "Icon skin2" };
+                SkinDB skin3 = new SkinDB { Name = "Steel Legion", Price = 975, Id = 3, ChampionForeignKey = 3, Image = "imageLegion", Champion = champion, Description = "Description skin3", Icon = "Icon skin3" };
 
                 context.SkinsSet.Add(skin1);
                 context.SkinsSet.Add(skin2);
@@ -51,9 +51,9 @@ namespace TestEntityUT
                 ChampionDB champion = new ChampionDB { Name = "Lux", Bio = "The Lady of Luminosity", Icon = "Icon Lux" };
                 context.ChampionsSet.Add(champion);
 
-                SkinDB skin1 = new SkinDB { Name = "Classic", Price = 0, Champion = champion, Description  = "Description skin1", Icon = "Icon skin1" };
-                SkinDB skin2 = new SkinDB { Name = "Elementalist", Price = 3250, Champion = champion, Description = "Description skin2", Icon = "Icon skin2" };
-                SkinDB skin3 = new SkinDB { Name = "Steel Legion", Price = 975, Champion = champion, Description = "Description skin3", Icon = "Icon skin3" };
+                SkinDB skin1 = new SkinDB { Name = "Classic", Price = 0, Id = 1, ChampionForeignKey = 1, Image = "imageClassic", Champion = champion, Description = "Description skin1", Icon = "Icon skin1" };
+                SkinDB skin2 = new SkinDB { Name = "Elementalist", Price = 3250, Id = 2, ChampionForeignKey = 2, Image = "imageElementalist", Champion = champion, Description = "Description skin2", Icon = "Icon skin2" };
+                SkinDB skin3 = new SkinDB { Name = "Steel Legion", Price = 975, Id = 3, ChampionForeignKey = 3, Image = "imageLegion", Champion = champion, Description = "Description skin3", Icon = "Icon skin3" };
 
                 context.SkinsSet.Add(skin1);
                 context.SkinsSet.Add(skin2);
@@ -94,9 +94,9 @@ namespace TestEntityUT
                 ChampionDB champion = new ChampionDB { Name = "Lux", Bio = "The Lady of Luminosity", Icon = "Icon Lux" };
                 context.ChampionsSet.Add(champion);
 
-                SkinDB skin1 = new SkinDB { Name = "Classic", Price = 0, Champion = champion, Description = "Description skin1", Icon = "Icon skin1" };
-                SkinDB skin2 = new SkinDB { Name = "Elementalist", Price = 3250, Champion = champion, Description = "Description skin2", Icon = "Icon skin2" };
-                SkinDB skin3 = new SkinDB { Name = "Steel Legion", Price = 975, Champion = champion, Description = "Description skin3", Icon = "Icon skin3" };
+                SkinDB skin1 = new SkinDB { Name = "Classic", Price = 0, Id = 1, ChampionForeignKey = 1, Image = "imageClassic", Champion = champion, Description = "Description skin1", Icon = "Icon skin1" };
+                SkinDB skin2 = new SkinDB { Name = "Elementalist", Price = 3250, Id = 2, ChampionForeignKey = 2, Image = "imageElementalist", Champion = champion, Description = "Description skin2", Icon = "Icon skin2" };
+                SkinDB skin3 = new SkinDB { Name = "Steel Legion", Price = 975, Id = 3, ChampionForeignKey = 3, Image = "imageLegion", Champion = champion, Description = "Description skin3", Icon = "Icon skin3" };
 
                 context.SkinsSet.Add(skin1);
                 context.SkinsSet.Add(skin2);
@@ -139,9 +139,9 @@ namespace TestEntityUT
                 ChampionDB champion = new ChampionDB { Name = "Lux", Bio = "The Lady of Luminosity", Icon = "Icon Lux" };
                 context.ChampionsSet.Add(champion);
 
-                SkinDB skin1 = new SkinDB { Name = "Classic", Price = 0, Champion = champion, Description = "Description skin1", Icon = "Icon skin1" };
-                SkinDB skin2 = new SkinDB { Name = "Elementalist", Price = 3250, Champion = champion, Description = "Description skin2", Icon = "Icon skin2" };
-                SkinDB skin3 = new SkinDB { Name = "Steel Legion", Price = 975, Champion = champion, Description = "Description skin3", Icon = "Icon skin3" };
+                SkinDB skin1 = new SkinDB { Name = "Classic", Price = 0, Id = 1, ChampionForeignKey = 1, Image = "imageClassic", Champion = champion, Description = "Description skin1", Icon = "Icon skin1" };
+                SkinDB skin2 = new SkinDB { Name = "Elementalist", Price = 3250, Id = 2, ChampionForeignKey = 2, Image = "imageElementalist", Champion = champion, Description = "Description skin2", Icon = "Icon skin2" };
+                SkinDB skin3 = new SkinDB { Name = "Steel Legion", Price = 975, Id = 3, ChampionForeignKey = 3, Image = "imageLegion", Champion = champion, Description = "Description skin3", Icon = "Icon skin3" };
 
                 context.SkinsSet.Add(skin1);
                 context.SkinsSet.Add(skin2);
@@ -160,14 +160,17 @@ namespace TestEntityUT
                 var classic = skins.FirstOrDefault(c => c.Name == "Classic");
                 Assert.NotNull(classic);
                 Assert.Equal("Description skin1", classic.Description);
+                Assert.Equal("imageClassic", classic.Image);
 
                 var elementalist = skins.FirstOrDefault(c => c.Name == "Elementalist");
                 Assert.NotNull(elementalist);
                 Assert.Equal("Description skin2", elementalist.Description);
+                Assert.Equal("imageElementalist", elementalist.Image);
 
                 var steellegion = skins.FirstOrDefault(c => c.Name == "Steel Legion");
                 Assert.NotNull(steellegion);
                 Assert.Equal("Description skin3", steellegion.Description);
+                Assert.Equal("imageLegion", steellegion.Image);
 
 
             }
@@ -183,7 +186,7 @@ namespace TestEntityUT
             using (var context = new EntityDbContexte(options))
             {
 
-                context.SkinsSet.Add(new SkinDB { Name = null, Price = 0, Champion = null, Description = "Description skin1", Icon = "Icon skin1" });
+                context.SkinsSet.Add(new SkinDB { Name = null, Price = 0, Id=1, ChampionForeignKey=1, Image=null, Champion = null, Description = "Description skin1", Icon = "Icon skin1" });
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges());
             }
