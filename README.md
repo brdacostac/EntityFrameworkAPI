@@ -61,7 +61,7 @@ Vous pouvez maintenant lancer le projet en appuyant sur F5 ou en cliquant sur le
 
 ## Diagrams
 
-<br/><img  width="350" src="images_readme/Api.png"/><br/>
+<br/><img  width="1000" src="images_readme/Api.png"/><br/>
 
 Description des diagrammes:
 
