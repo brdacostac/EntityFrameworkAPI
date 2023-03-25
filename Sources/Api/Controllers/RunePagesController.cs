@@ -26,19 +26,31 @@ namespace Api.Controllers
         {
             try
             {
-                if (Request.Query.Count > 4)
-                {
-                    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
-                    _logger.LogWarning(errorMessage);
-                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
-                }
-
                 if (count <= 0 || count > 25)
                 {
                     var message = "startIndex doit être compris entre 1 et 25.";
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
+                //int queryParametersCount = 0;
+                //foreach (var key in HttpContext.Request.Query.Keys)
+                //{
+                //    var value = HttpContext.Request.Query[key];
+                //    if (!string.IsNullOrEmpty(value))
+                //    {
+                //        queryParametersCount++;
+                //    }
+                //}
+
+                //if (queryParametersCount > 4)
+                //{
+                //    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
+                //    _logger.LogWarning(errorMessage);
+                //    return BadRequest(FactoryMessage.MessageCreate(errorMessage));
+                //}
+
+
+
                 if (!string.IsNullOrEmpty(nameSubstring))
                 {
                     var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByName(nameSubstring);
@@ -46,10 +58,6 @@ namespace Api.Controllers
                     int actualCount = count.HasValue ? count.Value : totalItemCount;
 
                     IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByName(nameSubstring, actualStartIndex, actualCount, null, descending);
-                    if (!string.IsNullOrEmpty(nameSubstring))
-                    {
-                        runePageList = runePageList.Where(r => r.Name.Contains(nameSubstring));
-                    }
 
                     if (!runePageList.Any())
                     {
