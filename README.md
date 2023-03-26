@@ -75,21 +75,25 @@ Et pour faire cela nous avons utiliser le projet Mapper, qui permet d'effectuer 
 
 Dans Entity Framework, nous avons tout d'abord créé le "biblioMilieu", qui établit une liaison entre le modèle et notre base de données.
 ### **Champion**
-
 Le champion a une relation "many-to-many" avec RunePage, une relation "one-to-many" avec Skin, ainsi qu'une relation "one-to-many" avec Skill.
-### **RunePage**
 
+### **RunePage**
 Ensuite, pour mettre en place la relation entre RunePage et son dictionnaire de Catégories et Runes, nous avons créé une classe "CategoryDicDB" qui contient une Category, un Rune et un RunePage, chacun ayant une relation "one-to-many" avec les autres.
+
 ### **CharacteristicDB**
 De la même manière, nous avons créé une classe "CharacteristicDB" qui contient un int et une string, ainsi qu'un Champion ayant une relation "one-to-many" avec eux.
-<br/>
+
 ### **Autre**
 Il est important de noter que toutes les relations ont été créées en utilisant le Fluent API, ainsi qu'un grand nombre de contraintes avec les Data Annotations.
 <br/>
 Pour remplir notre base de données, nous avons créé un script qui permet de transférer les données du stub vers la base de données. Vous pouvez trouver ce script dans le fichier "program.cs" du "biblioMilieu".
 En fin de compte, nous avons créé notre "DbManager", qui implémente "IDataManager". Ainsi, nous disposons de toutes les requêtes vers notre base de données pour effectuer les opérations CRUD. Le but étant de pouvoir se connecter à l'API.
+
 ## **Client Maui**
 Le client Maui a été conçu pour pouvoir utiliser un "IDataManager", que ce soit celui de l'API ou d'Entity Framework. Il est important de noter qu'il faut changer le chemin d'accès si l'on souhaite lancer l'application avec Entity Framework. Pour cela, il suffit de commenter la ligne actuelle dans le fichier "EntityDbContexte" et de décommenter la ligne correspondante.
+
+## **Tests**
+Afin de garantir la qualité de notre jeu, nous avons mis en place différents tests. Nous avons tout d'abord effectué des tests unitaires pour la partie API, qui ont permis de vérifier les méthodes des contrôleurs. Par ailleurs, des tests In Memory ont été effectués pour la partie EF, afin de simuler une base de données et de vérifier son bon fonctionnement. Enfin, pour assurer la continuité de l'intégration du code, nous avons mis en place un système de CI avec Drone et Sonar sur CodeFirst. Grâce à ces outils, nous avons atteint un taux de couverture de 80%. Les tests concernant le client on été effectués par M.CHEVALDONNE.
 
 
 *******
