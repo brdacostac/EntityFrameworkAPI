@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Model;
 using StubLib;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddVersionedApiExplorer(setup =>
@@ -20,7 +21,12 @@ builder.Services.AddVersionedApiExplorer(setup =>
 builder.Services.AddControllers();
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "API Lol v1", Version = "v1" });
+    options.SwaggerDoc("v2", new OpenApiInfo { Title = "API Lol v2", Version = "v2" });
+    options.SwaggerDoc("v3", new OpenApiInfo { Title = "API Lol v3", Version = "v3" });
+});
 builder.Services.AddSingleton<IDataManager, DbManger>(); //un seul pour tout le monde //il y a des semaphore et de concurrence d acces
 builder.Services.AddDbContext<EntityDbContexte>(opt => opt.UseSqlite($"Filename={Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..\\..\\..\\..\\Entity_framework\\Entity_framework.LolDB.db")}"));
 builder.Services.AddControllers().AddControllersAsServices(); // Add controllers as services
