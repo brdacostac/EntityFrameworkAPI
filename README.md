@@ -74,7 +74,7 @@ Nous avons également mis en place le versionnage de code, que vous pouvez retro
 De plus nous avons utiliser swagger afin de tester notre Api. Nous voulions implémenter une Api de niveau 3, cependant la contrainte de temps nous n'a pas permis de le faire. Endin nous avons également pu déployer notre Api sur CodeFirst dans le but de la rendre accessible de n'importe ou, cela à été fait par la mise en place d'un DockerFile.
 Nous avons mis en place des DTO, DTO (Data Transfer Object) est un modèle de conception qui permet de transférer des données entre des couches d'une application. 
 Afin d'adapter les classes du modele à notre Api, c'est pour cela que nous avons mis en place des mapper qui permet de convertir des données d'un format à un autre, soit dans notre cas de transformer les classes du modèle en DTO avec des méthode que l'on appelé par ToDto(). Et inversement par des méthodes du genre ToSkin(), ToChampion()... 
-Et pour faire cela nous avons utiliser le projet Mapper, qui permet d'effectuer ses changements, (mettre image). Afin de communiquer entre l'Api et le client nous avons utiliser le projet HTTPManager.
+Et pour faire cela nous avons utiliser le projet Mapper, qui permet d'effectuer ses changements. Afin de communiquer entre l'Api et le client nous avons utiliser le projet HTTPManager.
 
 ### **Entity Framework** :
 
@@ -101,6 +101,7 @@ Le client Maui a été conçu pour pouvoir utiliser un "IDataManager", que ce so
 ## **Tests** :zap:
 Afin de garantir la qualité de notre jeu, nous avons mis en place différents tests. Nous avons tout d'abord effectué des tests unitaires pour la partie API, qui ont permis de vérifier les méthodes des contrôleurs. Par ailleurs, des tests In Memory ont été effectués pour la partie EF, afin de simuler une base de données et de vérifier son bon fonctionnement. Enfin, pour assurer la continuité de l'intégration du code, nous avons mis en place un système de CI avec Drone et Sonar sur CodeFirst. Grâce à ces outils, nous avons atteint un taux de couverture de 80%. Les tests concernant le client on été effectués par M.CHEVALDONNE.
 ameliorations
+<br/><img  width="300" src="images_readme/coverage.png"/><br/>
 
 <div id='ameliorations'/>
 
