@@ -61,7 +61,7 @@ Vous pouvez maintenant lancer le projet en appuyant sur F5 ou en cliquant sur le
 
 <div id='conception'/>
 
-## Diagrams
+## Diagrammes
 
 <br/><img  width="1000" src="images_readme/Api.png"/><br/>
 
