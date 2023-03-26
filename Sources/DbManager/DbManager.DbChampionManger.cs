@@ -135,7 +135,12 @@ namespace DbManager
             public async Task<Champion?> UpdateItem(Champion? oldItem, Champion? newItem)
             {
                 var itemUpdated = parent.DbContext.ChampionsSet.FirstOrDefault(champ => champ.Name == oldItem.Name);
-                itemUpdated = newItem.ToDb();
+                var newEntity = newItem.ToDb();
+                itemUpdated.Name = newEntity.Name;
+                itemUpdated.Bio = newEntity.Bio;
+                itemUpdated.Class = newEntity.Class;
+           
+
                 parent.DbContext.SaveChanges();
                 return itemUpdated?.ToChampion();
             }
