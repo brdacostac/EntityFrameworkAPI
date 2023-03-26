@@ -29,16 +29,16 @@ namespace Api.Controllers
         // [FromQuery(Name = "runePage")] string runePage = null,
 
         [HttpGet]
-        public async Task<IActionResult> GetChampions([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = 4, [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "characteristic")] string? characteristic = null, [FromQuery(Name = "championClass")] string? championClass = null, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "skillName")] string? skillName = null)
+        public async Task<IActionResult> GetChampions([FromQuery(Name = "startIndex")] int? startIndex = 0, [FromQuery(Name = "count")] int? count = null, [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "characteristic")] string? characteristic = null, [FromQuery(Name = "championClass")] string? championClass = null, [FromQuery(Name = "descending")] bool descending = false, [FromQuery(Name = "skillName")] string? skillName = null)
         {
             try
             {
-                //if (Request.Query.Count > 5)
-                //{
-                //    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
-                //    _logger.LogWarning(errorMessage);
-                //    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
-                //}
+                if (Request.Query.Count > 4)
+                {
+                    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
+                    _logger.LogWarning(errorMessage);
+                    return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(errorMessage));
+                }
 
                 if (count <= 0 || count > 25)
                 {
@@ -49,14 +49,9 @@ namespace Api.Controllers
                 if (!string.IsNullOrEmpty(characteristic))
                 {
                     var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsByCharacteristic(characteristic);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByCharacteristic(characteristic, actualStartIndex, actualCount, null, descending);
-                    if (!string.IsNullOrEmpty(characteristic))
-                    {
-                        championList = championList.Where(r => r.Name.Contains(characteristic));
-                    }
+                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByCharacteristic(characteristic, (int)startIndex, actualCount, null, descending);
 
                     if (!championList.Any())
                     {
@@ -66,7 +61,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les charactéristiques avec le nom {characteristic} ont été récupéré avec succès.";
@@ -76,14 +71,9 @@ namespace Api.Controllers
                 if (!string.IsNullOrEmpty(skillName))
                 {
                     var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsBySkill(skillName);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count!=null ? count.Value : totalItemCount;
 
-                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsBySkill(skillName, actualStartIndex, actualCount, null, descending);
-                    if (!string.IsNullOrEmpty(skillName))
-                    {
-                        championList = championList.Where(r => r.Name.Contains(skillName));
-                    }
+                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsBySkill(skillName, (int)startIndex, actualCount, null, descending);
 
                     if (!championList.Any())
                     {
@@ -93,7 +83,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les skills avec le nom {skillName} ont été récupéré avec succès.";
@@ -103,14 +93,9 @@ namespace Api.Controllers
                 else if (!string.IsNullOrEmpty(name))
                 {
                     var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsByName(name);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByName(name, actualStartIndex, actualCount, null, descending);
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        championList = championList.Where(r => r.Name.Contains(name));
-                    }
+                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByName(name, (int)startIndex, actualCount, null, descending);
 
                     if (!championList.Any())
                     {
@@ -120,7 +105,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les champions avec le nom {name} ont été récupéré avec succès.";
@@ -131,10 +116,9 @@ namespace Api.Controllers
                 {
                     ChampionClass champClass = Enum.TryParse<ChampionClass>(championClass, true, out champClass) ? champClass : ChampionClass.Unknown;
                     var totalItemCount = await _dataManager.ChampionsMgr.GetNbItemsByClass(champClass);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByClass(champClass, actualStartIndex, actualCount, null, descending);
+                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItemsByClass(champClass, (int)startIndex, actualCount, null, descending);
 
 
                     if (!championList.Any())
@@ -145,7 +129,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les champions avec la classe {championClass} ont été récupéré avec succès.";
@@ -155,10 +139,9 @@ namespace Api.Controllers
                 else
                 {
                     int totalItemCount = await _dataManager.ChampionsMgr.GetNbItems();
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems(actualStartIndex, actualCount, name, descending);
+                    IEnumerable<Champion> championList = await _dataManager.ChampionsMgr.GetItems((int)startIndex, actualCount, name, descending);
 
                     if (!championList.Any())
                     {
@@ -168,7 +151,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"La récupération des données a été réalisé avec succès.";
@@ -221,7 +204,6 @@ namespace Api.Controllers
         {
             try
             {
-                //vérifier que le model soit valide
                 if (!ModelState.IsValid)
                 {
                     var message = $"Les données du champion ne sont pas correctes";
