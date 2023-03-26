@@ -36,12 +36,12 @@ namespace Api.Controllers
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
 
-                if (Request.Query.Count > 4)
-                {
-                    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
-                    _logger.LogWarning(errorMessage);
-                    return BadRequest(FactoryMessage.MessageCreate(errorMessage));
-                }
+                //if (Request.Query.Count > 4)
+                //{
+                //    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
+                //    _logger.LogWarning(errorMessage);
+                //    return BadRequest(FactoryMessage.MessageCreate(errorMessage));
+                //}
 
 
 
