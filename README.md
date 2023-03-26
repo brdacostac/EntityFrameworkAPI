@@ -7,11 +7,11 @@
 *******
 
 Sommaire 
- 1. [Introduction](#introduction)
- 2. [Team](#team)
- 3. [Installer notre projet](#installation)
- 4. [Diagrams](#diagrams)
- 5. [Ameliorations](#ameliorations)
+<div align="center">
+
+ [Introduction](#introduction) | [Team](#team) | [Installer notre projet](#installation) | [Diagrams](#diagrams) | [Ameliorations](#ameliorations)
+ 
+</div>
 
 
 *******
