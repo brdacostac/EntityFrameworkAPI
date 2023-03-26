@@ -193,7 +193,7 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                var errorMessage = $"Erreur de base de donnée lors de la récupération du champion {name}";
+                var errorMessage = $"Erreur de base de donnée lors de la récupération du champion {name}, {ex}";
                 _logger.LogError(errorMessage, ex);
                 return StatusCode((int)HttpStatusCode.InternalServerError, FactoryMessage.MessageCreate(errorMessage));
             }
