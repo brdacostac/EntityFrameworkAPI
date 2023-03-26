@@ -17,7 +17,7 @@ Sommaire
 *******
 <div id='introduction'/>
 
-### **Introduction au projet**
+### **Introduction au projet** :bulb:
 
 Dans le cadre de notre formation, nous avons eu l'opportunité de développer un projet qui nous a permis de mettre en pratique les compétences acquises au fil des enseignements. Notre objectif principal était de mettre en place une API RESTful ainsi qu'une base de données en utilisant Entity Framework. Pour ce faire, nous avons exploité les avantages offerts par cette technologie pour créer une base de données dédiée à League of Legends. 
 
@@ -27,7 +27,7 @@ Entity Framework est un outil de mappage objet-relationnel (ORM) open source dé
 *******
 <div id='team'/>
 
-### **Présentation de l'équipe**
+### **Présentation de l'équipe** :busts_in_silhouette:
 
 Étudiants de deuxième année - BUT Informatique - IUT Clermont Auvergne - 2022-2023   
 `DA COSTA CUNHA Bruno`  -  `KHEDAIR Rami` - `RANDON Noan`
@@ -61,7 +61,7 @@ Vous pouvez maintenant lancer le projet en appuyant sur F5 ou en cliquant sur le
 
 <div id='conception'/>
 
-## Diagrammes
+## Diagrammes :chart_with_upwards_trend:
 
 <br/><img  width="1000" src="images_readme/Api.png"/><br/>
 
@@ -92,16 +92,16 @@ Il est important de noter que toutes les relations ont été créées en utilisa
 Pour remplir notre base de données, nous avons créé un script qui permet de transférer les données du stub vers la base de données. Vous pouvez trouver ce script dans le fichier "program.cs" du "biblioMilieu".
 En fin de compte, nous avons créé notre "DbManager", qui implémente "IDataManager". Ainsi, nous disposons de toutes les requêtes vers notre base de données pour effectuer les opérations CRUD. Le but étant de pouvoir se connecter à l'API.
 
-## **Client Maui**
+## **Client Maui** :handbag:
 Le client Maui a été conçu pour pouvoir utiliser un "IDataManager", que ce soit celui de l'API ou d'Entity Framework. Il est important de noter qu'il faut changer le chemin d'accès si l'on souhaite lancer l'application avec Entity Framework. Pour cela, il suffit de commenter la ligne actuelle dans le fichier "EntityDbContexte" et de décommenter la ligne correspondante.
 
-## **Tests**
+## **Tests** :zap:
 Afin de garantir la qualité de notre jeu, nous avons mis en place différents tests. Nous avons tout d'abord effectué des tests unitaires pour la partie API, qui ont permis de vérifier les méthodes des contrôleurs. Par ailleurs, des tests In Memory ont été effectués pour la partie EF, afin de simuler une base de données et de vérifier son bon fonctionnement. Enfin, pour assurer la continuité de l'intégration du code, nous avons mis en place un système de CI avec Drone et Sonar sur CodeFirst. Grâce à ces outils, nous avons atteint un taux de couverture de 80%. Les tests concernant le client on été effectués par M.CHEVALDONNE.
 ameliorations
 
 <div id='ameliorations'/>
 
-## **Améliorations**
+## **Améliorations** :bookmark:
 
 Il y a plusieurs améliorations possibles dans notre projet, car nous n'avons pas eu suffisamment de temps pour réaliser tout ce que nous souhaitions. Tout d'abord, nous aurions souhaité mettre en place une API RESTful de niveau 3. Malheureusement, nous n'avons pas pu implémenter toutes les méthodes de HTTP Manager dans la partie API, car nous avons privilégié d'autres fonctionnalités qui étaient plus importantes pour notre client. 
 
