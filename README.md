@@ -17,7 +17,7 @@ Sommaire
 *******
 <div id='introduction'/>
 
-### **Project Introduction**
+### **Introduction au projet**
 
 Dans le cadre de notre formation, nous avons eu l'opportunité de développer un projet qui nous a permis de mettre en pratique les compétences acquises au fil des enseignements. Notre objectif principal était de mettre en place une API RESTful ainsi qu'une base de données en utilisant Entity Framework. Pour ce faire, nous avons exploité les avantages offerts par cette technologie pour créer une base de données dédiée à League of Legends. 
 
@@ -27,18 +27,18 @@ Entity Framework est un outil de mappage objet-relationnel (ORM) open source dé
 *******
 <div id='team'/>
 
-### **Presentation de l'équipe**
+### **Présentation de l'équipe**
 
-Students Second Year - BUT Informatique - IUT Clermont Auvergne - 2022-2023   
+Étudiants de deuxième année - BUT Informatique - IUT Clermont Auvergne - 2022-2023   
 `DA COSTA CUNHA Bruno`  -  `KHEDAIR Rami` - `RANDON Noan`
 
 *******  
 
 <div id='installation'/>
 
-## Functionalities
+## Fonctionalitées
 
-- installation
+- Installation
 
 Pour installer notre projet sur Visual Studio, vous devez d'abord vous assurer que vous avez installé .NET Multi-Platform App UI (Maui) dans Visual Studio. Si vous ne l'avez pas encore installé, vous pouvez le faire en cliquant sur l'installeur de Visual Studio, puis en sélectionnant "Modifier".
 <br/><img  width="750" src="images_readme/visual.png"/><br/>
@@ -68,7 +68,8 @@ Vous pouvez maintenant lancer le projet en appuyant sur F5 ou en cliquant sur le
 **Description des diagrammes:**
 ## **API**
 
-Tout d'abord, pour le dossier ApiGlobale, on retrouve tous ce qui concerne l'Api, on a le projet Api, on l'on retrouve les différents controleurs soit le controleur RunePages, le controleur Runes, le controleur Skins et le controleur Champions. Nous avons réalisé une ApiRestFul de niveau 2, celle-ci respecte les contraintes de l'architecture REST (Representational State Transfer). Les contraintes de niveau 2 incluent l'utilisation d'URI pour identifier les ressources, l'utilisation des méthodes HTTP pour spécifier les actions à effectuer sur ces ressources (GET, POST, PUT, DELETE) et l'utilisation de messages auto-descriptifs. Nous avons donc tout naturellement mis en place de la pagination et du filtrage pour les méthode Get. Cependant on retrouve quelques méthodes que l'on a été contraints d'implanter pour s'adapter au client, ce qui ne reste pas les contraintes d'une ApiRestFul.
+Tout d'abord, pour le dossier ApiGlobale, on retrouve tous ce qui concerne l'Api, on a le projet Api, on l'on retrouve les différents controleurs soit le controleur RunePages, le controleur Runes, le controleur Skins et le controleur Champions. Nous avons réalisé une ApiRestFul de niveau 2, celle-ci respecte les contraintes de l'architecture REST (Representational State Transfer). Les contraintes de niveau 2 incluent l'utilisation d'URI pour identifier les ressources, l'utilisation des méthodes HTTP pour spécifier les actions à effectuer sur ces ressources (GET, POST, PUT, DELETE) et l'utilisation de messages auto-descriptifs. Nous avons donc tout naturellement mis en place de la pagination et du filtrage pour les méthode Get. Cependant on retrouve quelques méthodes que l'on a été contraints d'implanter pour s'adapter au client, ce qui ne reste pas les contraintes d'une ApiRestFul. 
+Nous avons également mis en place le versionnage de code, que vous pouvez retrouver dans notre contrôleur RunePages. Nous n'avons pas étendu cette pratique à l'ensemble du projet car cela ne présentait pas d'intérêt particulier. Nous avons simplement voulu expérimenter cette fonctionnalité pour mieux comprendre son fonctionnement.
 De plus nous avons utiliser swagger afin de tester notre Api. Nous voulions implémenter une Api de niveau 3, cependant la contrainte de temps nous n'a pas permis de le faire. Endin nous avons également pu déployer notre Api sur CodeFirst dans le but de la rendre accessible de n'importe ou, cela à été fait par la mise en place d'un DockerFile.
 Nous avons mis en place des DTO, DTO (Data Transfer Object) est un modèle de conception qui permet de transférer des données entre des couches d'une application. 
 Afin d'adapter les classes du modele à notre Api, c'est pour cela que nous avons mis en place des mapper qui permet de convertir des données d'un format à un autre, soit dans notre cas de transformer les classes du modèle en DTO avec des méthode que l'on appelé par ToDto(). Et inversement par des méthodes du genre ToSkin(), ToChampion()... 
