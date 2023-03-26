@@ -395,5 +395,47 @@ namespace TestControllerApiUt
             Assert.AreEqual((int)HttpStatusCode.NotFound, objectResult.StatusCode);
 
         }
+
+        [TestMethod]
+        public async Task Count()
+        {
+            // Arrange
+            var mockDataManager = new Mock<IDataManager>();
+            mockDataManager.Setup(x => x.ChampionsMgr.GetNbItemsByCharacteristic(It.IsAny<string>())).Returns(Task.FromResult(5));
+            mockDataManager.Setup(x => x.ChampionsMgr.GetNbItemsByClass(It.IsAny<ChampionClass>())).Returns(Task.FromResult(5));
+            mockDataManager.Setup(x => x.ChampionsMgr.GetNbItemsByName(It.IsAny<string>())).Returns(Task.FromResult(5));
+            mockDataManager.Setup(x => x.ChampionsMgr.GetNbItemsBySkill(It.IsAny<string>())).Returns(Task.FromResult(5));
+            mockDataManager.Setup(x => x.ChampionsMgr.GetNbItems()).Returns(Task.FromResult(5));
+
+
+            var controller = new ChampionsController(mockDataManager.Object, _logger);
+
+            // Act
+            var result1 = await controller.GetItemCount();
+            var objectResult1 = (ObjectResult)result1;
+            var result2 = await controller.GetItemCount(skillName: "test");
+            var objectResult2 = (ObjectResult)result2;
+            var result3 = await controller.GetItemCount(championClass: "test");
+            var objectResult3 = (ObjectResult)result3;
+            var result4 = await controller.GetItemCount(charName: "test");
+            var objectResult4 = (ObjectResult)result4;
+            var result5 = await controller.GetItemCount(name: "test");
+            var objectResult5 = (ObjectResult)result5;
+
+            // Assert
+            Assert.IsNotNull(objectResult1);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult1.StatusCode);
+            Assert.IsNotNull(objectResult2);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult2.StatusCode);
+            Assert.IsNotNull(objectResult3);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult3.StatusCode);
+            Assert.IsNotNull(objectResult4);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult4.StatusCode);
+            Assert.IsNotNull(objectResult5);
+            Assert.AreEqual((int)HttpStatusCode.OK, objectResult5.StatusCode);
+
+        }
+
+
     }
 }
