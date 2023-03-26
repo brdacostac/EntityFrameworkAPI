@@ -43,15 +43,9 @@ namespace Api.Controllers
                 if (!string.IsNullOrEmpty(nameSubstring))
                 {
                     var totalItemCount = await _dataManager.SkinsMgr.GetNbItemsByName(nameSubstring);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByName(nameSubstring, actualStartIndex, actualCount, null, descending);
-                    //if (!string.IsNullOrEmpty(nameSubstring))
-                    //{
-                    //    skinList = skinList.Where(r => r.Name.Contains(nameSubstring));
-                    //}
-
+                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByName(nameSubstring, (int)startIndex, actualCount, null, descending);
                     if (!skinList.Any())
                     {
                         var message = $"Aucun skin nommé {nameSubstring} n'a été trouvé.";
@@ -60,7 +54,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les skins avec le nom {nameSubstring} ont été récupéré avec succès.";
@@ -71,10 +65,9 @@ namespace Api.Controllers
                 {
                     var championItem = await _dataManager.ChampionsMgr.GetItemByName(champion);
                     var totalItemCount = await _dataManager.SkinsMgr.GetNbItemsByChampion(championItem);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByChampion(championItem, actualStartIndex, actualCount, null, descending);
+                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItemsByChampion(championItem, (int)startIndex, actualCount, null, descending);
 
                     if (!skinList.Any())
                     {
@@ -84,7 +77,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les skins {champion} ont été récupéré avec succès.";
@@ -94,10 +87,9 @@ namespace Api.Controllers
                 else
                 {
                     int totalItemCount = await _dataManager.SkinsMgr.GetNbItems();
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItems(actualStartIndex, actualCount, null, descending);
+                    IEnumerable<Skin> skinList = await _dataManager.SkinsMgr.GetItems((int)startIndex, actualCount, null, descending);
 
                     if (!skinList.Any())
                     {
@@ -107,7 +99,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"La récupération des données a été réalisé avec succès.";

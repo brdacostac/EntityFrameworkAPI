@@ -35,17 +35,8 @@ namespace Api.Controllers
                     _logger.LogInformation(message);
                     return StatusCode((int)HttpStatusCode.BadRequest, FactoryMessage.MessageCreate(message));
                 }
-                //int queryParametersCount = 0;
-                //foreach (var key in HttpContext.Request.Query.Keys)
-                //{
-                //    var value = HttpContext.Request.Query[key];
-                //    if (!string.IsNullOrEmpty(value))
-                //    {
-                //        queryParametersCount++;
-                //    }
-                //}
 
-                //if (queryParametersCount > 4)
+                //if (Request.Query.Count > 4)
                 //{
                 //    var errorMessage = $"La requête doit contenir uniquement l'un des paramètres suivants : startIndex, count, name, skillName, charName, skill, index, orderingPropertyName.";
                 //    _logger.LogWarning(errorMessage);
@@ -57,10 +48,9 @@ namespace Api.Controllers
                 if (!string.IsNullOrEmpty(nameSubstring))
                 {
                     var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByName(nameSubstring);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByName(nameSubstring, actualStartIndex, actualCount, null, descending);
+                    IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByName(nameSubstring, (int)startIndex, actualCount, null, descending);
 
                     if (!runePageList.Any())
                     {
@@ -70,7 +60,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les pages de runes avec le nom {nameSubstring} ont été récupéré avec succès.";
@@ -81,10 +71,9 @@ namespace Api.Controllers
                 {
                     Champion champObj = await _dataManager.ChampionsMgr.GetItemByName(nameChampion);
                     var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByChampion(champObj);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByChampion(champObj, actualStartIndex, actualCount, null, descending);
+                    IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByChampion(champObj, (int)startIndex, actualCount, null, descending);
                     if (!runePageList.Any())
                     {
                         var message = $"Aucune page de rune correspond au champion {nameChampion} n'a été trouvé.";
@@ -93,7 +82,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les pages runes correspondantes au champion {nameChampion} ont été récupéré avec succès.";
@@ -104,10 +93,9 @@ namespace Api.Controllers
                 {
                     var rune = await _dataManager.RunesMgr.GetItemByName(nameRune);
                     var totalItemCount = await _dataManager.RunePagesMgr.GetNbItemsByRune(rune);
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByRune(rune, actualStartIndex, actualCount, null, descending);
+                    IEnumerable<RunePage> runePageList = await _dataManager.RunePagesMgr.GetItemsByRune(rune, (int)startIndex, actualCount, null, descending);
                     if (!runePageList.Any())
                     {
                         var message = $"Aucune page de rune correspond a la rune {nameRune} n'a été trouvé.";
@@ -116,7 +104,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"Les pages runes correspondantes à la rune {rune.Name} ont été récupéré avec succès.";
@@ -126,10 +114,9 @@ namespace Api.Controllers
                 else
                 {
                     int totalItemCount = await _dataManager.RunePagesMgr.GetNbItems();
-                    int actualStartIndex = startIndex.HasValue ? startIndex.Value : 0;
-                    int actualCount = count.HasValue ? count.Value : totalItemCount;
+                    int actualCount = count != null ? count.Value : totalItemCount;
 
-                    IEnumerable<RunePage> runeList = await _dataManager.RunePagesMgr.GetItems(actualStartIndex, actualCount, null, descending);
+                    IEnumerable<RunePage> runeList = await _dataManager.RunePagesMgr.GetItems((int)startIndex, actualCount, null, descending);
 
                     if (!runeList.Any())
                     {
@@ -139,7 +126,7 @@ namespace Api.Controllers
                     }
 
                     int totalPages = (int)Math.Ceiling((double)totalItemCount / actualCount);
-                    int currentPage = actualStartIndex / actualCount + 1;
+                    int currentPage = (int)(startIndex / actualCount + 1);
                     int nextPage = (currentPage < totalPages) ? currentPage + 1 : -1;
 
                     var successMessage = $"La récupération des données a été réalisé avec succès.";
