@@ -2,16 +2,16 @@
 
 # **EntityFramework-API**
 
-## Hello and Welcome to our repository ! 👋
+## Bonjour et bienvenue sur notre dépôt. ! 👋
 
 *******
 
 Sommaire 
  1. [Introduction](#introduction)
  2. [Team](#team)
- 3. [Installer](#installation)
+ 3. [Installer notre projet](#installation)
  4. [Diagrams](#diagrams)
-
+ 5. [Ameliorations](#ameliorations)
 
 
 *******
@@ -19,8 +19,10 @@ Sommaire
 
 ### **Project Introduction**
 
-Entity Framework is an open-source object-relational mapping (ORM) tool developed by Microsoft. It enables developers to map data stored in a relational database to .NET objects. In our project, we are using Entity Framework to create a League of Legends database, and we also create a REST API based on the game to access and manipulate the data.
+Dans le cadre de notre formation, nous avons eu l'opportunité de développer un projet qui nous a permis de mettre en pratique les compétences acquises au fil des enseignements. Notre objectif principal était de mettre en place une API RESTful ainsi qu'une base de données en utilisant Entity Framework. Pour ce faire, nous avons exploité les avantages offerts par cette technologie pour créer une base de données dédiée à League of Legends. 
 
+**Un peu de vocabulaire: 
+Entity Framework est un outil de mappage objet-relationnel (ORM) open source développé par Microsoft. Il permet aux développeurs de faire correspondre les données stockées dans une base de données relationnelle aux objets .NET.**
 
 *******
 <div id='team'/>
@@ -94,6 +96,12 @@ Le client Maui a été conçu pour pouvoir utiliser un "IDataManager", que ce so
 
 ## **Tests**
 Afin de garantir la qualité de notre jeu, nous avons mis en place différents tests. Nous avons tout d'abord effectué des tests unitaires pour la partie API, qui ont permis de vérifier les méthodes des contrôleurs. Par ailleurs, des tests In Memory ont été effectués pour la partie EF, afin de simuler une base de données et de vérifier son bon fonctionnement. Enfin, pour assurer la continuité de l'intégration du code, nous avons mis en place un système de CI avec Drone et Sonar sur CodeFirst. Grâce à ces outils, nous avons atteint un taux de couverture de 80%. Les tests concernant le client on été effectués par M.CHEVALDONNE.
+ameliorations
 
+<div id='ameliorations'/>
+
+## **Améliorations**
+
+Il y a plusieurs améliorations possibles dans notre projet, car nous n'avons pas eu suffisamment de temps pour réaliser tout ce que nous souhaitions. Tout d'abord, nous aurions souhaité mettre en place une API RESTful de niveau 3. Malheureusement, nous n'avons pas pu implémenter toutes les méthodes de HTTP Manager dans la partie API, car nous avons privilégié d'autres fonctionnalités qui étaient plus importantes pour notre client. 
 
 *******
