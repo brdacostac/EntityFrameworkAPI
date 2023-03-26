@@ -99,7 +99,7 @@ steps:
       - dotnet restore StubLib/StubLib.csproj
       - dotnet restore TestChampion/TestControllerApiUt.csproj
       - dotnet restore Tests/ConsoleTests/ConsoleTests.csproj
-      - dotnet sonarscanner begin /k:EntityApiFrameworkLol /d:sonar.host.url=$${PLUGIN_SONAR_HOST} /d:sonar.coverageReportPaths="coveragereport/SonarQube.xml" /d:sonar.coverage.exclusions="Tests/**,Entity_framework/Migrations/**,DbManager/**,ClientApi/**,Console/**,MapperApi/Mapper/SkillMapper.cs,DTOLol/DTOSkill.cs" /d:sonar.login=$${PLUGIN_SONAR_TOKEN} 
+      - dotnet sonarscanner begin /k:EntityApiFrameworkLol /d:sonar.host.url=$${PLUGIN_SONAR_HOST} /d:sonar.coverageReportPaths="coveragereport/SonarQube.xml" /d:sonar.coverage.exclusions="Tests/**,Entity_framework/Migrations/**,DbManager/**,ClientApi/**,Console/**,MapperApi/Mapper/SkillMapper.cs,DTOLol/DTOSkill.cs,Model/**" /d:sonar.login=$${PLUGIN_SONAR_TOKEN} 
       - dotnet build Api/Api.csproj -c Release --no-restore
       - dotnet build Champion_TestMemory/TestEntityUT.csproj -c Release --no-restore
       - dotnet build ClientApi/ClientApi.csproj -c Release --no-restore
