@@ -29,7 +29,7 @@ namespace DbManager
 
             public async Task<bool> DeleteItem(Champion? item)
             {
-                var itemDeleted = parent.DbContext.ChampionsSet.Remove(item.ToDb());
+                var itemDeleted = parent.DbContext.ChampionsSet.Remove(parent.DbContext.ChampionsSet.FirstOrDefault(i => i.Name==item.Name));
                 await parent.DbContext.SaveChangesAsync();
                 return parent.DbContext.ChampionsSet.Find(item.Name)!=null;
             }
