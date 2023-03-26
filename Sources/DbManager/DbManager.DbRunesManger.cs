@@ -26,7 +26,7 @@ namespace DbManager
 
             public async Task<bool> DeleteItem(Model.Rune? item)
             {
-                var itemDeleted = parent.DbContext.RunesSet.Remove(item.ToDb());
+                var itemDeleted = parent.DbContext.RunesSet.Remove(parent.DbContext.RunesSet.FirstOrDefault(i => i.Name == item.Name));
                 await parent.DbContext.SaveChangesAsync();
                 return parent.DbContext.SkinsSet.Find(item.Name) != null;
             }

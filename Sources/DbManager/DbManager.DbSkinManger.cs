@@ -27,7 +27,7 @@ namespace DbManager
 
             public async Task<bool> DeleteItem(Skin? item)
             {
-                var itemDeleted = parent.DbContext.SkinsSet.Remove(item.ToDb());
+                var itemDeleted = parent.DbContext.SkinsSet.Remove(parent.DbContext.SkinsSet.FirstOrDefault(i => i.Name == item.Name));
                 await parent.DbContext.SaveChangesAsync();
                 return parent.DbContext.SkinsSet.Find(item.Name) != null;
             }

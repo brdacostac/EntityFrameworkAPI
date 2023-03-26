@@ -1,4 +1,8 @@
-﻿using Model;
+﻿using BiblioMilieu;
+using BiblioMilieu.Mapper.EnumsMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,64 +17,87 @@ namespace DbManager
         {
             public DbRunePagesManger(DbManger parent) : base(parent) { }
 
-            public Task<RunePage?> AddItem(RunePage? item)
+            public async Task<RunePage?> AddItem(RunePage? item)
             {
-                throw new NotImplementedException();
+                var itemAdded = await parent.DbContext.RunePagesSet.AddAsync(item.ToDb());
+                await parent.DbContext.SaveChangesAsync();
+
+                return itemAdded.Entity?.ToRunePage();
             }
 
-            public Task<bool> DeleteItem(RunePage? item)
+            public async Task<bool> DeleteItem(RunePage? item)
             {
-                throw new NotImplementedException();
+                var itemDeleted = parent.DbContext.RunePagesSet.Remove(parent.DbContext.RunePagesSet.FirstOrDefault(i => i.Name == item.Name));
+                await parent.DbContext.SaveChangesAsync();
+                return parent.DbContext.RunePagesSet.Find(item.Name) != null;
             }
 
-            public Task<RunePage?> GetItemByName(string name)
+            public async Task<RunePage?> GetItemByName(string name)
             {
-                throw new NotImplementedException();
+                var itemByName = await parent.DbContext.RunePagesSet.Include(rp => rp.CategoryRunePages).Include(rp => rp.champions).FirstOrDefaultAsync(item => item.Name == name);
+                return itemByName?.ToRunePage();
             }
 
-            public Task<IEnumerable<RunePage?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<RunePage?>> GetItems(int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunePagesSet.Include(rp => rp.CategoryRunePages).Include(rp => rp.champions).GetItemsWithFilterAndOrdering(
+                        c => true,
+                        index, count,
+                        orderingPropertyName, descending).Result.Select(c => c.ToRunePage());
             }
 
-            public Task<IEnumerable<RunePage?>> GetItemsByChampion(Champion? champion, int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<RunePage?>> GetItemsByChampion(Champion? champion, int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunePagesSet.Include(rp => rp.CategoryRunePages).Include(rp => rp.champions).GetItemsWithFilterAndOrdering(
+                         rp => rp.champions.FirstOrDefault(c => c.Name== champion.Name)!=null,
+                         index, count,
+                         orderingPropertyName, descending).Result.Select(c => c.ToRunePage());
             }
 
-            public Task<IEnumerable<RunePage?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<RunePage?>> GetItemsByName(string substring, int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunePagesSet.Include(rp => rp.CategoryRunePages).Include(rp => rp.champions).GetItemsWithFilterAndOrdering(
+                         c => c.Name.Contains(substring),
+                         index, count,
+                         orderingPropertyName, descending).Result.Select(c => c.ToRunePage());
             }
 
-            public Task<IEnumerable<RunePage?>> GetItemsByRune(Model.Rune? rune, int index, int count, string? orderingPropertyName = null, bool descending = false)
+            public async Task<IEnumerable<RunePage?>> GetItemsByRune(Model.Rune? rune, int index, int count, string? orderingPropertyName = null, bool descending = false)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunePagesSet.Include(rp => rp.CategoryRunePages).Include(rp => rp.champions).GetItemsWithFilterAndOrdering(
+                         rp => rp.CategoryRunePages.FirstOrDefault(c => c.rune.Name == rune.Name) != null,
+                         index, count,
+                         orderingPropertyName, descending).Result.Select(c => c.ToRunePage());
             }
 
-            public Task<int> GetNbItems()
+            public  Task<int> GetNbItems()
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunePagesSet.CountAsync();
             }
 
-            public Task<int> GetNbItemsByChampion(Champion? champion)
+            public  Task<int> GetNbItemsByChampion(Champion? champion)
             {
-                throw new NotImplementedException();
+               return parent.DbContext.RunePagesSet.Where(rp => rp.champions.FirstOrDefault(c => c.Name == champion.Name)!=null ).CountAsync();
+                       
             }
 
-            public Task<int> GetNbItemsByName(string substring)
+            public  Task<int> GetNbItemsByName(string substring)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunePagesSet.Where(c => c.Name== substring).CountAsync();
             }
 
             public Task<int> GetNbItemsByRune(Model.Rune? rune)
             {
-                throw new NotImplementedException();
+                return parent.DbContext.RunePagesSet.Where(rp => rp.CategoryRunePages.FirstOrDefault(c => c.rune.Name == rune.Name) != null).CountAsync();
             }
 
-            public Task<RunePage?> UpdateItem(RunePage? oldItem, RunePage? newItem)
+            public async Task<RunePage?> UpdateItem(RunePage? oldItem, RunePage? newItem)
             {
-                throw new NotImplementedException();
+                var itemUpdated = parent.DbContext.RunePagesSet.FirstOrDefault(champ => champ.Name == oldItem.Name);
+                var newEntity = newItem.ToDb();
+                itemUpdated.Name = newEntity.Name;
+                parent.DbContext.SaveChanges();
+                return itemUpdated?.ToRunePage();
             }
         }
     }

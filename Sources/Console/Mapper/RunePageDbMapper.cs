@@ -22,10 +22,15 @@ namespace BiblioMilieu.Mapper.EnumsMapper
 
         public static RunePage ToRunePage(this RunePagesDb runePageModele)
         {
-           return new RunePage(runePageModele.Name);
+            var runePage= new RunePage(runePageModele.Name);
+            if (runePageModele.CategoryRunePages != null)
+            {
+                foreach(var category in runePageModele.CategoryRunePages)
+                {
+                    runePage.Runes.Append(new KeyValuePair<RunePage.Category, Model.Rune>(category.category.ToRuneFamily(), category.rune.ToRune()));
+                }
+            }
+            return runePage;
         }
-
-
-
     }
 }
